@@ -30,6 +30,7 @@ yarn add qoq
 * validation
 * middleware
 
-# Major Packages
-| Package | Version |
+# Major Projects
+| Project | Version |
 | ------- | ------- |
+| [qoq-compress](https://github.com/qoq-ts/qoq-compress) | [![npm](https://img.shields.io/npm/v/qoq-compress)](https://www.npmjs.com/package/qoq-compress) |
