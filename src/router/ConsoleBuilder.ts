@@ -1,6 +1,7 @@
 import { Action } from '../slot/Action';
 import { CommandOption, OptionValidation } from '../slot/CommandOption';
 import { ConsoleSlotCtx, Slot } from '../slot/Slot';
+import { SlotManager } from '../slot/SlotManager';
 import { Validator } from '../validator/Validator';
 import { Builder } from './Builder';
 
@@ -21,15 +22,22 @@ export class ConsoleBuilder<Props = any, State = any, Alias extends string = ''>
     this.commands = commands.map((item) => prefix + item);
   }
 
+  public use<P, S>(
+    slot: Slot<Slot.Mix | Slot.Console, P, S> | SlotManager<Slot.Mix | Slot.Console, P, S>
+  ): ConsoleBuilder<Props & P, State & S> {
+    this.slots = this.slots.use(slot);
+    return this;
+  }
+
   public options<T extends { [key: string]: Validator }>(options: T): ConsoleBuilder<Props & OptionValidation<T>, State, Exclude<keyof T, symbol | number>> {
-    this.setSlot(this.commandOptions);
+    this.use(this.commandOptions);
     this.commandOptions.setData(options);
     // @ts-expect-error
     return this;
   }
 
   public action<P = {}, S = {}>(fn: ConsoleSlotCtx<Props & P, State & S>): ConsoleBuilder<Props & P, State & S> {
-    this.setSlot(Action(fn));
+    this.use(Action(fn));
     return this;
   }
 
