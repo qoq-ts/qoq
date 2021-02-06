@@ -5,7 +5,7 @@ import yargs from 'yargs/yargs';
 import { Slot } from './Slot';
 import { ConsoleBuilder } from '../router/ConsoleBuilder';
 import { getVersion } from '../util/getVersion';
-import { _ConsoleRouter } from '../router/ConsoleRouter';
+import { ConsoleRouter } from '../router/ConsoleRouter';
 import { stringToArray } from '../util/stringToArray';
 
 export class Help extends Slot<Slot.Console> {
@@ -66,7 +66,7 @@ export class Help extends Slot<Slot.Console> {
       glob.sync(path.resolve(item, '**/!(*.d).{ts,js}')).forEach((matchPath) => {
         const modules = require(matchPath);
         Object.values(modules).forEach((moduleItem) => {
-          if (moduleItem && moduleItem instanceof _ConsoleRouter) {
+          if (moduleItem && moduleItem instanceof ConsoleRouter) {
             moduleItem.getBuilders().forEach((builder) => {
               if (builder.isShow) {
                 builder.commands[0] = chalk.yellow(builder.commands[0]);

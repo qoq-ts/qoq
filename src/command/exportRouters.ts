@@ -3,12 +3,12 @@ import fs from 'fs';
 import glob from 'glob';
 import mkdirp from 'mkdirp';
 import chalk from 'chalk';
-import { ConsoleRouter } from '../router/ConsoleRouter';
+import { createConsoleRouter } from '../router/ConsoleRouter';
 import { ConsoleSlotManager } from '../slot/SlotManager';
 import { rule } from '../validator';
-import { _WebRouter } from '../router/WebRouter';
+import { WebRouter } from '../router/WebRouter';
 
-export const router = ConsoleRouter(ConsoleSlotManager);
+export const router = createConsoleRouter(ConsoleSlotManager);
 
 router
   .command('export:routers')
@@ -44,7 +44,7 @@ router
         console.log('Parsing path: ' + matchPath);
 
         Object.values(modules).forEach((item) => {
-          if (item && item instanceof _WebRouter) {
+          if (item && item instanceof WebRouter) {
             item.builders.forEach((builder) => {
               routers.push(builder.toJSON());
             });

@@ -13,7 +13,7 @@ import { WebContext } from './WebContext';
 import { Stream } from 'stream';
 import { Application } from './Application';
 import { Method } from '../util/Method';
-import { _WebRouter } from '../router/WebRouter';
+import { WebRouter } from '../router/WebRouter';
 import cookies from 'cookies';
 import { stringToArray } from '../util/stringToArray';
 
@@ -78,7 +78,7 @@ export class WebApplication extends Application {
   /**
    * Useful for testing scenario.
    */
-  public appendRoutes(routers: _WebRouter | _WebRouter[]): this {
+  public appendRoutes(routers: WebRouter | WebRouter[]): this {
     stringToArray(routers).forEach((router) => {
       this.parseRouters({ default: router });
     });
@@ -86,8 +86,8 @@ export class WebApplication extends Application {
     return this;
   }
 
-  protected getRouterInstance(): new (...args: any[]) => _WebRouter {
-    return _WebRouter;
+  protected getRouterInstance(): new (...args: any[]) => WebRouter {
+    return WebRouter;
   }
 
   protected serverCallback() {

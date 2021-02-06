@@ -5,7 +5,7 @@ import { Application } from './Application';
 import { ConsoleContext } from './ConsoleContext';
 import chalk from 'chalk';
 import { Help } from '../slot/Help';
-import { _ConsoleRouter } from '../router/ConsoleRouter';
+import { ConsoleRouter } from '../router/ConsoleRouter';
 import { stringToArray } from '../util/stringToArray';
 
 interface Options {
@@ -87,7 +87,7 @@ export class ConsoleApplication extends Application {
   /**
    * Useful for testing scenario.
    */
-  public appendCommands(routers: _ConsoleRouter | _ConsoleRouter[]): this {
+  public appendCommands(routers: ConsoleRouter | ConsoleRouter[]): this {
     stringToArray(routers).forEach((router) => {
       this.parseRouters({ default: router });
     });
@@ -114,8 +114,8 @@ export class ConsoleApplication extends Application {
     console.error();
   }
 
-  protected getRouterInstance(): new (...args: any[]) => _ConsoleRouter {
-    return _ConsoleRouter;
+  protected getRouterInstance(): new (...args: any[]) => ConsoleRouter {
+    return ConsoleRouter;
   }
 
   protected getHelper(): Help {
@@ -129,7 +129,7 @@ export class ConsoleApplication extends Application {
   protected parseRouters(modules: Record<string, any>): void {
     super.parseRouters(modules);
     Object.values(modules).forEach((item) => {
-      if (item && item instanceof _ConsoleRouter) {
+      if (item && item instanceof ConsoleRouter) {
         this.getHelper().appendBuilders(item.getBuilders());
       }
     });

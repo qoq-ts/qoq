@@ -11,14 +11,14 @@ interface WebRouterOptions<Props, State> {
   slots?: SlotManager<Slot.Web | Slot.Mix, Props, State>,
 }
 
-export const WebRouter = <Props, State, P, S>(
+export const createWebRouter = <Props, State, P, S>(
   globalSlots: SlotManager<Slot.Web | Slot.Mix, Props, State>,
   options: WebRouterOptions<P, S> = {}
-): _WebRouter<Props & P, State & S> => {
-  return new _WebRouter(globalSlots, options);
+): WebRouter<Props & P, State & S> => {
+  return new WebRouter(globalSlots, options);
 };
 
-export class _WebRouter<Props = any, State = any> extends Router<Slot.Web | Slot.Mix, WebBuilder<any, any>> {
+export class WebRouter<Props = any, State = any> extends Router<Slot.Web | Slot.Mix, WebBuilder<any, any>> {
   constructor(
     globalSlots: SlotManager<Slot.Web | Slot.Mix, any, any>,
     options: WebRouterOptions<Props, State>

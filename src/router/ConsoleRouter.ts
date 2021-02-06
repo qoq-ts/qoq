@@ -11,14 +11,14 @@ interface ConsoleRouterOptions<Props, State> {
   slots?: SlotManager<Slot.Console | Slot.Mix, Props, State>,
 }
 
-export const ConsoleRouter = <Props, State, P, S>(
+export const createConsoleRouter = <Props, State, P, S>(
   globalSlots: SlotManager<Slot.Console | Slot.Mix, Props, State>,
   options: ConsoleRouterOptions<P, S> = {}
-): _ConsoleRouter<Props & P, State & S> => {
-  return new _ConsoleRouter(globalSlots, options);
+): ConsoleRouter<Props & P, State & S> => {
+  return new ConsoleRouter(globalSlots, options);
 };
 
-export class _ConsoleRouter<Props = any, State = any> extends Router<Slot.Console | Slot.Mix, ConsoleBuilder<any, any>> {
+export class ConsoleRouter<Props = any, State = any> extends Router<Slot.Console | Slot.Mix, ConsoleBuilder<any, any>> {
   constructor(
     globalSlots: SlotManager<Slot.Console | Slot.Mix, any, any>,
     options: ConsoleRouterOptions<Props, State>

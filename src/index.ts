@@ -1,6 +1,6 @@
 // Basic
-export { WebRouter } from './router/WebRouter';
-export { ConsoleRouter } from './router/ConsoleRouter';
+export { createWebRouter } from './router/WebRouter';
+export { createConsoleRouter } from './router/ConsoleRouter';
 export { WebSlotManager, ConsoleSlotManager } from './slot/SlotManager';
 export { Slot } from './slot/Slot';
 export { getVersion } from './util/getVersion';
