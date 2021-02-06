@@ -42,6 +42,10 @@ export abstract class Slot<
   ): {
     use: Slot<Type, P & Props, S & State>['use'];
   };
+  // @ts-expect-error to compatible with koa.Middleware
+  protected use(fn: (ctx: any, next: Next) => any): {
+    use: Slot<Type, Props, State>['use'];
+  };
   protected use(fn: SlotCtx<Type, any, any> | Slot<any>): object {
     if (typeof fn === 'function') {
       this.middleware.push(fn);
