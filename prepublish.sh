@@ -12,4 +12,5 @@ rm -rf ./build
 ./node_modules/.bin/tsc --module ES6
 mv ./build/src ./es
 
+npx public-refactor --src ./src --dist ./build/types/src
 mv ./build/types/src ./types
