@@ -1,0 +1,13 @@
+.idea/
+.DS_Store
+dist/
+*.log
+node_modules/
+coverage
+.nyc_output
+TODO
+test.js
+es/
+lib/
+types/
+build/
