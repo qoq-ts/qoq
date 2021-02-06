@@ -3,20 +3,15 @@ import { WebContextHelper } from '../core/WebContext';
 
 export type Next = () => Promise<any>;
 
-export type WebSlot<Props = {}, State = {}> = Slot<Slot.Web, Props, State> | Slot<Slot.Mix, Props, State>;
-export type ConsoleSlot<Props = {}, State = {}> = Slot<Slot.Console, Props, State> | Slot<Slot.Mix, Props, State>;
-export type MixSlot<Props = {}, State = {}> = WebSlot<Props, State> | ConsoleSlot<Props, State>;
-
 export type MixSlotCtx<Props = {}, State = {}> = (ctx: WebContextHelper<Props, State> | ConsoleContextHelper<Props, State>, next: Next) => any;
 export type WebSlotCtx<Props = {}, State = {}> = (ctx: WebContextHelper<Props, State>, next: Next) => any;
 export type ConsoleSlotCtx<Props = {}, State = {}> = (ctx: ConsoleContextHelper<Props, State>, next: Next) => any;
 
-type SlotCtx<Type, Props, State> = Type extends Slot.Mix
+type SlotCtx<Type, Props = {}, State = {}> = Type extends Slot.Mix
   ? MixSlotCtx<Props, State>
   : Type extends Slot.Console
     ? ConsoleSlotCtx<Props, State>
     : WebSlotCtx<Props, State>;
-
 
 export namespace Slot {
   export type Web = 'web';
@@ -40,14 +35,14 @@ export abstract class Slot<
   };
   protected use<P, S>(
     slot: Type extends Slot.Web
-      ? WebSlot<P, S>
+      ? Slot<Slot.Web, P, S> | Slot<Slot.Mix, P, S>
       : Type extends Slot.Console
-        ? ConsoleSlot<P, S>
-        : MixSlot<P, S>
+        ? Slot<Slot.Console, P, S> | Slot<Slot.Mix, P, S>
+        : Slot<Slot.Web, P, S> | Slot<Slot.Mix, P, S> | Slot<Slot.Console, P, S>
   ): {
     use: Slot<Type, P & Props, S & State>['use'];
   };
-  protected use(fn: SlotCtx<Type, Props, State> | MixSlot<any, any>): object {
+  protected use(fn: SlotCtx<Type, any, any> | Slot<any>): object {
     if (typeof fn === 'function') {
       this.middleware.push(fn);
     } else{

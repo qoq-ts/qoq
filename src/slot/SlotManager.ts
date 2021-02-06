@@ -17,5 +17,4 @@ export class SlotManager<T extends Slot.Mix | Slot.Web | Slot.Console, Props = {
 }
 
 export const WebSlotManager = new SlotManager<Slot.Mix | Slot.Web>([]);
-
 export const ConsoleSlotManager = new SlotManager<Slot.Mix | Slot.Console>([]);

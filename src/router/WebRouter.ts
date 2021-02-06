@@ -1,4 +1,4 @@
-import { Slot, WebSlot, WebSlotCtx } from '../slot/Slot';
+import { Slot, WebSlotCtx } from '../slot/Slot';
 import { SlotManager, WebSlotManager } from '../slot/SlotManager';
 import { compose, Composer } from '../util/compose';
 import { Method } from '../util/Method';
@@ -72,7 +72,7 @@ export class WebRouter<Props = any, State = any> extends Router<Slot.Web | Slot.
 
     return (ctx, next) => {
       const { path, method } = ctx.request;
-      const middleware: Array<WebSlot | WebSlotCtx> = [];
+      const middleware: Array<Slot<Slot.Web> | WebSlotCtx> = [];
 
       for (let i = 0; i < builders.length; ++i) {
         const builder = builders[i]!;

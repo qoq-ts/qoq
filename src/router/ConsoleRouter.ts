@@ -1,5 +1,5 @@
 import { ConsoleContextHelper } from '../core/ConsoleContext';
-import { Slot, ConsoleSlot, ConsoleSlotCtx, Next } from '../slot/Slot';
+import { Slot, ConsoleSlotCtx, Next } from '../slot/Slot';
 import { ConsoleSlotManager, SlotManager } from '../slot/SlotManager';
 import { compose, Composer } from '../util/compose';
 import { stringToArray } from '../util/stringToArray';
@@ -38,7 +38,7 @@ export class ConsoleRouter<Props = any, State = any> extends Router<Slot.Console
 
     return (ctx, next) => {
       const { command } = ctx;
-      const middleware: Array<ConsoleSlot | ConsoleSlotCtx> = [];
+      const middleware: Array<Slot<Slot.Console> | ConsoleSlotCtx> = [];
 
       for (let i = 0; i < builders.length; ++i) {
         const builder = builders[i]!;

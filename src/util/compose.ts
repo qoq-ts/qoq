@@ -1,13 +1,9 @@
-import type { MixSlotCtx, Next, WebSlotCtx, ConsoleSlotCtx, WebSlot, ConsoleSlot } from '../slot/Slot';
-import { WebContextHelper } from '../core/WebContext';
-import { ConsoleContextHelper } from '../core/ConsoleContext';
+import type { Next, Slot } from '../slot/Slot';
 
-type Middleware = WebSlotCtx<any, any> | ConsoleSlotCtx<any, any> | MixSlotCtx<any, any> | Composer;
+type Middleware = (ctx: any, next: Next) => Promise<any>;
+type ExtraMiddleware = Middleware | Slot<any, any, any>;
 
-type ExtraMiddleware = Middleware | WebSlot<any, any> | ConsoleSlot<any, any>;
-
-export type Composer = {
-  (context: WebContextHelper<any, any> | ConsoleContextHelper<any, any>, next?: Next): any;
+export type Composer = ((ctx: any, next?: Next) => Promise<any>) & {
   get(): ExtraMiddleware[];
   set(middleware: ExtraMiddleware[]): void;
   append(...middleware: ExtraMiddleware[]): void;
@@ -18,7 +14,7 @@ export function compose(middleware: ExtraMiddleware[]): Composer {
   let realMiddleware: Middleware[] = [];
   let middlewareLength: number = 0;
 
-  const composer: Composer = (context, next) => {
+  const composer: Composer = (ctx, next) => {
     let lastIndex: number = -1;
 
     const dispatch = async (currentIndex: number): Promise<void> => {
@@ -30,7 +26,7 @@ export function compose(middleware: ExtraMiddleware[]): Composer {
 
       const through = currentIndex === middlewareLength ? next : realMiddleware[currentIndex];
       if (through) {
-        await through(context, dispatch.bind(null, currentIndex + 1));
+        await through(ctx, dispatch.bind(null, currentIndex + 1));
       }
     }
 
