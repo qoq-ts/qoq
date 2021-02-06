@@ -4,7 +4,7 @@ import { SlotManager } from '../slot/SlotManager';
 export abstract class Builder<T extends Slot.Mix | Slot.Console | Slot.Web, Props = any, State = any> {
   protected slots = new SlotManager<T, any, any>([]);
 
-  protected setSlot<P, S>(slot: Slot<T, P, S>): SlotManager<T, Props & P, State & S> {
+  public use<P, S>(slot: Slot<T, P, S>): SlotManager<T, Props & P, State & S> {
     this.slots = this.slots.use(slot);
 
     return this.slots;

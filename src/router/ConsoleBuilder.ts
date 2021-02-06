@@ -22,14 +22,14 @@ export class ConsoleBuilder<Props = any, State = any, Alias extends string = ''>
   }
 
   public options<T extends { [key: string]: Validator }>(options: T): ConsoleBuilder<Props & OptionValidation<T>, State, Exclude<keyof T, symbol | number>> {
-    this.setSlot(this.commandOptions);
+    this.use(this.commandOptions);
     this.commandOptions.setData(options);
     // @ts-expect-error
     return this;
   }
 
   public action<P = {}, S = {}>(fn: ConsoleSlotCtx<Props & P, State & S>): ConsoleBuilder<Props & P, State & S> {
-    this.setSlot(Action(fn));
+    this.use(Action(fn));
     return this;
   }
 

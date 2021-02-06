@@ -41,24 +41,24 @@ export class WebBuilder<Props = any, State = any> extends Builder<Slot.Web | Slo
 
   public query<T extends { [key: string]: Validator }>(rules: T): WebBuilder<Props & QueryValidation<T>, State> {
     this.queryData = rules;
-    this.setSlot(Query(rules));
+    this.use(Query(rules));
     return this;
   }
 
   public body<T extends { [key: string]: Validator }>(rules: T): WebBuilder<Props & BodyValidation<T>, State> {
     this.bodyData = rules;
-    this.setSlot(Body(rules));
+    this.use(Body(rules));
     return this;
   }
 
   public params<T extends { [key: string]: Validator }>(rules: T): WebBuilder<Props & ParamValidation<T>, State> {
     this.paramData = rules;
-    this.setSlot(Param(rules));
+    this.use(Param(rules));
     return this;
   }
 
   public action<P = {}, S = {}>(fn: WebSlotCtx<Props & P, State & S>): WebBuilder<Props & P, State & S> {
-    this.setSlot(Action(fn));
+    this.use(Action(fn));
     return this;
   }
 
