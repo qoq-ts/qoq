@@ -33,3 +33,15 @@ jobs:
     - name: Coverage
       uses: codecov/codecov-action@v1
       if: matrix.node-version == '12.13.0' && matrix.ts-version == '4.1.2' && github.ref == 'refs/heads/master' && matrix.os == 'ubuntu-latest'
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - run: yarn install
+      - uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
