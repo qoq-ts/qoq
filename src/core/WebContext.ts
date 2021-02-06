@@ -2,7 +2,7 @@ import { IncomingMessage, ServerResponse } from 'http';
 import util from 'util';
 import statuses from 'statuses';
 import createHttpError, { HttpError } from 'http-errors';
-import { WebApplication, FomexError } from './WebApplication';
+import { WebApplication, QoqError } from './WebApplication';
 import { WebResponse, ResponseBody } from './WebResponse';
 import { WebRequest } from './WebRequest';
 import { Context } from './Context';
@@ -67,7 +67,7 @@ export class WebContext<Props = {}, State = {}> extends Context<Props, State> {
     })());
   }
 
-  public onerror(err: FomexError | null): void {
+  public onerror(err: QoqError | null): void {
     if (err === null) {
       return;
     }
