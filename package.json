@@ -1,10 +1,9 @@
 {
   "name": "qoq",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "main": "lib/index.js",
   "module": "es/index.js",
   "typings": "types/index.d.ts",
-  "type": "module",
   "description": "A highly efficient node framework for TS",
   "repository": "git@github.com:qoq-ts/qoq.git",
   "author": "原罪 <531362022@qq.com>",
