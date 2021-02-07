@@ -34,6 +34,7 @@ jobs:
       uses: codecov/codecov-action@v1
       if: matrix.node-version == '12.13.0' && matrix.ts-version == '4.1.2' && github.ref == 'refs/heads/master' && matrix.os == 'ubuntu-latest'
   publish:
+    if: "!contains(toJson(github.event.commits), '[skip ci]')"
     needs: test
     runs-on: ubuntu-latest
     steps:
