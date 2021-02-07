@@ -1,14 +1,11 @@
 import fs from 'fs';
 import path from 'path';
 import mkdirp from 'mkdirp';
-import { Cache, CacheOptions } from './Cache';
+import { BaseCache, BaseCacheOptions } from './BaseCache';
 import { createHash } from 'crypto';
 
-export const configFileCache = (config: FileCacheOptions): [typeof FileCache, FileCacheOptions] => {
-  return [FileCache, config];
-};
-
-export interface FileCacheOptions extends CacheOptions {
+export interface FileCacheOptions extends BaseCacheOptions {
+  slot: 'FileCache';
   dir: string;
   db?: number;
 }
@@ -19,7 +16,7 @@ interface FileData {
   ttl: number;
 };
 
-export class FileCache extends Cache {
+export class FileCache extends BaseCache {
   protected readonly dir: string;
 
   constructor(config: FileCacheOptions) {

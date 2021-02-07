@@ -3,11 +3,14 @@ export { createWebRouter } from './router/WebRouter';
 export { createConsoleRouter } from './router/ConsoleRouter';
 export { WebSlotManager, ConsoleSlotManager } from './slot/SlotManager';
 export { Slot } from './slot/Slot';
+export { Cache } from './slot/Cache';
 export { version } from './util/version';
 export { createConfig } from './util/createConfig';
 export { rule } from './validator';
 export { WebApplication } from './core/WebApplication';
 export { ConsoleApplication } from './core/ConsoleApplication';
+export { FileCacheOptions } from './caching/FileCache';
+export { MemoryCacheOptions } from './caching/MemoryCache';
 
 // Advanced
 export { compose, Composer } from './util/compose';
@@ -17,3 +20,4 @@ export { Validator, ValidatorOptions, ValidatorType } from './validator/Validato
 export { WebContextHelper } from './core/WebContext';
 export { ConsoleContextHelper } from './core/ConsoleContext';
 export { HttpError } from 'http-errors';
+export { BaseCache, BaseCacheOptions } from './caching/BaseCache';

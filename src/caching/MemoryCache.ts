@@ -1,10 +1,8 @@
-import { Cache, CacheOptions } from './Cache';
+import { BaseCache, BaseCacheOptions } from './BaseCache';
 
-export const configMemoryCache = (config: MemoryCacheOptions = {}): [typeof MemoryCache, MemoryCacheOptions] => {
-  return [MemoryCache, config];
-};
-
-export interface MemoryCacheOptions extends CacheOptions {}
+export interface MemoryCacheOptions extends BaseCacheOptions {
+  slot: 'MemoryCache';
+}
 
 interface MemoryData {
   k: string;
@@ -12,7 +10,7 @@ interface MemoryData {
   ttl: number;
 };
 
-export class MemoryCache extends Cache {
+export class MemoryCache extends BaseCache {
   private data: MemoryData[] = [];
 
   protected async getValue(key: string): Promise<any> {
