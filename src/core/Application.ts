@@ -9,12 +9,14 @@ import { GlobalComposer } from '../util/GlobalComposer';
 export abstract class Application extends EventEmitter {
   protected readonly routesPath: string[];
   protected readonly composer: Composer = compose([]);
-  protected readonly global = new GlobalComposer();
+  protected readonly routersBeforeGlobal = compose([]);
+  protected readonly globalAndLocalSlots = new GlobalComposer();
 
   constructor(routesPath: string | string[]) {
     super();
 
-    this.composer.append(this.global.getGlobal());
+    this.composer.append(this.routersBeforeGlobal);
+    this.composer.append(this.globalAndLocalSlots.getGlobal());
     this.searchRouters(
       this.routesPath = Array.isArray(routesPath) ? routesPath : [routesPath]
     );
@@ -43,11 +45,14 @@ export abstract class Application extends EventEmitter {
       const customModule = allModules[i];
 
       if (customModule && customModule instanceof CustomRouter) {
-        const toLocalComposer = this.global.compare(
-          customModule.getGlobalSlotManager().getSlots()
-        );
+        const globalSlots = customModule.getGlobalSlotManager().getSlots();
 
-        this.composer.append(customModule.createMiddleware(toLocalComposer));
+        if (globalSlots.length) {
+          const toLocalComposer = this.globalAndLocalSlots.compare(globalSlots);
+          this.composer.append(customModule.createMiddleware(toLocalComposer));
+        } else {
+          this.routersBeforeGlobal.append(customModule.createMiddleware());
+        }
       }
     }
   }
