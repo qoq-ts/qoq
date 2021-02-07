@@ -9,7 +9,6 @@ export abstract class Router<T extends Slot.Mix | Slot.Web | Slot.Console, U ext
   constructor(
     protected readonly prefix: string,
     protected globalSlots: SlotManager<T, any, any>,
-    protected groupSlots: SlotManager<T, any, any>
   ) {}
 
   public/*protected*/ getBuilders(): U[] {
@@ -20,5 +19,5 @@ export abstract class Router<T extends Slot.Mix | Slot.Web | Slot.Console, U ext
     return this.globalSlots;
   }
 
-  public/*protected*/ abstract createMiddleware(globalToLocal?: Composer): WebSlotCtx | ConsoleSlotCtx;
+  public/*protected*/ abstract createMiddleware(globalToGroup?: Composer): WebSlotCtx | ConsoleSlotCtx;
 }

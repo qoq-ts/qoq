@@ -1,6 +1,6 @@
 import { ConsoleContextHelper } from '../core/ConsoleContext';
 import { Slot, ConsoleSlotCtx, Next } from '../slot/Slot';
-import { ConsoleSlotManager, SlotManager } from '../slot/SlotManager';
+import { SlotManager } from '../slot/SlotManager';
 import { compose, Composer } from '../util/compose';
 import { toArray } from '../util/toArray';
 import { ConsoleBuilder } from './ConsoleBuilder';
@@ -8,22 +8,12 @@ import { Router } from './Router';
 
 interface ConsoleRouterOptions<Props, State> {
   prefix?: string;
-  slots?: SlotManager<Slot.Console | Slot.Mix, Props, State>,
+  slots: SlotManager<Slot.Console | Slot.Mix, Props, State>,
 }
 
-export const createConsoleRouter = <Props, State, P, S>(
-  globalSlots: SlotManager<Slot.Console | Slot.Mix, Props, State>,
-  options: ConsoleRouterOptions<P, S> = {}
-): ConsoleRouter<Props & P, State & S> => {
-  return new ConsoleRouter(globalSlots, options);
-};
-
 export class ConsoleRouter<Props = any, State = any> extends Router<Slot.Console | Slot.Mix, ConsoleBuilder<any, any>> {
-  constructor(
-    globalSlots: SlotManager<Slot.Console | Slot.Mix, any, any>,
-    options: ConsoleRouterOptions<Props, State>
-  ) {
-    super(options.prefix || '', globalSlots, options.slots || ConsoleSlotManager);
+  constructor(options: ConsoleRouterOptions<Props, State>) {
+    super(options.prefix || '', options.slots);
   }
 
   public command(command: string | string[]): ConsoleBuilder<Props, State> {
@@ -32,9 +22,8 @@ export class ConsoleRouter<Props = any, State = any> extends Router<Slot.Console
     return builder;
   }
 
-  public/*protected*/ createMiddleware(globalToLocal?: Composer): ConsoleSlotCtx {
+  public/*protected*/ createMiddleware(globalToGroup?: Composer): ConsoleSlotCtx {
     const builders = this.builders;
-    const groupSlots = this.groupSlots.getSlots();
 
     return (ctx, next) => {
       const { command } = ctx;
@@ -52,8 +41,7 @@ export class ConsoleRouter<Props = any, State = any> extends Router<Slot.Console
         return next();
       }
 
-      middleware.unshift(...groupSlots);
-      globalToLocal && middleware.unshift(globalToLocal);
+      globalToGroup && middleware.unshift(globalToGroup);
 
       return compose(middleware)(ctx, next);
     };

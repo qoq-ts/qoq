@@ -3,12 +3,14 @@ import fs from 'fs';
 import glob from 'glob';
 import mkdirp from 'mkdirp';
 import chalk from 'chalk';
-import { createConsoleRouter } from '../router/ConsoleRouter';
+import { ConsoleRouter } from '../router/ConsoleRouter';
 import { ConsoleSlotManager } from '../slot/SlotManager';
 import { rule } from '../validator';
 import { WebRouter } from '../router/WebRouter';
 
-export const router = createConsoleRouter(ConsoleSlotManager);
+export const router = new ConsoleRouter({
+  slots: ConsoleSlotManager,
+});
 
 router
   .command('export:routers')

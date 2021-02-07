@@ -1,5 +1,5 @@
 import { Slot, WebSlotCtx } from '../slot/Slot';
-import { SlotManager, WebSlotManager } from '../slot/SlotManager';
+import { SlotManager } from '../slot/SlotManager';
 import { compose, Composer } from '../util/compose';
 import { Method } from '../util/Method';
 import { toArray } from '../util/toArray';
@@ -8,26 +8,12 @@ import { WebBuilder } from './WebBuilder';
 
 interface WebRouterOptions<Props, State> {
   prefix?: string;
-  slots?: SlotManager<Slot.Web | Slot.Mix, Props, State>,
+  slots: SlotManager<Slot.Web | Slot.Mix, Props, State>,
 }
 
-export const createWebRouter = <Props, State, P, S>(
-  globalSlots: SlotManager<Slot.Web | Slot.Mix, Props, State>,
-  options: WebRouterOptions<P, S> = {}
-): WebRouter<Props & P, State & S> => {
-  return new WebRouter(globalSlots, options);
-};
-
 export class WebRouter<Props = any, State = any> extends Router<Slot.Web | Slot.Mix, WebBuilder<any, any>> {
-  constructor(
-    globalSlots: SlotManager<Slot.Web | Slot.Mix, any, any>,
-    options: WebRouterOptions<Props, State>
-  ) {
-    super(
-      (options.prefix || '').replace(/\/+$/, ''),
-      globalSlots,
-      options.slots || WebSlotManager,
-    );
+  constructor(options: WebRouterOptions<Props, State>) {
+    super((options.prefix || '').replace(/\/+$/, ''), options.slots);
   }
 
   public get(uri: string | string[]): WebBuilder<Props, State> {
@@ -66,9 +52,8 @@ export class WebRouter<Props = any, State = any> extends Router<Slot.Web | Slot.
     return builder;
   }
 
-  public/*protected*/ createMiddleware(globalToLocal?: Composer): WebSlotCtx {
+  public/*protected*/ createMiddleware(globalToGroup?: Composer): WebSlotCtx {
     const builders = this.builders;
-    const groupSlots = this.groupSlots.getSlots();
 
     return (ctx, next) => {
       const { path, method } = ctx.request;
@@ -100,8 +85,7 @@ export class WebRouter<Props = any, State = any> extends Router<Slot.Web | Slot.
         return next();
       }
 
-      middleware.unshift(...groupSlots);
-      globalToLocal && middleware.unshift(globalToLocal);
+      globalToGroup && middleware.unshift(globalToGroup);
 
       return compose(middleware)(ctx, next);
     };
