@@ -40,6 +40,13 @@ export class _Body extends Slot<Slot.Web, BodyValidation<any>> {
   }
 
   protected async getBody(ctx: WebContextHelper): Promise<Record<string, any>> {
+    // @ts-ignore Pre-parse the unknown content-type data to json.
+    const parsed = ctx._parsedBody_;
+
+    if (parsed && typeof parsed === 'object') {
+      return JSON.parse(JSON.stringify(parsed));
+    }
+
     try {
       if (ctx.request.is('multipart/*')) {
         const form = new IncomingForm({
