@@ -3,7 +3,11 @@ import { Slot } from './Slot';
 
 type ChildCache<T> = new (config: T) => BaseCache;
 
-export class Cache<T extends BaseCacheOptions> extends Slot<Slot.Mix, { cache: BaseCache }> {
+export interface CacheContextProps {
+  cache: BaseCache
+}
+
+export class Cache<T extends BaseCacheOptions> extends Slot<Slot.Mix, CacheContextProps> {
   protected readonly instance: BaseCache;
 
   constructor(config: T) {
