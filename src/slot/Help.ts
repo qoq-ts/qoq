@@ -4,7 +4,7 @@ import glob from 'glob';
 import yargs from 'yargs/yargs';
 import { Slot } from './Slot';
 import { ConsoleBuilder } from '../router/ConsoleBuilder';
-import { getVersion } from '../util/getVersion';
+import { version } from '../util/version';
 import { ConsoleRouter } from '../router/ConsoleRouter';
 import { stringToArray } from '../util/stringToArray';
 
@@ -16,7 +16,7 @@ export class Help extends Slot<Slot.Console> {
     this.use((ctx, next) => {
       if (ctx.command === '') {
         if (ctx.argv.some((argv) => argv === '--version' || argv === '-v')) {
-          console.log(getVersion());
+          console.log(version);
         } else {
           this.showAllHelp(ctx.app.getPaths());
         }

@@ -1,7 +1,7 @@
 import { createHash } from 'crypto';
 
 export type CacheOptions = {
-  prefix?: string;
+  keyPrefix?: string;
   ttl?: number;
 };
 
@@ -18,7 +18,7 @@ export abstract class Cache {
   protected readonly defaultTTL: number;
 
   constructor(config: CacheOptions) {
-    this.keyPrefix = config.prefix ?? '';
+    this.keyPrefix = config.keyPrefix ?? '';
     this.defaultTTL = config.ttl ?? 0;
   }
 
