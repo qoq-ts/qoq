@@ -6,7 +6,7 @@ import { ConsoleContext } from './ConsoleContext';
 import chalk from 'chalk';
 import { Help } from '../slot/Help';
 import { ConsoleRouter } from '../router/ConsoleRouter';
-import { stringToArray } from '../util/stringToArray';
+import { toArray } from '../util/toArray';
 
 interface Options {
   routerDir?: string | string[];
@@ -88,7 +88,7 @@ export class ConsoleApplication extends Application {
    * Useful for testing scenario.
    */
   public appendCommands(routers: ConsoleRouter | ConsoleRouter[]): this {
-    stringToArray(routers).forEach((router) => {
+    toArray(routers).forEach((router) => {
       this.parseRouters({ default: router });
     });
 

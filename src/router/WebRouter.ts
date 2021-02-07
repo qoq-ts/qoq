@@ -2,7 +2,7 @@ import { Slot, WebSlotCtx } from '../slot/Slot';
 import { SlotManager, WebSlotManager } from '../slot/SlotManager';
 import { compose, Composer } from '../util/compose';
 import { Method } from '../util/Method';
-import { stringToArray } from '../util/stringToArray';
+import { toArray } from '../util/toArray';
 import { Router } from './Router';
 import { WebBuilder } from './WebBuilder';
 
@@ -31,37 +31,37 @@ export class WebRouter<Props = any, State = any> extends Router<Slot.Web | Slot.
   }
 
   public get(uri: string | string[]): WebBuilder<Props, State> {
-    const builder = new WebBuilder(this.prefix, stringToArray(uri), [Method.get, Method.head]);
+    const builder = new WebBuilder(this.prefix, toArray(uri), [Method.get, Method.head]);
     this.builders.push(builder);
     return builder;
   }
 
   public post(uri: string | string[]): WebBuilder<Props, State> {
-    const builder = new WebBuilder(this.prefix, stringToArray(uri), [Method.post]);
+    const builder = new WebBuilder(this.prefix, toArray(uri), [Method.post]);
     this.builders.push(builder);
     return builder;
   }
 
   public put(uri: string | string[]): WebBuilder<Props, State> {
-    const builder = new WebBuilder(this.prefix, stringToArray(uri), [Method.put]);
+    const builder = new WebBuilder(this.prefix, toArray(uri), [Method.put]);
     this.builders.push(builder);
     return builder;
   }
 
   public patch(uri: string | string[]): WebBuilder<Props, State> {
-    const builder = new WebBuilder(this.prefix, stringToArray(uri), [Method.patch]);
+    const builder = new WebBuilder(this.prefix, toArray(uri), [Method.patch]);
     this.builders.push(builder);
     return builder;
   }
 
   public delete(uri: string | string[]): WebBuilder<Props, State> {
-    const builder = new WebBuilder(this.prefix, stringToArray(uri), [Method.delete]);
+    const builder = new WebBuilder(this.prefix, toArray(uri), [Method.delete]);
     this.builders.push(builder);
     return builder;
   }
 
   public all(uri: string | string[]): WebBuilder<Props, State> {
-    const builder = new WebBuilder(this.prefix, stringToArray(uri), Object.values(Method));
+    const builder = new WebBuilder(this.prefix, toArray(uri), Object.values(Method));
     this.builders.push(builder);
     return builder;
   }

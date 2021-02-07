@@ -13,7 +13,7 @@ import { WebContext } from './WebContext';
 import { extname } from 'path';
 import destroy from 'destroy';
 import { setInspector } from '../util/setInspector';
-import { stringToArray } from '../util/stringToArray';
+import { toArray } from '../util/toArray';
 
 export type ResponseBody = null | string | Buffer | Stream | object;
 
@@ -302,7 +302,7 @@ export class WebResponse {
     const prev = this.getHeader(field) as string | string[] | undefined;
 
     if (prev) {
-      value = stringToArray(prev).concat(value);
+      value = toArray(prev).concat(value);
     }
 
     return this.setHeader(field, value);

@@ -2,7 +2,7 @@ import { ConsoleContextHelper } from '../core/ConsoleContext';
 import { Slot, ConsoleSlotCtx, Next } from '../slot/Slot';
 import { ConsoleSlotManager, SlotManager } from '../slot/SlotManager';
 import { compose, Composer } from '../util/compose';
-import { stringToArray } from '../util/stringToArray';
+import { toArray } from '../util/toArray';
 import { ConsoleBuilder } from './ConsoleBuilder';
 import { Router } from './Router';
 
@@ -27,7 +27,7 @@ export class ConsoleRouter<Props = any, State = any> extends Router<Slot.Console
   }
 
   public command(command: string | string[]): ConsoleBuilder<Props, State> {
-    const builder = new ConsoleBuilder(this.prefix, stringToArray(command));
+    const builder = new ConsoleBuilder(this.prefix, toArray(command));
     this.builders.push(builder);
     return builder;
   }

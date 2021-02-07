@@ -15,7 +15,7 @@ import { Application } from './Application';
 import { Method } from '../util/Method';
 import { WebRouter } from '../router/WebRouter';
 import cookies from 'cookies';
-import { stringToArray } from '../util/stringToArray';
+import { toArray } from '../util/toArray';
 
 interface Options {
   routerDir?: string | string[];
@@ -79,7 +79,7 @@ export class WebApplication extends Application {
    * Useful for testing scenario.
    */
   public appendRoutes(routers: WebRouter | WebRouter[]): this {
-    stringToArray(routers).forEach((router) => {
+    toArray(routers).forEach((router) => {
       this.parseRouters({ default: router });
     });
 

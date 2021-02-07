@@ -6,7 +6,7 @@ import { Slot } from './Slot';
 import { ConsoleBuilder } from '../router/ConsoleBuilder';
 import { version } from '../util/version';
 import { ConsoleRouter } from '../router/ConsoleRouter';
-import { stringToArray } from '../util/stringToArray';
+import { toArray } from '../util/toArray';
 
 export class Help extends Slot<Slot.Console> {
   protected builders: ConsoleBuilder[] = [];
@@ -95,7 +95,7 @@ export class Help extends Slot<Slot.Console> {
       const options = validator.toJSON();
 
       cli.option(options.name || key, {
-        alias: alias === undefined ? undefined : stringToArray(alias),
+        alias: alias === undefined ? undefined : toArray(alias),
         description: options.description,
         default: options.defaultValue === '' ? undefined : options.defaultValue,
       });
