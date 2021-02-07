@@ -41,9 +41,16 @@ export class WebContext<Props = {}, State = {}> extends Context<Props, State> {
     throw createHttpError(...args);
   }
 
-  public send(body: ResponseBody): this {
+  public send(body: ResponseBody, statusCode?: number, contentType?: string): void {
+    if (statusCode !== undefined) {
+      this.response.statusCode = statusCode;
+    }
+
+    if (contentType !== undefined) {
+      this.response.contentType = contentType;
+    }
+
     this.response.body = body;
-    return this;
   }
 
   public get cookies(): CookieApi {
