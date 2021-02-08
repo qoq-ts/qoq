@@ -12,7 +12,7 @@
     "test": "nyc mocha ./test/**/*.test.ts -r ts-node/register --recursive --exit",
     "prepublishOnly": "sh ./prepublish.sh"
   },
-  "bin": "./bin.js",
+  "bin": "./lib/bin.js",
   "engines": {
     "node": "^10.13.0 || ^12.13.0 || ^14.15.0"
   },
