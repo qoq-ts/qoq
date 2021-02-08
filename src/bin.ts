@@ -10,10 +10,10 @@ function js() {
   let jsFile: string | undefined = undefined;
 
   for (let i = 0; i < files.length; ++i) {
-    const file = files[i] + '.js';
+    const file = path.resolve(files[i] + '.js');
 
     if (fs.existsSync(file)) {
-      jsFile = path.resolve(file);
+      jsFile = file;
       break;
     }
   }
@@ -30,10 +30,10 @@ function ts() {
   let tsFile: string | undefined = undefined;
 
   for (let i = 0; i < files.length; ++i) {
-    const file = files[i] + '.ts';
+    const file = path.resolve(files[i] + '.ts');
 
     if (fs.existsSync(file)) {
-      tsFile = path.resolve(file);
+      tsFile = file;
       break;
     }
   }
