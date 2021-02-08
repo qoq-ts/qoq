@@ -11,12 +11,29 @@ interface WebRouterOptions<Props, State> {
   slots: SlotManager<Slot.Web | Slot.Mix, Props, State>,
 }
 
+// _ is valid variable letter
+type InvalidCharacter = '/' | '(' | ')' | '.' | ',' | '+' | '*' | '-' | '?' | '#' | '[' | ']' | '\\' | '|' | '{' | '}' | '=' | '&' | '<' | '>' | '@' | '!' | '~' | ' ' | '$' | '^' | '%';
+
+type GetParam<T extends string> = (
+  T extends `:${infer U}${InvalidCharacter}${infer R}`
+    ? GetParam<`:${U}`> | (R extends string ? GetParam<R> : never)
+    : T extends `:${infer U}`
+      ? U extends `:${string}`
+        ? GetParam<U>
+        : U extends `${infer R}:`
+          ? GetParam<`:${R}`>
+          : U
+      : T extends `${string}:${infer R}`
+        ? GetParam<`:${R}`>
+        : never
+);
+
 export class WebRouter<Props = any, State = any> extends Router<Slot.Web | Slot.Mix, WebBuilder<any, any>> {
   constructor(options: WebRouterOptions<Props, State>) {
     super((options.prefix || '').replace(/\/+$/, ''), options.slots);
   }
 
-  public get(uri: string | string[]): WebBuilder<Props, State> {
+  public get<T extends string>(uri: T | T[]): WebBuilder<Props, State, GetParam<T>> {
     const builder = new WebBuilder(this.prefix, toArray(uri), [Method.get, Method.head]);
     this.builders.push(builder);
     return builder;

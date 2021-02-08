@@ -9,7 +9,7 @@ import { Method } from '../util/Method';
 import { Validator } from '../validator/Validator';
 import { Builder } from './Builder';
 
-export class WebBuilder<Props = any, State = any> extends Builder<Slot.Web | Slot.Mix, Props, State> {
+export class WebBuilder<Props = any, State = any, Param extends string = string> extends Builder<Slot.Web | Slot.Mix, Props, State> {
   protected readonly uris: string[];
   protected readonly methods: Method[];
   protected readonly uriPatterns: ([RegExp, Key[]] | string)[];
@@ -42,30 +42,30 @@ export class WebBuilder<Props = any, State = any> extends Builder<Slot.Web | Slo
 
   public use<P, S>(
     slot: Slot<Slot.Mix | Slot.Web, P, S> | SlotManager<Slot.Mix | Slot.Web, P, S>
-  ): WebBuilder<Props & P, State & S> {
+  ): WebBuilder<Props & P, State & S, Param> {
     this.slots = this.slots.use(slot);
     return this;
   }
 
-  public query<T extends { [key: string]: Validator }>(rules: T): WebBuilder<Props & QueryValidation<T>, State> {
+  public query<T extends { [key: string]: Validator }>(rules: T): WebBuilder<Props & QueryValidation<T>, State, Param> {
     this.queryData = rules;
     this.use(Query(rules));
     return this;
   }
 
-  public body<T extends { [key: string]: Validator }>(rules: T): WebBuilder<Props & BodyValidation<T>, State> {
+  public body<T extends { [key: string]: Validator }>(rules: T): WebBuilder<Props & BodyValidation<T>, State, Param> {
     this.bodyData = rules;
     this.use(Body(rules));
     return this;
   }
 
-  public params<T extends { [key: string]: Validator }>(rules: T): WebBuilder<Props & ParamValidation<T>, State> {
+  public params<T extends (Param extends string ? { [key in Param]: Validator } : never)>(rules: T): WebBuilder<Props & ParamValidation<T>, State, Param> {
     this.paramData = rules;
     this.use(Param(rules));
     return this;
   }
 
-  public action<P = {}, S = {}>(fn: WebSlotCtx<Props & P, State & S>): WebBuilder<Props & P, State & S> {
+  public action<P = {}, S = {}>(fn: WebSlotCtx<Props & P, State & S>): WebBuilder<Props & P, State & S, Param> {
     this.use(Action(fn));
     return this;
   }
