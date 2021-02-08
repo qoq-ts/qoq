@@ -5,7 +5,7 @@ import mkdirp from 'mkdirp';
 import chalk from 'chalk';
 import { ConsoleRouter } from '../router/ConsoleRouter';
 import { ConsoleSlotManager } from '../slot/SlotManager';
-import { rule } from '../validator';
+import { validator } from '../validator';
 import { WebRouter } from '../router/WebRouter';
 
 export const router = new ConsoleRouter({
@@ -19,10 +19,10 @@ router
     description: 'Export web routers to file and `ctx.state.routes`',
   })
   .options({
-    sourceDir: rule.array.each(rule.string).minItemLength(1).docs({
+    sourceDir: validator.array.each(validator.string).minItemLength(1).docs({
       description: 'The folders where web routers come from',
     }),
-    output: rule
+    output: validator
       .string
       .default('./routers.json')
       .docs({

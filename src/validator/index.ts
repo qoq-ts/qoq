@@ -45,4 +45,4 @@ export class ValidatorStatic {
   }
 }
 
-export const rule = new ValidatorStatic();
+export const validator = new ValidatorStatic();

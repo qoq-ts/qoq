@@ -6,7 +6,7 @@ export { Slot } from './slot/Slot';
 export { Cache } from './slot/Cache';
 export { version } from './util/version';
 export { createConfig } from './util/createConfig';
-export { rule } from './validator';
+export { validator } from './validator';
 export { WebApplication } from './core/WebApplication';
 export { ConsoleApplication } from './core/ConsoleApplication';
 export { FileCacheOptions } from './caching/FileCache';
