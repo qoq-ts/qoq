@@ -34,3 +34,4 @@ yarn add qoq
 | [qoq-cors](https://github.com/qoq-ts/qoq-cors) | [![npm](https://img.shields.io/npm/v/qoq-cors)](https://www.npmjs.com/package/qoq-cors) | Web | CORS |
 | [qoq-etag](https://github.com/qoq-ts/qoq-etag) | [![npm](https://img.shields.io/npm/v/qoq-etag)](https://www.npmjs.com/package/qoq-etag) | Web | Header with etag |
 | [qoq-response-time](https://github.com/qoq-ts/qoq-response-time) | [![npm](https://img.shields.io/npm/v/qoq-response-time)](https://www.npmjs.com/package/qoq-response-time) | Web | Header with X-Response-Time |
+| [qoq-pretty-json](https://github.com/qoq-ts/qoq-pretty-json) | [![npm](https://img.shields.io/npm/v/qoq-pretty-json)](https://www.npmjs.com/package/qoq-pretty-json) | Web | format JSON |
