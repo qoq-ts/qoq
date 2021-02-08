@@ -13,11 +13,7 @@ export type BodyValidation<T> = {
   };
 };
 
-export const Body = (rules: Record<string, Validator>): _Body => {
-  return new _Body(rules);
-};
-
-export class _Body extends Slot<Slot.Web, BodyValidation<any>> {
+export class Body extends Slot<Slot.Web, BodyValidation<any>> {
   constructor(rules: Record<string, Validator>) {
     super();
     const parsedRules = Object.entries(rules);

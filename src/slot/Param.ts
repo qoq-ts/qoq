@@ -10,11 +10,7 @@ export type ParamValidation<T> = {
   };
 };
 
-export const Param = (rules: Record<string, Validator>): _Param => {
-  return new _Param(rules);
-};
-
-export class _Param extends Slot<Slot.Web, ParamValidation<any>> {
+export class Param extends Slot<Slot.Web, ParamValidation<any>> {
   constructor(rules: Record<string, Validator>) {
     super();
     const parsedRules = Object.entries(rules);

@@ -11,11 +11,7 @@ export type QueryValidation<T> = {
   };
 };
 
-export const Query = (rules: Record<string, Validator>): _Query => {
-  return new _Query(rules);
-};
-
-export class _Query extends Slot<Slot.Web, QueryValidation<any>> {
+export class Query extends Slot<Slot.Web, QueryValidation<any>> {
   constructor(rules: Record<string, Validator>) {
     super();
     const parsedRules = Object.entries(rules);

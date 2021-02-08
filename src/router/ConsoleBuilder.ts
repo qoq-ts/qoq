@@ -37,7 +37,7 @@ export class ConsoleBuilder<Props = any, State = any, Alias extends string = ''>
   }
 
   public action<P = {}, S = {}>(fn: ConsoleSlotCtx<Props & P, State & S>): ConsoleBuilder<Props & P, State & S> {
-    this.use(Action(fn));
+    this.use(new Action(fn));
     return this;
   }
 

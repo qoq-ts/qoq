@@ -49,24 +49,24 @@ export class WebBuilder<Props = any, State = any, Param extends string = string>
 
   public query<T extends { [key: string]: Validator }>(rules: T): WebBuilder<Props & QueryValidation<T>, State, Param> {
     this.queryData = rules;
-    this.use(Query(rules));
+    this.use(new Query(rules));
     return this;
   }
 
   public body<T extends { [key: string]: Validator }>(rules: T): WebBuilder<Props & BodyValidation<T>, State, Param> {
     this.bodyData = rules;
-    this.use(Body(rules));
+    this.use(new Body(rules));
     return this;
   }
 
   public params<T extends (Param extends string ? { [key in Param]: Validator } : never)>(rules: T): WebBuilder<Props & ParamValidation<T>, State, Param> {
     this.paramData = rules;
-    this.use(Param(rules));
+    this.use(new Param(rules));
     return this;
   }
 
   public action<P = {}, S = {}>(fn: WebSlotCtx<Props & P, State & S>): WebBuilder<Props & P, State & S, Param> {
-    this.use(Action(fn));
+    this.use(new Action(fn));
     return this;
   }
 
