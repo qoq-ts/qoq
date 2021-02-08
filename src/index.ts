@@ -16,6 +16,7 @@ export { MemoryCacheOptions } from './caching/MemoryCache';
 export { compose, Composer } from './util/compose';
 export { Method } from './util/Method';
 export { Next, ConsoleSlotCtx, WebSlotCtx, MixSlotCtx } from './slot/Slot';
+export { ValidatorStatic } from './validator';
 export { Validator, ValidatorOptions, ValidatorType } from './validator/Validator';
 export { WebCtx } from './core/WebContext';
 export { ConsoleCtx } from './core/ConsoleContext';
