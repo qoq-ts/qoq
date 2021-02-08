@@ -1,6 +1,6 @@
 import coBody from 'co-body';
 import { IncomingForm } from 'formidable';
-import { WebContextHelper } from '../core/WebContext';
+import { WebCtx } from '../core/WebContext';
 import { Validator, ValidatorType } from '../validator/Validator';
 import { Slot } from './Slot';
 
@@ -39,7 +39,7 @@ export class _Body extends Slot<Slot.Web, BodyValidation<any>> {
     });
   }
 
-  protected async getBody(ctx: WebContextHelper): Promise<Record<string, any>> {
+  protected async getBody(ctx: WebCtx): Promise<Record<string, any>> {
     // @ts-ignore Pre-parse the unknown content-type data to json.
     const parsed = ctx._parsedBody_;
 

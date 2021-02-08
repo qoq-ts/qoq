@@ -1,11 +1,11 @@
-import { ConsoleContextHelper } from '../core/ConsoleContext';
-import { WebContextHelper } from '../core/WebContext';
+import { ConsoleCtx } from '../core/ConsoleContext';
+import { WebCtx } from '../core/WebContext';
 
 export type Next = () => Promise<any>;
 
-export type MixSlotCtx<Props = {}, State = {}> = (ctx: WebContextHelper<Props, State> | ConsoleContextHelper<Props, State>, next: Next) => any;
-export type WebSlotCtx<Props = {}, State = {}> = (ctx: WebContextHelper<Props, State>, next: Next) => any;
-export type ConsoleSlotCtx<Props = {}, State = {}> = (ctx: ConsoleContextHelper<Props, State>, next: Next) => any;
+export type MixSlotCtx<Props = {}, State = {}> = (ctx: WebCtx<Props, State> | ConsoleCtx<Props, State>, next: Next) => any;
+export type WebSlotCtx<Props = {}, State = {}> = (ctx: WebCtx<Props, State>, next: Next) => any;
+export type ConsoleSlotCtx<Props = {}, State = {}> = (ctx: ConsoleCtx<Props, State>, next: Next) => any;
 
 type SlotCtx<Type, Props = {}, State = {}> = Type extends Slot.Mix
   ? MixSlotCtx<Props, State>

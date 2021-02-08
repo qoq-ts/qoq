@@ -1,4 +1,4 @@
-import { ConsoleContextHelper } from '../core/ConsoleContext';
+import { ConsoleCtx } from '../core/ConsoleContext';
 import { Slot, ConsoleSlotCtx, Next } from '../slot/Slot';
 import { SlotManager } from '../slot/SlotManager';
 import { compose, Composer } from '../util/compose';
@@ -47,7 +47,7 @@ export class ConsoleRouter<Props = any, State = any> extends Router<Slot.Console
     };
   }
 
-  protected reset(ctx: ConsoleContextHelper, next: Next) {
+  protected reset(ctx: ConsoleCtx, next: Next) {
     ctx.commandMatched = true;
     // @ts-expect-error
     ctx.options = undefined;

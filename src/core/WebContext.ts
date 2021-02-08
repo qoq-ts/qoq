@@ -8,7 +8,7 @@ import { WebRequest } from './WebRequest';
 import { Context } from './Context';
 import Cookies from 'cookies';
 
-export type WebContextHelper<Props = {}, State = {}> = WebContext<Props, State> & Props;
+export type WebCtx<Props = {}, State = {}> = WebContext<Props, State> & Props;
 
 interface CookieApi {
   get(key: string, options?: Cookies.GetOption): string | undefined;

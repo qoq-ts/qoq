@@ -2,7 +2,7 @@ import yargs from 'yargs/yargs';
 import { Context } from './Context';
 import { ConsoleApplication } from './ConsoleApplication';
 
-export type ConsoleContextHelper<Props = {}, State = {}> = ConsoleContext<Props, State> & Props;
+export type ConsoleCtx<Props = {}, State = {}> = ConsoleContext<Props, State> & Props;
 
 export class ConsoleContext<Props = {}, State = {}> extends Context<Props, State> {
   public readonly app: ConsoleApplication;
