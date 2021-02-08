@@ -82,15 +82,20 @@ export class WebRouter<Props = any, State = any> extends Router<Slot.Web | Slot.
 
         if (params) {
           middleware.push(
-            (_ctx, _next) => {
+            async (_ctx, _next) => {
               const { request } = _ctx;
 
-              // Reset dynamic data
+              // @ts-expect-error
+              _ctx['query'] = _ctx['body'] = _ctx['params'] = undefined;
               // @ts-expect-error
               request['query'] = request['body'] = request['params'] = undefined;
               request.rawParams = params;
 
-              return _next();
+              await _next();
+
+              // @ts-expect-error
+              // rollback to original query
+              _ctx['query'] = request['query'] = request._query;
             },
             ...builder.getSlots(),
           );
