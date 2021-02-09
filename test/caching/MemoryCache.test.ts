@@ -34,6 +34,12 @@ describe('Memory Cache', () => {
     expect(await cache.get('hello')).to.null;
   });
 
+  it ('can use exists', async () => {
+    expect(await cache.exists('hello')).to.be.false;
+    await cache.set('hello', 'world');
+    expect(await cache.exists('hello')).to.be.true;
+  });
+
   it ('can add value only once', async () => {
     expect(await cache.add('hello', 'world')).to.be.true;
     expect(await cache.get('hello')).to.equal('world');
