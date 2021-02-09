@@ -1,13 +1,13 @@
 import fs from 'fs';
 import path from 'path';
 import mkdirp from 'mkdirp';
+import rimraf from 'rimraf';
 import { BaseCache, BaseCacheOptions } from './BaseCache';
 import { createHash } from 'crypto';
 
 export interface FileCacheOptions extends BaseCacheOptions {
   slot: 'FileCache';
   dir: string;
-  db?: number;
 }
 
 interface FileData {
@@ -25,7 +25,7 @@ export class FileCache extends BaseCache {
     mkdirp.sync(this.dir);
   }
 
-  protected async getValue(key: string): Promise<any> {
+  protected async getValue(key: string): Promise<string | null> {
     const filePath = this.getFilePath(key);
 
     if (!fs.existsSync(filePath)) {
@@ -43,27 +43,17 @@ export class FileCache extends BaseCache {
     return null;
   }
 
-  protected async setValue(key: string, value: string, duration: number): Promise<boolean> {
+  protected async setValue(key: string, value: string, ttl?: number): Promise<boolean> {
     const filePath = this.getFilePath(key);
     const serialize: FileData = {
       k: key,
       v: value,
-      ttl: duration === 0 ? 0 : Date.now() + duration,
+      ttl: ttl === undefined ? 0 : Date.now() + ttl,
     };
 
     mkdirp.sync(path.dirname(filePath));
     fs.writeFileSync(filePath, JSON.stringify(serialize));
     return true;
-  }
-
-  protected async addValue(key: string, value: string, duration: number): Promise<boolean> {
-    const exist = await this.getValue(key);
-
-    if (exist === null) {
-      return this.setValue(key, value, duration);
-    }
-
-    return false;
   }
 
   protected async deleteValue(key: string): Promise<boolean> {
@@ -75,30 +65,11 @@ export class FileCache extends BaseCache {
   }
 
   protected async deleteAllValues(): Promise<boolean> {
-    if (fs.existsSync(this.dir)) {
-      this.deleteDirs(this.dir);
-      fs.rmdirSync(this.dir);
-    }
-
-    return true;
-  }
-
-  protected deleteDirs(storePath: string) {
-    const files = fs.readdirSync(storePath);
-
-    files.forEach((file) => {
-      if (file === '.' || file === '..') {
-        return;
-      }
-
-      const fullFilePath = path.join(storePath, file);
-
-      if (fs.statSync(fullFilePath).isDirectory()) {
-        this.deleteDirs(fullFilePath);
-        fs.rmdirSync(fullFilePath);
-      } else {
-        fs.unlinkSync(fullFilePath);
-      }
+    return new Promise((resolve) => {
+      // rimraf recommend to use async instead of rimraf.sync
+      rimraf(this.dir, (err) => {
+        resolve(!err);
+      });
     });
   }
 

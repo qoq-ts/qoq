@@ -3,16 +3,13 @@ import { createHash } from 'crypto';
 export type BaseCacheOptions = {
   slot: string;
   keyPrefix?: string;
-  ttl?: number;
 };
 
 export abstract class BaseCache {
   protected readonly keyPrefix: string;
-  protected readonly defaultTTL: number;
 
   constructor(config: BaseCacheOptions) {
     this.keyPrefix = config.keyPrefix ?? '';
-    this.defaultTTL = config.ttl ?? 0;
   }
 
   async exists(key: string): Promise<boolean> {
@@ -40,7 +37,7 @@ export abstract class BaseCache {
     }
   }
 
-  async getOrSet<T extends string | number | object | boolean>(key: string, orSet: () => T | Promise<T>, duration: number = this.defaultTTL): Promise<T> {
+  async getOrSet<T extends string | number | object | boolean>(key: string, orSet: () => T | Promise<T>, ttl?: number): Promise<T> {
     let value: T | null = await this.get(key);
 
     if (value !== null) {
@@ -48,22 +45,22 @@ export abstract class BaseCache {
     }
 
     value = await orSet();
-    await this.set(key, value, duration);
+    await this.set(key, value, ttl);
     return value;
   }
 
-  async set(key: string, value: string | number | object | boolean, duration: number = this.defaultTTL): Promise<boolean> {
+  async set(key: string, value: string | number | object | boolean, ttl?: number): Promise<boolean> {
     const hashKey = this.buildKey(key);
     const wrappedValue = JSON.stringify(value);
 
-    return this.setValue(hashKey, wrappedValue, duration);
+    return this.setValue(hashKey, wrappedValue, ttl);
   }
 
-  async add(key: string, value: any, duration: number = this.defaultTTL): Promise<boolean> {
+  async add(key: string, value: any, ttl?: number): Promise<boolean> {
     const hashKey = this.buildKey(key);
     const wrappedValue = JSON.stringify(value);
 
-    return this.addValue(hashKey, wrappedValue, duration);
+    return this.addValue(hashKey, wrappedValue, ttl);
   }
 
   async delete(key: string): Promise<boolean> {
@@ -81,9 +78,18 @@ export abstract class BaseCache {
     return this.keyPrefix + hashKey;
   }
 
+  protected async addValue(key: string, value: string, ttl?: number): Promise<boolean> {
+    const exist = await this.exists(key);
+
+    if (!exist) {
+      return this.setValue(key, value, ttl);
+    }
+
+    return false;
+  }
+
   protected abstract getValue(key: string): Promise<string | null>;
-  protected abstract setValue(key: string, value: string, duration: number): Promise<boolean>;
-  protected abstract addValue(key: string, value: string, duration: number): Promise<boolean>;
+  protected abstract setValue(key: string, value: string, ttl?: number): Promise<boolean>;
   protected abstract deleteValue(key: string): Promise<boolean>;
   protected abstract deleteAllValues(): Promise<boolean>;
 }

@@ -1,62 +1,42 @@
+import LRUCache from 'lru-cache';
 import { BaseCache, BaseCacheOptions } from './BaseCache';
 
 export interface MemoryCacheOptions extends BaseCacheOptions {
   slot: 'MemoryCache';
+  // The maximum size of the cache, default to `Infinity`
+  max?: number;
 }
 
-interface MemoryData {
-  k: string;
-  v: string;
-  ttl: number;
-};
-
 export class MemoryCache extends BaseCache {
-  private data: MemoryData[] = [];
+  private readonly lru: LRUCache<string, string>;
 
-  protected async getValue(key: string): Promise<any> {
-    const data = this.data.find((item) => item.k === key);
-
-    if (data && (data.ttl === 0 || data.ttl > Date.now())) {
-      return data.v;
-    }
-
-    return null;
+  constructor(options: MemoryCacheOptions) {
+    super(options);
+    this.lru = new LRUCache<string, string>({
+      max: options.max,
+    });
   }
 
-  protected async setValue(key: string, value: string, duration: number): Promise<boolean> {
-    const index = this.data.findIndex((item) => item.k === key);
-    const serialize: MemoryData = {
-      k: key,
-      v: value,
-      ttl: duration === 0 ? 0 : Date.now() + duration,
-    };
-
-    if (index >= 0) {
-      this.data[index] = serialize;
-    } else {
-      this.data.push(serialize);
-    }
-
-    return true;
+  public async exists(key: string): Promise<boolean> {
+    return this.lru.has(this.buildKey(key));
   }
 
-  protected async addValue(key: string, value: string, duration: number): Promise<boolean> {
-    const exist = await this.getValue(key);
+  protected async getValue(key: string): Promise<string | null> {
+    const data = this.lru.get(key);
+    return data === undefined ? null : data;
+  }
 
-    if (exist === null) {
-      return this.setValue(key, value, duration);
-    }
-
-    return false;
+  protected async setValue(key: string, value: string, ttl?: number): Promise<boolean> {
+    return this.lru.set(key, value, ttl);
   }
 
   protected async deleteValue(key: string): Promise<boolean> {
-    this.data = this.data.filter((item) => item.k !== key);
+    this.lru.del(key);
     return true;
   }
 
   protected async deleteAllValues(): Promise<boolean> {
-    this.data = [];
+    this.lru.reset();
     return true;
   }
 }
