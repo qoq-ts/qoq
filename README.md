@@ -10,6 +10,7 @@ Qoq is a restful node framework with real type checking, for saving time and avo
 [![License](https://img.shields.io/github/license/qoq-ts/qoq)](https://github.com/qoq-ts/qoq/blob/master/LICENSE)
 [![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/qoq-ts/qoq/CI/master)](https://github.com/qoq-ts/qoq/actions)
 [![Codecov](https://img.shields.io/codecov/c/github/qoq-ts/qoq)](https://codecov.io/gh/qoq-ts/qoq)
+[![npm](https://img.shields.io/npm/v/qoq)](https://www.npmjs.com/package/qoq)
 
 # Features
 
