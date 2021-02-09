@@ -8,35 +8,35 @@ export interface MemoryCacheOptions extends BaseCacheOptions {
 }
 
 export class MemoryCache extends BaseCache {
-  private readonly lru: LRUCache<string, string>;
+  private readonly cache: LRUCache<string, string>;
 
   constructor(options: MemoryCacheOptions) {
     super(options);
-    this.lru = new LRUCache<string, string>({
+    this.cache = new LRUCache<string, string>({
       max: options.max,
     });
   }
 
   public async exists(key: string): Promise<boolean> {
-    return this.lru.has(this.buildKey(key));
+    return this.cache.has(this.buildKey(key));
   }
 
   protected async getValue(key: string): Promise<string | null> {
-    const data = this.lru.get(key);
+    const data = this.cache.get(key);
     return data === undefined ? null : data;
   }
 
   protected async setValue(key: string, value: string, ttl?: number): Promise<boolean> {
-    return this.lru.set(key, value, ttl);
+    return this.cache.set(key, value, ttl);
   }
 
   protected async deleteValue(key: string): Promise<boolean> {
-    this.lru.del(key);
+    this.cache.del(key);
     return true;
   }
 
   protected async deleteAllValues(): Promise<boolean> {
-    this.lru.reset();
+    this.cache.reset();
     return true;
   }
 }

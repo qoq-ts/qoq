@@ -3,9 +3,8 @@ import fs from 'fs';
 import os from 'os';
 import { join } from 'path';
 import sleep from 'sleep-promise';
-import rimraf from 'rimraf';
-import { FileCache } from '../../src/caching/FileCache';
 import { createHash } from 'crypto';
+import { FileCache } from '../../src';
 
 describe('File Cache', () => {
   let cache: FileCache;
@@ -14,12 +13,12 @@ describe('File Cache', () => {
   beforeEach(() => {
     cache = new FileCache({
       slot: 'FileCache',
-      dir: tempDir,
+      cacheDir: tempDir,
     });
   });
 
-  afterEach(() => {
-    rimraf.sync(tempDir);
+  afterEach(async () => {
+    await cache.deleteAll();
   });
 
   it ('can set anything (string, number, object)', async () => {
@@ -40,7 +39,7 @@ describe('File Cache', () => {
     await sleep(300);
     expect(await cache.get('hello')).to.equal('world');
 
-    await sleep(200);
+    await sleep(202);
     expect(await cache.get('hello')).to.null;
   });
 
@@ -56,7 +55,7 @@ describe('File Cache', () => {
     expect(await cache.add('hello', 'world', 500)).to.be.true;
     expect(await cache.add('hello', 'next data', 500)).to.be.false;
     expect(await cache.get('hello')).to.equal('world');
-    await sleep(500);
+    await sleep(502);
     expect(await cache.add('hello', 'next data', 500)).to.be.true;
     expect(await cache.get('hello')).to.equal('next data');
   });
@@ -85,7 +84,7 @@ describe('File Cache', () => {
 
     cache = new FileCache({
       slot: 'FileCache',
-      dir: tempDir,
+      cacheDir: tempDir,
       keyPrefix: 'cache-',
     });
 
@@ -106,7 +105,7 @@ describe('File Cache', () => {
 
     expect(await cache.getOrSet('test1', () => 'test data', 500)).to.equal('test data');
     expect(await cache.getOrSet('test1', () => 'new test data', 500)).to.equal('test data');
-    await sleep(500);
+    await sleep(502);
     expect(await cache.getOrSet('test1', () => 'new test data', 500)).to.equal('new test data');
   });
 

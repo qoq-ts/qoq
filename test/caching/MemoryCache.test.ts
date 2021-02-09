@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { createHash } from 'crypto';
 import sleep from 'sleep-promise';
-import { MemoryCache } from '../../src/caching/MemoryCache';
+import { MemoryCache } from '../../src';
 
 describe('Memory Cache', () => {
   let cache: MemoryCache;
@@ -30,7 +30,7 @@ describe('Memory Cache', () => {
     await sleep(300);
     expect(await cache.get('hello')).to.equal('world');
 
-    await sleep(200);
+    await sleep(202);
     expect(await cache.get('hello')).to.null;
   });
 
@@ -46,7 +46,7 @@ describe('Memory Cache', () => {
     expect(await cache.add('hello', 'world', 500)).to.be.true;
     expect(await cache.add('hello', 'next data', 500)).to.be.false;
     expect(await cache.get('hello')).to.equal('world');
-    await sleep(500);
+    await sleep(502);
     expect(await cache.add('hello', 'next data', 500)).to.be.true;
     expect(await cache.get('hello')).to.equal('next data');
   });
@@ -95,7 +95,7 @@ describe('Memory Cache', () => {
 
     expect(await cache.getOrSet('test1', () => 'test data', 500)).to.equal('test data');
     expect(await cache.getOrSet('test1', () => 'new test data', 500)).to.equal('test data');
-    await sleep(500);
+    await sleep(502);
     expect(await cache.getOrSet('test1', () => 'new test data', 500)).to.equal('new test data');
   });
 

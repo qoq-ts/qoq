@@ -7,13 +7,13 @@ import { createHash } from 'crypto';
 
 export interface FileCacheOptions extends BaseCacheOptions {
   slot: 'FileCache';
-  dir: string;
+  cacheDir: string;
 }
 
 interface FileData {
   k: string;
   v: string;
-  ttl: number;
+  t: number;
 };
 
 export class FileCache extends BaseCache {
@@ -21,7 +21,7 @@ export class FileCache extends BaseCache {
 
   constructor(config: FileCacheOptions) {
     super(config);
-    this.dir = path.resolve(config.dir);
+    this.dir = path.resolve(config.cacheDir);
     mkdirp.sync(this.dir);
   }
 
@@ -35,7 +35,7 @@ export class FileCache extends BaseCache {
     try {
       const data: FileData = JSON.parse(fs.readFileSync(filePath).toString());
 
-      if (data && data.k === key && (data.ttl === 0 || data.ttl > Date.now())) {
+      if (data && data.k === key && (data.t === -1 || data.t > Date.now())) {
         return data.v;
       }
     } catch {}
@@ -48,7 +48,7 @@ export class FileCache extends BaseCache {
     const serialize: FileData = {
       k: key,
       v: value,
-      ttl: ttl === undefined ? 0 : Date.now() + ttl,
+      t: ttl === undefined ? -1 : Date.now() + ttl,
     };
 
     mkdirp.sync(path.dirname(filePath));

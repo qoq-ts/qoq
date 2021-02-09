@@ -9,8 +9,8 @@ export { createConfig } from './util/createConfig';
 export { validator } from './validator';
 export { WebApplication } from './core/WebApplication';
 export { ConsoleApplication } from './core/ConsoleApplication';
-export { FileCacheOptions } from './caching/FileCache';
-export { MemoryCacheOptions } from './caching/MemoryCache';
+export { FileCacheOptions, FileCache } from './caching/FileCache';
+export { MemoryCacheOptions, MemoryCache } from './caching/MemoryCache';
 
 // Advanced
 export { compose, Composer } from './util/compose';

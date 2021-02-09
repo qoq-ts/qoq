@@ -1,5 +1,6 @@
-import { BaseCache, BaseCacheOptions } from '../caching/BaseCache';
-import { Slot } from './Slot';
+import { existsSync } from 'fs';
+import { basename, dirname, resolve } from 'path';
+import { BaseCache, BaseCacheOptions, Slot } from '..';
 
 type ChildCache<T> = new (config: T) => BaseCache;
 
@@ -26,28 +27,24 @@ export class Cache<T extends BaseCacheOptions> extends Slot<Slot.Mix, CacheConte
   }
 
   protected getCache(slot: string): ChildCache<T> {
-    const paths = slot.split('/');
-    let RealCache: ChildCache<T>;
-
-    try {
-      if (paths.length < 1 || paths.length > 2) {
-        throw new Error();
-      }
-
-      if (paths.length === 1) {
-        RealCache = this.findRealCache(require(`../caching/${paths[0]}`), paths[0]!);
-      } else {
-        RealCache = this.findRealCache(require(paths[0]!), paths[1]!);
-      }
-    } catch (e) {
-      throw new TypeError(`Cache slot ${slot} is invalid`);
+    if (!slot.includes('/')) {
+      // From built-in
+      return this.findRealCache(require(`../caching/${slot}`), slot);
+    } else if (
+      existsSync(slot) ||
+      existsSync(slot + '.js') ||
+      existsSync(slot + '.ts')
+    ) {
+      // From local
+      return this.findRealCache(require(resolve(slot)), basename(slot));
+    } else {
+      // From node_modules
+      return this.findRealCache(require(dirname(slot)), basename(slot));
     }
-
-    return RealCache;
   }
 
   protected findRealCache(modules: Record<string, any>, name: string): ChildCache<T> {
-    const custom: ChildCache<T> = modules[name] || (modules.default && modules.default[name]);
+    const custom: ChildCache<T> = modules[name] || modules.default;
 
     if (
       custom &&
