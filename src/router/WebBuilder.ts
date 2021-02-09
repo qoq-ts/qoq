@@ -1,6 +1,6 @@
 import { pathToRegexp, Key } from 'path-to-regexp';
 import { Action } from '../slot/Action';
-import { Body, BodyValidation } from '../slot/Body';
+import { Payload, PayloadValidation } from '../slot/Payload';
 import { Param, ParamValidation } from '../slot/Param';
 import { Query, QueryValidation } from '../slot/Query';
 import { Slot, WebSlotCtx } from '../slot/Slot';
@@ -53,13 +53,16 @@ export class WebBuilder<Props = any, State = any, Param extends string = string>
     return this;
   }
 
-  public body<T extends { [key: string]: Validator }>(rules: T): WebBuilder<Props & BodyValidation<T>, State, Param> {
+  /**
+   * An alias of request body.
+   */
+  public payload<T extends { [key: string]: Validator }>(rules: T): WebBuilder<Props & PayloadValidation<T>, State, Param> {
     this.bodyData = rules;
-    this.use(new Body(rules));
+    this.use(new Payload(rules));
     return this;
   }
 
-  public params<T extends (Param extends string ? { [key in Param]: Validator } : never)>(rules: T): WebBuilder<Props & ParamValidation<T>, State, Param> {
+  public params<T extends { [key in Param]: Validator }>(rules: T): WebBuilder<Props & ParamValidation<T>, State, Param> {
     this.paramData = rules;
     this.use(new Param(rules));
     return this;

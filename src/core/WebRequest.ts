@@ -5,7 +5,7 @@ import contentType from 'content-type';
 import typeIs from 'type-is';
 import accepts, { Accepts } from 'accepts';
 import fresh from 'fresh';
-import qs from 'querystring';
+import qs from 'qs';
 import { format as formatUrl, URL } from 'url';
 import querystring from 'querystring';
 import { WebApplication } from './WebApplication';
@@ -18,7 +18,6 @@ export class WebRequest {
   public/*protected*/ readonly app: WebApplication;
   public/*protected*/ ctx?: WebContext;
   public/*protected*/ res?: ServerResponse;
-  public/*protected*/ rawParams: Record<string, string> = {};
   protected _accept?: Accepts;
   protected _querycache?: Record<string, object>;
   protected memoizedURL?: URL;
@@ -341,9 +340,13 @@ export class WebRequest {
     };
   }
 
-  public/*private*/ get _query(): object {
+  public/*private*/ get rawQuery(): object {
     const str = this.querystring;
     const cache = this._querycache = this._querycache || {};
     return cache[str] || (cache[str] = qs.parse(str));
+  }
+
+  public get query(): object {
+    return this.rawQuery;
   }
 }

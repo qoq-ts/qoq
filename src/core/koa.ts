@@ -28,8 +28,7 @@ new Alias(WebRequest)
 
   .getter('header', 'getHeader', true)
   .getter('type', 'contentType')
-  .getter('length', 'contentLength')
-  .getter('query', '_query');
+  .getter('length', 'contentLength');
 
 new Delegates(WebContext.prototype, 'response')
   .method('attachment')

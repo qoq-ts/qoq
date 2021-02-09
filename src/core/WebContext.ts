@@ -20,6 +20,7 @@ export class WebContext<Props = {}, State = {}> extends Context<Props, State> {
   public readonly app: WebApplication;
   public readonly request: WebRequest;
   public readonly response: WebResponse;
+  public/*protected*/ _params?: object;
   public/*protected*/ readonly req: IncomingMessage;
   public/*protected*/ readonly res: ServerResponse;
   protected _cookies?: CookieApi;
