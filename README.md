@@ -37,3 +37,134 @@ yarn add qoq
 | [qoq-response-time](https://github.com/qoq-ts/qoq-response-time) | [![npm](https://img.shields.io/npm/v/qoq-response-time)](https://www.npmjs.com/package/qoq-response-time) | Web | Header with X-Response-Time |
 | [qoq-pretty-json](https://github.com/qoq-ts/qoq-pretty-json) | [![npm](https://img.shields.io/npm/v/qoq-pretty-json)](https://www.npmjs.com/package/qoq-pretty-json) | Web | format JSON |
 | [qoq-static](https://github.com/qoq-ts/qoq-static) | [![npm](https://img.shields.io/npm/v/qoq-static)](https://www.npmjs.com/package/qoq-static) | Web | static file serve |
+
+# Usage
+### Create web app
+```typescript
+// src/index.ts
+import { WebApplication } from 'qoq';
+
+const app = new WebApplication({
+  routerDir: './src/routers',
+});
+
+app.listen(3000, () => {
+  console.log('Server started!');
+});
+```
+### Create slots (middleware)
+```typescript
+// src/bootstrap/web.ts
+import { WebSlotManager } from 'qoq';
+import { Cors } from 'qoq-cors';
+import { Redis } from 'qoq-redis';
+
+export const webSlots = WebslotManager.use(new Cors()).use(new Redis()).use(...);
+export const advancedSlots = webSlots.use(...).use(...);
+```
+### Create router
+```typescript
+// src/routers/index.ts
+import { WebRouter, validator } from 'qoq';
+import { webSlots } from '../bootstrap/web';
+
+export const router = new WebRouter({
+  prefix: '/',
+  slots: webSlots
+    // as router group slots
+    .use(new CustomSlot())
+    .use(...),
+});
+
+router
+  .get('/user/:id')
+  .params({
+    id: validator.number,
+  })
+  .action(async (ctx) => {
+    const userId = ctx.params.id; // TS type annotation: number
+    const user = await ctx.redis.get(`user-${userId}`);
+
+    !user && ctx.throw(400, 'user not found');
+    ctx.send(user);
+  });
+
+router
+  .get('/users')
+  .query({
+    // page is required, otherwise a 400 bad-request error will be thrown.
+    page: validator.number,
+    // pageSize is optional and will set to 10 when data is undefined/null.
+    pageSize: validator.number.default(10),
+  })
+  .action(async (ctx) => {
+    // TS type annotation: { page: number; pageSize: number }
+    const { page, pageSize } = ctx.query;
+    const users = await User.findAll({
+      offset: (page - 1) * pageSize,
+      limit: pageSize,
+    });
+
+    ctx.send(users, 200);
+  });
+```
+
+### Create console app
+```typescript
+// src/index.ts
+import { ConsoleApplication } from 'qoq';
+
+const app = new ConsoleApplication({
+  routerDir: './src/commands',
+});
+
+app.run();
+```
+
+### Create console router
+```typescript
+// src/commands/index.ts
+import { ConsoleRouter, validator } from 'qoq';
+import { webSlots } from '../bootstrap/web';
+
+export const router = new Webrouter({
+  prefix: '/',
+  slots: consoleSlots
+    // as router group slots
+    .use(new CustomSlot()),
+});
+
+router
+  .command('x:schedule')
+  .options({
+    dateFrom: validator.string.optional(),
+    dateTo: validator.string.optional(),
+  })
+  .alias({
+    dateFrom: 'f',
+    dateTo: 't',
+  })
+  .action(async (ctx) => {
+    // TS type annotation: { dateFrom: string | undefined; dateTo: string | undefined }
+    const { dateFrom, dateTo } = ctx.options;
+
+    // ...your business
+    console.log('Done!');
+  });
+```
+You can execute this command like this:
+```bash
+qoq x:schedule
+# or
+qoq x:schedule --dateFrom '..' --dateTo '..'
+# or
+qoq x:schedule -f '..' -t '..'
+```
+For testing, you can execute like this:
+```typescript
+it ('can do something', async () => {
+  const app = new ConsoleApplication();
+  const ctx = await app.run('x:schedule', '-f', '..', '-t', '..');
+  expect(...);
+});
+```
