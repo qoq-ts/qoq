@@ -33,7 +33,7 @@ describe('Cache Slot', () => {
 
   it ('can import cache engin from other module', () => {
     const options = createConfig<CustomCacheOptions>({
-      slot: './test/caching/custom/CustomCache',
+      slot: './test/slot/custom/CustomCache',
       test: true,
     });
 
