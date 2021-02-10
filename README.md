@@ -45,6 +45,7 @@ yarn add qoq
 import { WebApplication } from 'qoq';
 
 const app = new WebApplication({
+  // mount routers automatically
   routerDir: './src/routers',
 });
 
@@ -52,17 +53,18 @@ app.listen(3000, () => {
   console.log('Server started!');
 });
 ```
-### Create slots (middleware)
+### Create web slots (middleware)
 ```typescript
 // src/bootstrap/web.ts
 import { WebSlotManager } from 'qoq';
 import { Cors } from 'qoq-cors';
 import { Redis } from 'qoq-redis';
 
+// as global slots(middleware)
 export const webSlots = WebslotManager.use(new Cors()).use(new Redis()).use(...);
 export const advancedSlots = webSlots.use(...).use(...);
 ```
-### Create router
+### Create web router
 ```typescript
 // src/routers/index.ts
 import { WebRouter, validator } from 'qoq';
@@ -70,10 +72,8 @@ import { webSlots } from '../bootstrap/web';
 
 export const router = new WebRouter({
   prefix: '/',
-  slots: webSlots
-    // as router group slots
-    .use(new CustomSlot())
-    .use(...),
+  // slots behind webSlots will be convert to router group slots
+  slots: webSlots.use(new CustomSlot()).use(...),
 });
 
 router
@@ -105,7 +105,21 @@ router
       limit: pageSize,
     });
 
-    ctx.send(users, 200);
+    ctx.send(users);
+  });
+
+router
+  .post('/user')
+  .payload({
+    name: validator.string,
+    vip: validator.boolean.default(false),
+    homepage: validator.url.optional(),
+  })
+  .action(async (ctx) => {
+    // TS type annotation of payload: { name: string; vip: boolean; homepage?: string }
+    const user = await User.create(ctx.payload);
+
+    ctx.send(user, 201);
   });
 ```
 
@@ -115,6 +129,7 @@ router
 import { ConsoleApplication } from 'qoq';
 
 const app = new ConsoleApplication({
+  // mount routers automatically
   routerDir: './src/commands',
 });
 
@@ -127,7 +142,7 @@ app.run();
 import { ConsoleRouter, validator } from 'qoq';
 import { webSlots } from '../bootstrap/web';
 
-export const router = new Webrouter({
+export const router = new ConsoleRouter({
   prefix: '/',
   slots: consoleSlots
     // as router group slots
@@ -145,7 +160,7 @@ router
     dateTo: 't',
   })
   .action(async (ctx) => {
-    // TS type annotation: { dateFrom: string | undefined; dateTo: string | undefined }
+    // TS type annotation: { dateFrom?: string; dateTo?: string }
     const { dateFrom, dateTo } = ctx.options;
 
     // ...your business
@@ -154,17 +169,26 @@ router
 ```
 You can execute this command like this:
 ```bash
-qoq x:schedule
+npx qoq x:schedule
 # or
-qoq x:schedule --dateFrom '..' --dateTo '..'
+npx qoq x:schedule --dateFrom '..' --dateTo '..'
 # or
-qoq x:schedule -f '..' -t '..'
+npx qoq x:schedule -f '..' -t '..'
 ```
-For testing, you can execute like this:
+For testing, feel free to execute command as follows:
 ```typescript
-it ('can do something', async () => {
+test ('can do something', async () => {
   const app = new ConsoleApplication();
   const ctx = await app.run('x:schedule', '-f', '..', '-t', '..');
   expect(...);
 });
+```
+
+### Cli
+```bash
+npx qoq -h
+# or
+node ./src/console.js -h
+# or
+ts-node ./src/console.ts -h
 ```
