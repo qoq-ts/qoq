@@ -3,7 +3,7 @@ import { existsSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
 import { createConfig, FileCacheOptions, MemoryCacheOptions, compose, Cache, FileCache, MemoryCache } from '../../src';
-import CustomCache, { CustomCacheOptions } from './custom/CustomCache';
+import CustomCache, { CustomCacheOptions } from '../fixture/CustomCache';
 
 describe('Cache Slot', () => {
   it('can import file cache', () => {
@@ -33,7 +33,7 @@ describe('Cache Slot', () => {
 
   it ('can import cache engin from other module', () => {
     const options = createConfig<CustomCacheOptions>({
-      slot: './test/slot/custom/CustomCache',
+      slot: './test/fixture/CustomCache',
       test: true,
     });
 

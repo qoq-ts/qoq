@@ -1,7 +1,7 @@
-import { BaseCache } from '../../../src';
+import { BaseCache } from '../../src';
 
 export interface CustomCacheOptions {
-  slot: './test/slot/custom/CustomCache',
+  slot: './test/fixture/CustomCache',
   test: boolean;
 }
 

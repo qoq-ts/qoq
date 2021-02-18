@@ -5,6 +5,10 @@ export class SlotManager<T extends Slot.Mix | Slot.Web | Slot.Console, Props = {
   protected isTrunk: boolean = false;
   protected routers: Array<WebSlotCtx | ConsoleSlotCtx> = [];
 
+  public static use<T extends Slot.Mix | Slot.Web | Slot.Console, P, S>(this: new (...args: any[]) => SlotManager<T, any, any>, slot: Slot<T, P, S> | SlotManager<T, P, S>): SlotManager<T, P, S> {
+    return new SlotManager([]).use(slot);
+  }
+
   constructor(protected slots: Slot<T, any, any>[] = []) {};
 
   use<P, S>(slot: Slot<T, P, S> | SlotManager<T, P, S>): SlotManager<T, Props & P, State & S> {
@@ -20,8 +24,11 @@ export class SlotManager<T extends Slot.Mix | Slot.Web | Slot.Console, Props = {
     let mixData: Mix = [];
     let prevManager: SlotManager<T, any, any> | null = this;
 
-    while (prevManager && prevManager.isTrunk) {
-      mixData = ([] as Mix).concat(prevManager.slots, prevManager.routers, mixData);
+    while (prevManager) {
+      if (prevManager.isTrunk) {
+        mixData = ([] as Mix).concat(prevManager.slots, prevManager.routers, mixData);
+      }
+      prevManager = prevManager.prev;
     }
 
     return mixData;
@@ -34,7 +41,6 @@ export class SlotManager<T extends Slot.Mix | Slot.Web | Slot.Console, Props = {
       if (prevManager.isTrunk) {
         return prevManager;
       }
-
       prevManager = prevManager.prev;
     }
 
@@ -54,24 +60,19 @@ export class SlotManager<T extends Slot.Mix | Slot.Web | Slot.Console, Props = {
   }
 
   public/*protected*/ setTrunk(): void {
-    let prev: SlotManager<T, any, any> | null = this;
+    let prevManager: SlotManager<T, any, any> | null = this;
 
-    do { prev.isTrunk = true; } while (prev = prev.prev);
+    do { prevManager.isTrunk = true; } while (prevManager = prevManager.prev);
   }
 
   public/*protected*/ mountRouter(router: WebSlotCtx | ConsoleSlotCtx) {
+    if (!this.isTrunk) {
+      throw new ReferenceError('Only tree trunk can mount router');
+    }
     this.routers.push(router);
   }
 }
 
-export class WebSlotManager<Props = {}, State = {}> extends SlotManager<Slot.Mix | Slot.Web, Props, State> {
-  public static use<P, S>(slot: Slot<Slot.Mix | Slot.Web, P, S> | WebSlotManager<P, S>): WebSlotManager<P, S> {
-    return new WebSlotManager([]).use(slot);
-  }
-}
+export class WebSlotManager<Props = {}, State = {}> extends SlotManager<Slot.Mix | Slot.Web, Props, State> {}
 
-export class ConsoleSlotManager<Props = {}, State = {}> extends SlotManager<Slot.Mix | Slot.Console, Props, State> {
-  public static use<P, S>(slot: Slot<Slot.Mix | Slot.Console, P, S> | ConsoleSlotManager<P, S>): ConsoleSlotManager<P, S> {
-    return new ConsoleSlotManager([]).use(slot);
-  }
-};
+export class ConsoleSlotManager<Props = {}, State = {}> extends SlotManager<Slot.Mix | Slot.Console, Props, State> {}
