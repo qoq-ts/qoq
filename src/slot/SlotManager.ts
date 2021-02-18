@@ -5,15 +5,18 @@ export class SlotManager<T extends Slot.Mix | Slot.Web | Slot.Console, Props = {
   protected isTrunk: boolean = false;
   protected routers: Array<WebSlotCtx | ConsoleSlotCtx> = [];
 
-  public static use<T extends Slot.Mix | Slot.Web | Slot.Console, P, S>(this: new (...args: any[]) => SlotManager<T, any, any>, slot: Slot<T, P, S> | SlotManager<T, P, S>): SlotManager<T, P, S> {
+  public static use<T extends Slot.Mix | Slot.Web | Slot.Console, P, S>(this: new (...args: any[]) => SlotManager<T, any, any>, slot: Slot<T, P, S> | SlotManager<T, P, S> | null): SlotManager<T, P, S> {
     return new SlotManager([]).use(slot);
   }
 
   constructor(protected slots: Slot<T, any, any>[] = []) {};
 
-  use<P, S>(slot: Slot<T, P, S> | SlotManager<T, P, S>): SlotManager<T, Props & P, State & S> {
-    const manager = new SlotManager(slot instanceof SlotManager ? slot.slots : [slot]);
+  use<P, S>(slot: Slot<T, P, S> | SlotManager<T, P, S> | null): SlotManager<T, Props & P, State & S> {
+    if (slot === null) {
+      return this;
+    }
 
+    const manager = new SlotManager(slot instanceof SlotManager ? slot.slots : [slot]);
     manager.prev = this;
 
     return manager;

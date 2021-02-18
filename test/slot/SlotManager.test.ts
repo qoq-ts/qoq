@@ -79,4 +79,11 @@ describe('Slot manager', () => {
 
     expect(slots.getBranchSlots()[0]).toBeInstanceOf(SlotDemo1);
   });
+
+  it ('can set null to skip slot', () => {
+    const slots = WebSlotManager.use(new SlotDemo1('a'));
+    const slots2 = slots.use(null).use(null);
+
+    expect(slots2).toEqual(slots);
+  });
 });
