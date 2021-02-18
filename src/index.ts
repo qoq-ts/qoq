@@ -9,6 +9,7 @@ export { createConfig } from './util/createConfig';
 export { validator } from './validator';
 export { WebApplication } from './core/WebApplication';
 export { ConsoleApplication } from './core/ConsoleApplication';
+export { Tree } from './core/Tree';
 export { FileCacheOptions, FileCache } from './caching/FileCache';
 export { MemoryCacheOptions, MemoryCache } from './caching/MemoryCache';
 

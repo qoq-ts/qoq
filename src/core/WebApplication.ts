@@ -16,6 +16,8 @@ import { Method } from '../util/Method';
 import { WebRouter } from '../router/WebRouter';
 import cookies from 'cookies';
 import { toArray } from '../util/toArray';
+import { Tree } from './Tree';
+import { WebSlotManager } from '../slot/SlotManager';
 
 interface Options {
   routerDir?: string | string[];
@@ -82,6 +84,7 @@ export class WebApplication extends Application {
     toArray(routers).forEach((router) => {
       this.parseRouters({ default: router });
     });
+    this.refreshTreeTrunk();
 
     return this;
   }
@@ -140,7 +143,7 @@ export class WebApplication extends Application {
 
     ctx.response.res.statusCode = 404;
     onFinished(ctx.response.res, onError);
-    this.composer(ctx)
+    this.compose(ctx)
       .then(() => this.respond(ctx))
       .catch(onError);
   }
@@ -219,5 +222,9 @@ export class WebApplication extends Application {
     response.contentType = 'json';
     response.contentLength = Buffer.byteLength(body);
     return res.end(body);
+  }
+
+  protected getTrunkNode(): WebSlotManager<any, any> {
+    return Tree.getWebTrunk();
   }
 }

@@ -56,13 +56,16 @@ app.listen(3000, () => {
 ### Create web slots (middleware)
 ```typescript
 // src/bootstrap/web.ts
-import { WebSlotManager } from 'qoq';
+import { WebSlotManager, Tree } from 'qoq';
 import { Cors } from 'qoq-cors';
 import { Redis } from 'qoq-redis';
 
-// as global slots(middleware)
 export const webSlots = WebslotManager.use(new Cors()).use(new Redis()).use(...);
 export const advancedSlots = webSlots.use(...).use(...);
+
+// the trunk will always run through
+// until slot or router interrput it ( by skip execute next() ).
+Tree.setWebTrunk(advancedSlots);
 ```
 ### Create web router
 ```typescript

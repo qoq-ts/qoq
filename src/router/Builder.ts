@@ -5,7 +5,7 @@ export abstract class Builder<T extends Slot.Mix | Slot.Console | Slot.Web, Prop
   protected slots = new SlotManager<T, any, any>([]);
 
   public/*protected*/ getSlots(): Slot<T, Props, State>[] {
-    return this.slots.getSlots();
+    return this.slots.getBranchSlots();
   }
 
   public/*protected*/ abstract toJSON(): object;

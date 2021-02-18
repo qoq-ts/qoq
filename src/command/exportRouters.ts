@@ -9,7 +9,7 @@ import { validator } from '../validator';
 import { WebRouter } from '../router/WebRouter';
 
 export const router = new ConsoleRouter({
-  slots: ConsoleSlotManager,
+  slots: new ConsoleSlotManager(),
 });
 
 router

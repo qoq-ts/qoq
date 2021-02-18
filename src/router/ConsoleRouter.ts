@@ -1,7 +1,7 @@
 import { ConsoleCtx } from '../core/ConsoleContext';
 import { Slot, ConsoleSlotCtx, Next } from '../slot/Slot';
 import { SlotManager } from '../slot/SlotManager';
-import { compose, Composer } from '../util/compose';
+import { compose } from '../util/compose';
 import { toArray } from '../util/toArray';
 import { ConsoleBuilder } from './ConsoleBuilder';
 import { Router } from './Router';
@@ -22,8 +22,10 @@ export class ConsoleRouter<Props = any, State = any> extends Router<Slot.Console
     return builder;
   }
 
-  public/*protected*/ createMiddleware(globalToGroup?: Composer): ConsoleSlotCtx {
+  public/*protected*/ createMiddleware(): ConsoleSlotCtx {
     const builders = this.builders;
+    const groupSlots = this.globalSlots.getBranchSlots();
+    const groupCompose = groupSlots.length > 0 && compose(groupSlots);
 
     return (ctx, next) => {
       const { command } = ctx;
@@ -41,7 +43,7 @@ export class ConsoleRouter<Props = any, State = any> extends Router<Slot.Console
         return next();
       }
 
-      globalToGroup && middleware.unshift(globalToGroup);
+      groupCompose && middleware.unshift(groupCompose);
 
       return compose(middleware)(ctx, next);
     };

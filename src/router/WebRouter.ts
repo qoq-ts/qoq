@@ -1,6 +1,6 @@
 import { Slot, WebSlotCtx } from '../slot/Slot';
 import { SlotManager } from '../slot/SlotManager';
-import { compose, Composer } from '../util/compose';
+import { compose } from '../util/compose';
 import { Method } from '../util/Method';
 import { toArray } from '../util/toArray';
 import { Router } from './Router';
@@ -69,8 +69,10 @@ export class WebRouter<Props = any, State = any> extends Router<Slot.Web | Slot.
     return builder;
   }
 
-  public/*protected*/ createMiddleware(globalToGroup?: Composer): WebSlotCtx {
+  public/*protected*/ createMiddleware(): WebSlotCtx {
     const builders = this.builders;
+    const groupSlots = this.globalSlots.getBranchSlots();
+    const groupCompose = groupSlots.length > 0 && compose(groupSlots);
 
     return (ctx, next) => {
       const { path, method } = ctx.request;
@@ -98,7 +100,7 @@ export class WebRouter<Props = any, State = any> extends Router<Slot.Web | Slot.
         return next();
       }
 
-      globalToGroup && middleware.unshift(globalToGroup);
+      groupCompose && middleware.unshift(groupCompose);
 
       return compose(middleware)(ctx, next);
     };

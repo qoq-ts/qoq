@@ -7,6 +7,8 @@ import chalk from 'chalk';
 import { Help } from '../slot/Help';
 import { ConsoleRouter } from '../router/ConsoleRouter';
 import { toArray } from '../util/toArray';
+import { Tree } from './Tree';
+import { ConsoleSlotManager } from '../slot/SlotManager';
 
 interface Options {
   routerDir?: string | string[];
@@ -22,7 +24,7 @@ export class ConsoleApplication extends Application {
       path.join(__dirname, '..', 'command')
     ].concat(options.routerDir || './src/commands');
     super(dir);
-    this.composer.prepend(this.getHelper());
+    this.compose.prepend(this.getHelper());
     this.isChildProcess = false;
   }
 
@@ -46,7 +48,7 @@ export class ConsoleApplication extends Application {
     this.isChildProcess = false;
 
     try {
-      await this.composer(ctx);
+      await this.compose(ctx);
 
       if (!ctx.commandMatched) {
         throw new Error(`No command matches "${ctx.command}"`);
@@ -91,6 +93,7 @@ export class ConsoleApplication extends Application {
     toArray(routers).forEach((router) => {
       this.parseRouters({ default: router });
     });
+    this.refreshTreeTrunk();
 
     return this;
   }
@@ -133,6 +136,10 @@ export class ConsoleApplication extends Application {
         this.getHelper().appendBuilders(item.getBuilders());
       }
     });
+  }
+
+  protected getTrunkNode(): ConsoleSlotManager<any, any> {
+    return Tree.getConsoleTrunk();
   }
 
   public/*protected*/ inspect() {
