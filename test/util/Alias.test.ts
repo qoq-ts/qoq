@@ -1,5 +1,4 @@
 import { Alias } from '../../src/util/Alias';
-import { expect } from 'chai';
 
 describe('Alias', () => {
   it ('can set method alias', () => {
@@ -13,14 +12,14 @@ describe('Alias', () => {
 
     const a = new A();
     // @ts-expect-error
-    expect(a.hello).to.equal(undefined);
-    expect(a.m_hi()).to.equal(a.name);
+    expect(a.hello).toEqual(undefined);
+    expect(a.m_hi()).toEqual(a.name);
 
     new Alias(A).method('hello', 'm_hi');
     // @ts-expect-error
-    expect(typeof a.hello).to.equal('function');
+    expect(typeof a.hello).toEqual('function');
     // @ts-expect-error
-    expect(a.hello()).to.equal(a.name);
+    expect(a.hello()).toEqual(a.name);
   });
 
   it ('can set getter alias', () => {
@@ -34,12 +33,12 @@ describe('Alias', () => {
 
     const a = new A();
     // @ts-expect-error
-    expect(a.hello).to.equal(undefined);
-    expect(a.g_hi).to.equal(a.name);
+    expect(a.hello).toEqual(undefined);
+    expect(a.g_hi).toEqual(a.name);
 
     new Alias(A).getter('hello', 'g_hi');
     // @ts-expect-error
-    expect(a.hello).to.equal(a.name);
+    expect(a.hello).toEqual(a.name);
   });
 
   it ('can set getter alias with method', () => {
@@ -53,12 +52,12 @@ describe('Alias', () => {
 
     const a = new A();
     // @ts-expect-error
-    expect(a.hello).to.equal(undefined);
-    expect(a.m_hi()).to.equal(a.name);
+    expect(a.hello).toEqual(undefined);
+    expect(a.m_hi()).toEqual(a.name);
 
     new Alias(A).getter('hello', 'm_hi', true);
     // @ts-expect-error
-    expect(a.hello).to.equal(a.name);
+    expect(a.hello).toEqual(a.name);
   });
 
   it ('can set setter alias', () => {
@@ -72,14 +71,14 @@ describe('Alias', () => {
 
     const a = new A();
     // @ts-expect-error
-    expect(a.hello).to.equal(undefined);
+    expect(a.hello).toEqual(undefined);
     a.s_hi = 'earth';
-    expect(a.name).to.equal('earth');
+    expect(a.name).toEqual('earth');
 
     new Alias(A).setter('hello', 's_hi');
     // @ts-expect-error
     a.hello = 'world';
-    expect(a.name).to.equal('world');
+    expect(a.name).toEqual('world');
   });
 
   it ('can set setter alias with method', () => {
@@ -93,12 +92,12 @@ describe('Alias', () => {
 
     const a = new A();
     // @ts-expect-error
-    expect(a.hello).to.equal(undefined);
+    expect(a.hello).toEqual(undefined);
 
     new Alias(A).setter('hello', 'm_hi', true);
     // @ts-expect-error
     a.hello = 'world';
-    expect(a.name).to.equal('world');
+    expect(a.name).toEqual('world');
   });
 
   it ('can set access alias', () => {
@@ -116,17 +115,17 @@ describe('Alias', () => {
 
     const a = new A();
     a.hi = 'earth';
-    expect(a.hi).to.equal('earth');
-    expect(a.name).to.equal('earth');
+    expect(a.hi).toEqual('earth');
+    expect(a.name).toEqual('earth');
 
     // @ts-expect-error
-    expect(a.hello).to.equal(undefined);
+    expect(a.hello).toEqual(undefined);
     new Alias(A).access('hello', 'hi');
     // @ts-expect-error
     a.hello = 'world';
      // @ts-expect-error
-    expect(a.hello).to.equal('world');
-    expect(a.name).to.equal('world');
+    expect(a.hello).toEqual('world');
+    expect(a.name).toEqual('world');
   });
 
   it ('should throw error when alias equivalent to from property', () => {
@@ -138,6 +137,6 @@ describe('Alias', () => {
       }
     }
 
-    expect(() => new Alias(A).method('m_hi', 'm_hi')).to.throw(Error);
+    expect(() => new Alias(A).method('m_hi', 'm_hi')).toThrowError();
   });
 });

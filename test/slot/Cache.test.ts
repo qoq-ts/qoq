@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { existsSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
@@ -13,12 +12,12 @@ describe('Cache Slot', () => {
       cacheDir: dir,
     });
 
-    expect(existsSync(dir)).to.be.false;
+    expect(existsSync(dir)).toBeFalsy();
 
     const cache = new Cache(options);
 
-    expect(existsSync(dir)).to.be.true;
-    expect(cache.getIntance()).to.instanceOf(FileCache);
+    expect(existsSync(dir)).toBeTruthy();
+    expect(cache.getIntance()).toBeInstanceOf(FileCache);
   });
 
   it('can import memory cache', () => {
@@ -28,7 +27,7 @@ describe('Cache Slot', () => {
 
     const cache = new Cache(options);
 
-    expect(cache.getIntance()).to.instanceOf(MemoryCache);
+    expect(cache.getIntance()).toBeInstanceOf(MemoryCache);
   });
 
   it ('can import cache engin from other module', () => {
@@ -39,12 +38,12 @@ describe('Cache Slot', () => {
 
     const cache = new Cache(options);
 
-    expect(cache.getIntance()).to.instanceOf(CustomCache);
+    expect(cache.getIntance()).toBeInstanceOf(CustomCache);
   });
 
   it ('will throw error when module not found', () => {
-    expect(() => new Cache({ slot: '----' })).to.throw(Error);
-    expect(() => new Cache({ slot: '----/---' })).to.throw(Error);
+    expect(() => new Cache({ slot: '----' })).toThrowError();
+    expect(() => new Cache({ slot: '----/---' })).toThrowError();
   });
 
   it ('can inject ctx.cache to context', async () => {
@@ -54,7 +53,7 @@ describe('Cache Slot', () => {
     });
 
     await compose([cache])(ctx);
-    expect(ctx).has.property('cache');
-    expect(ctx['cache']).to.instanceOf(MemoryCache);
+    expect(ctx).toHaveProperty('cache');
+    expect(ctx['cache']).toBeInstanceOf(MemoryCache);
   });
 });

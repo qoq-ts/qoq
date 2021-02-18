@@ -2,9 +2,11 @@ import { Cache, createConfig, MemoryCacheOptions, Tree, validator, WebApplicatio
 import request from 'supertest';
 import { SlotDemo1 } from '../fixture/SlotDemo1';
 import { resolve } from 'path';
+import { Server } from 'http';
 
 describe('Web Router', () => {
   let app: WebApplication;
+  let listen: Server;
   let router: WebRouter<{}, {}>;
   let server: ReturnType<typeof request>;
 
@@ -14,7 +16,12 @@ describe('Web Router', () => {
       slots: new WebSlotManager(),
     });
     app.appendRoutes(router);
-    server = request(app.listen());
+    listen = app.listen();
+    server = request(listen);
+  });
+
+  afterEach(() => {
+    listen.close();
   });
 
   it ('should respond 404 without router', async () => {
@@ -245,8 +252,9 @@ describe('Web Router', () => {
     const router = new WebRouter({
       slots: globalSlots.use(new SlotDemo1('123')),
     });
+    const listen = app.listen();
     app.appendRoutes(router);
-    server = request(app.listen());
+    server = request(listen);
 
     router
       .get('/')
@@ -255,6 +263,8 @@ describe('Web Router', () => {
       });
 
     await server.get('/').expect('123');
+
+    listen.close();
   });
 
   it ('can use action slots', async () => {
