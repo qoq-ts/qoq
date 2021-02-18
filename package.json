@@ -1,6 +1,6 @@
 {
   "name": "qoq",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "main": "lib/index.js",
   "module": "es/index.js",
   "typings": "types/index.d.ts",
@@ -26,7 +26,7 @@
     "CHANGELOG.md"
   ],
   "peerDependencies": {
-    "@types/node": ">=10.13.0",
+    "@types/node": ">=10.17.0",
     "typescript": ">=4.1.0"
   },
   "dependencies": {
