@@ -15,12 +15,13 @@ export class SlotManager<T extends Slot.Mix | Slot.Web | Slot.Console, Props = {
     return manager;
   }
 
-  public/*protected*/ getTrunkSlotsAndRouters(): (Slot<T, Props, State> | WebSlotCtx | ConsoleSlotCtx)[] {
-    let mixData: (Slot<T, Props, State> | WebSlotCtx | ConsoleSlotCtx)[] = [];
+  public/*protected*/ getTrunkSlotsAndRouters() {
+    type Mix = (Slot<T, Props, State> | WebSlotCtx | ConsoleSlotCtx)[];
+    let mixData: Mix = [];
     let prevManager: SlotManager<T, any, any> | null = this;
 
     while (prevManager && prevManager.isTrunk) {
-      mixData = mixData.concat(prevManager.slots, prevManager.routers);
+      mixData = ([] as Mix).concat(prevManager.slots, prevManager.routers, mixData);
     }
 
     return mixData;
@@ -29,8 +30,12 @@ export class SlotManager<T extends Slot.Mix | Slot.Web | Slot.Console, Props = {
   public/*protected*/ getTrunkNode(): SlotManager<T, any, any> | null {
     let prevManager: SlotManager<T, any, any> | null = this;
 
-    while (prevManager && prevManager.isTrunk) {
-      return prevManager;
+    while (prevManager) {
+      if (prevManager.isTrunk) {
+        return prevManager;
+      }
+
+      prevManager = prevManager.prev;
     }
 
     return null;
@@ -41,7 +46,8 @@ export class SlotManager<T extends Slot.Mix | Slot.Web | Slot.Console, Props = {
     let prevManager: SlotManager<T, any, any> | null = this;
 
     while (prevManager && !prevManager.isTrunk) {
-      slots = slots.concat(prevManager.slots);
+      slots = prevManager.slots.concat(slots);
+      prevManager = prevManager.prev;
     }
 
     return slots;

@@ -26,9 +26,10 @@ export class WebBuilder<Props = any, State = any, Param extends string = string>
     this.uriPatterns = [];
 
     for (let i = 0; i < uris.length; ++i) {
-      const uri = prefix + (uris[i] === '/' ? '' : uris[i]);
+      const uri = prefix + uris[i];
 
-      if (/^[\/a-z0-9]+$/i.test(uri)) {
+      // Pure path
+      if (/^[\/a-z0-9-_]+$/i.test(uri)) {
         this.uriPatterns.push(uri);
       } else {
         const keysRef: Key[] = [];
@@ -95,10 +96,6 @@ export class WebBuilder<Props = any, State = any, Param extends string = string>
 
       if (captures === null) {
         continue;
-      }
-
-      if (!keys.length) {
-        return params;
       }
 
       for (let keyIndex = 0; keyIndex < captures.length; ++keyIndex) {
