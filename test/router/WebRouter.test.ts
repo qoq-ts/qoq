@@ -1,6 +1,7 @@
 import { Cache, createConfig, MemoryCacheOptions, Tree, validator, WebApplication, WebRouter, WebSlotManager } from '../../src';
 import request from 'supertest';
 import { SlotDemo1 } from '../fixture/SlotDemo1';
+import { resolve } from 'path';
 
 describe('Web Router', () => {
   let app: WebApplication;
@@ -59,6 +60,32 @@ describe('Web Router', () => {
       .expect({
         name: 'bob',
         age: 20,
+      });
+
+    await server.post('/user').send({}).expect(400);
+  });
+
+  it ('can upload file', async () => {
+    router
+      .post('/avatar')
+      .payload({
+        file: validator.file,
+        ping: validator.string,
+      })
+      .action(async (ctx) => {
+        ctx.send({
+          filename: ctx.payload.file.name,
+          ping: ctx.payload.ping,
+        });
+      });
+
+    await server
+      .post('/avatar')
+      .field('ping', 'pong')
+      .attach('file', resolve('./test/fixture/hello.txt'))
+      .expect({
+        filename: 'hello.txt',
+        ping: 'pong',
       });
   });
 
