@@ -26,7 +26,7 @@ export class WebBuilder<Props = any, State = any, Param extends string = string>
     this.uriPatterns = [];
 
     for (let i = 0; i < uris.length; ++i) {
-      const uri = prefix + uris[i];
+      const uri = (prefix + (uris[i] === '/' ? '' : uris[i])) || '/';
 
       // Pure path
       if (/^[\/a-z0-9-_]+$/i.test(uri)) {
