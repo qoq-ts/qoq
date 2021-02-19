@@ -39,31 +39,31 @@ export class WebRouter<Props = any, State = any> extends Router<Slot.Web | Slot.
     return builder;
   }
 
-  public post(uri: string | string[]): WebBuilder<Props, State> {
+  public post<T extends string>(uri: T | T[]): WebBuilder<Props, State, GetParam<T>> {
     const builder = new WebBuilder(this.prefix, toArray(uri), [Method.post]);
     this.builders.push(builder);
     return builder;
   }
 
-  public put(uri: string | string[]): WebBuilder<Props, State> {
+  public put<T extends string>(uri: T | T[]): WebBuilder<Props, State, GetParam<T>> {
     const builder = new WebBuilder(this.prefix, toArray(uri), [Method.put]);
     this.builders.push(builder);
     return builder;
   }
 
-  public patch(uri: string | string[]): WebBuilder<Props, State> {
+  public patch<T extends string>(uri: T | T[]): WebBuilder<Props, State, GetParam<T>> {
     const builder = new WebBuilder(this.prefix, toArray(uri), [Method.patch]);
     this.builders.push(builder);
     return builder;
   }
 
-  public delete(uri: string | string[]): WebBuilder<Props, State> {
+  public delete<T extends string>(uri: T | T[]): WebBuilder<Props, State, GetParam<T>> {
     const builder = new WebBuilder(this.prefix, toArray(uri), [Method.delete]);
     this.builders.push(builder);
     return builder;
   }
 
-  public all(uri: string | string[]): WebBuilder<Props, State> {
+  public all<T extends string>(uri: T | T[]): WebBuilder<Props, State, GetParam<T>> {
     const builder = new WebBuilder(this.prefix, toArray(uri), Object.values(Method));
     this.builders.push(builder);
     return builder;
