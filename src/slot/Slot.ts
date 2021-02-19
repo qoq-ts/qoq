@@ -7,7 +7,7 @@ export type MixSlotCtx<Props = {}, State = {}> = (ctx: WebCtx<Props, State> | Co
 export type WebSlotCtx<Props = {}, State = {}> = (ctx: WebCtx<Props, State>, next: Next) => any;
 export type ConsoleSlotCtx<Props = {}, State = {}> = (ctx: ConsoleCtx<Props, State>, next: Next) => any;
 
-type SlotCtx<Type, Props = {}, State = {}> = Type extends Slot.Mix
+export type SlotCtx<Type, Props = {}, State = {}> = Type extends Slot.Mix
   ? MixSlotCtx<Props, State>
   : Type extends Slot.Console
     ? ConsoleSlotCtx<Props, State>

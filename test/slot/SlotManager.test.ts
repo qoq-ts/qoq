@@ -86,4 +86,16 @@ describe('Slot manager', () => {
 
     expect(slots2).toEqual(slots);
   });
+
+  it ('can use function in use()', () => {
+    const slots = WebSlotManager.use(async (ctx, next) => {
+      ctx.request;
+      await next();
+    }).use((ctx, next) => {
+      ctx.response;
+      return next();
+    });
+
+    expect(slots.getBranchSlots()).toHaveLength(2);
+  });
 });

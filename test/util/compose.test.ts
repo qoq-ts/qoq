@@ -1,16 +1,6 @@
-import { compose, Composer, MixSlotCtx, Slot } from '../../src';
+import { compose, Composer, Slot } from '../../src';
 import { ExtraMiddleware, Middleware } from '../../src/util/compose';
-
-const createSlot = (fn: MixSlotCtx) => {
-  const Wrapper = class extends Slot<Slot.Mix> {
-    constructor() {
-      super();
-      this.use(fn);
-    }
-  }
-
-  return new Wrapper();
-};
+import { createSlot } from '../../src/util/createSlot';
 
 describe('compose', () => {
   it ('can input function', async () => {
@@ -40,17 +30,17 @@ describe('compose', () => {
   it ('can input slots', async () => {
     const ids: number[] = [];
     const slots: Slot[] = [
-      createSlot(async (_, next) => {
+      createSlot('mix', async (_, next) => {
         ids.push(1);
         await next();
         ids.push(6);
       }),
-      createSlot(async (_, next) => {
+      createSlot('web', async (_, next) => {
         ids.push(2);
         await next();
         ids.push(5);
       }),
-      createSlot(async (_, next) => {
+      createSlot('console', async (_, next) => {
         ids.push(3);
         await next();
         ids.push(4);
@@ -65,19 +55,19 @@ describe('compose', () => {
     const ids: number[] = [];
     const slots: Composer[] = [
       compose([
-        createSlot(async (_, next) => {
+        createSlot('mix', async (_, next) => {
           ids.push(1);
           await next();
           ids.push(6);
         }),
-        createSlot(async (_, next) => {
+        createSlot('web', async (_, next) => {
           ids.push(2);
           await next();
           ids.push(5);
         }),
       ]),
       compose([
-        createSlot(async (_, next) => {
+        createSlot('mix', async (_, next) => {
           ids.push(3);
           await next();
           ids.push(4);
@@ -92,7 +82,7 @@ describe('compose', () => {
   it ('can input mixed values', async () => {
     const ids: number[] = [];
     const slots: ExtraMiddleware[] = [
-      createSlot(async (_, next) => {
+      createSlot('mix', async (_, next) => {
         ids.push(1);
         await next();
         ids.push(6);
@@ -102,7 +92,7 @@ describe('compose', () => {
         await next();
         ids.push(5);
       },
-      createSlot(async (_, next) => {
+      createSlot('mix', async (_, next) => {
         ids.push(3);
         await next();
         ids.push(4);
@@ -117,17 +107,17 @@ describe('compose', () => {
     const ids: number[] = [];
     const empty: Slot[] = [];
     const slots: Slot[] = [
-      createSlot(async (_, next) => {
+      createSlot('mix', async (_, next) => {
         ids.push(1);
         await next();
         ids.push(6);
       }),
-      createSlot(async (_, next) => {
+      createSlot('web', async (_, next) => {
         ids.push(2);
         await next();
         ids.push(5);
       }),
-      createSlot(async (_, next) => {
+      createSlot('mix', async (_, next) => {
         ids.push(3);
         await next();
         ids.push(4);
@@ -145,7 +135,7 @@ describe('compose', () => {
   it ('can append slots', async () => {
     const ids: number[] = [];
     const slots: Slot[] = [
-      createSlot(async (_, next) => {
+      createSlot('mix', async (_, next) => {
         ids.push(1);
         await next();
         ids.push(6);
@@ -158,12 +148,12 @@ describe('compose', () => {
 
     ids.splice(0, 10);
     composer.append(
-      createSlot(async (_, next) => {
+      createSlot('mix', async (_, next) => {
         ids.push(2);
         await next();
         ids.push(5);
       }),
-      createSlot(async (_, next) => {
+      createSlot('mix', async (_, next) => {
         ids.push(3);
         await next();
         ids.push(4);
@@ -176,7 +166,7 @@ describe('compose', () => {
   it ('can prepend slots', async () => {
     const ids: number[] = [];
     const slots: Slot[] = [
-      createSlot(async (_, next) => {
+      createSlot('mix', async (_, next) => {
         ids.push(1);
         await next();
         ids.push(6);
@@ -185,19 +175,19 @@ describe('compose', () => {
 
     const composer = compose(slots);
     composer.prepend(
-      createSlot(async (_, next) => {
+      createSlot('mix', async (_, next) => {
         ids.push(2);
         await next();
         ids.push(5);
       }),
-      createSlot(async (_, next) => {
+      createSlot('mix', async (_, next) => {
         ids.push(3);
         await next();
         ids.push(4);
       }),
     );
     composer.prepend(
-      createSlot(async (_, next) => {
+      createSlot('mix', async (_, next) => {
         ids.push(7);
         await next();
         ids.push(8);

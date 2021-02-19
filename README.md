@@ -65,7 +65,13 @@ import { WebSlotManager, Tree } from 'qoq';
 import { Cors } from 'qoq-cors';
 import { Redis } from 'qoq-redis';
 
-export const webSlots = WebslotManager.use(new Cors()).use(new Redis()).use(...);
+export const webSlots = WebslotManager
+  .use(new Cors())
+  .use(new Redis())
+  .use((ctx, next) => {
+    console.log(ctx.request.ip);
+    return next();
+  });
 export const advancedSlots = webSlots.use(...).use(...);
 
 // the trunk will always run through

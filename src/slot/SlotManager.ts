@@ -1,29 +1,40 @@
-import { ConsoleSlotCtx, Slot, WebSlotCtx } from './Slot';
+import { createSlot } from '../util/createSlot';
+import { Slot, SlotCtx } from './Slot';
 
 export class SlotManager<T extends Slot.Mix | Slot.Web | Slot.Console, Props = {}, State = {}> {
   protected prev: SlotManager<T, any, any> | null = null;
   protected isTrunk: boolean = false;
-  protected routers: Array<WebSlotCtx | ConsoleSlotCtx> = [];
+  protected routers: Array<SlotCtx<T>> = [];
 
-  public static use<T extends Slot.Mix | Slot.Web | Slot.Console, P, S>(this: new (...args: any[]) => SlotManager<T, any, any>, slot: Slot<T, P, S> | SlotManager<T, P, S> | null): SlotManager<T, P, S> {
+  public static use<T extends Slot.Mix | Slot.Web | Slot.Console, P = {}, S = {}>(
+    this: new (...args: any[]) => SlotManager<T, any, any>,
+    slot: Slot<T, P, S> | SlotManager<T, P, S> | SlotCtx<Slot.Web extends T ? Slot.Web : Slot.Console> | null
+  ): SlotManager<T, P, S> {
+    // @ts-ignore
     return new SlotManager([]).use(slot);
   }
 
   constructor(protected slots: Slot<T, any, any>[] = []) {};
 
-  use<P, S>(slot: Slot<T, P, S> | SlotManager<T, P, S> | null): SlotManager<T, Props & P, State & S> {
+  use<P, S>(slot: Slot<T, P, S> | SlotManager<T, P, S> | SlotCtx<Slot.Web extends T ? Slot.Web : Slot.Console, Props, State> | null): SlotManager<T, Props & P, State & S> {
     if (slot === null) {
       return this;
     }
 
-    const manager = new SlotManager(slot instanceof SlotManager ? slot.slots : [slot]);
+    const manager = new SlotManager(
+      typeof slot === 'function'
+        ? [createSlot('mix', slot as SlotCtx<T, any, any>) as Slot<T>]
+        : slot instanceof SlotManager
+          ? slot.slots
+          : [slot]
+    );
     manager.prev = this;
 
     return manager;
   }
 
   public/*protected*/ getTrunkSlotsAndRouters() {
-    type Mix = (Slot<T, Props, State> | WebSlotCtx | ConsoleSlotCtx)[];
+    type Mix = (Slot<T, Props, State> | SlotCtx<T, Props, State>)[];
     let mixData: Mix = [];
     let prevManager: SlotManager<T, any, any> | null = this;
 
@@ -68,7 +79,7 @@ export class SlotManager<T extends Slot.Mix | Slot.Web | Slot.Console, Props = {
     do { prevManager.isTrunk = true; } while (prevManager = prevManager.prev);
   }
 
-  public/*protected*/ mountRouter(router: WebSlotCtx | ConsoleSlotCtx) {
+  public/*protected*/ mountRouter(router: SlotCtx<T>) {
     if (!this.isTrunk) {
       throw new ReferenceError('Only tree trunk can mount router');
     }
