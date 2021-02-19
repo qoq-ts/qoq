@@ -26,17 +26,22 @@ Qoq is a restful node framework with real type checking, for saving time and avo
 yarn add qoq
 ```
 
-# Related Projects
+# Related Middleware
 | Project | Version | Slot for | Description |
 | ------- | ------- | ------ | ------ |
 | [qoq-redis](https://github.com/qoq-ts/qoq-redis) | [![npm](https://img.shields.io/npm/v/qoq-redis)](https://www.npmjs.com/package/qoq-redis) | Web, Console | redis command, cache extension |
 | [qoq-compress](https://github.com/qoq-ts/qoq-compress) | [![npm](https://img.shields.io/npm/v/qoq-compress)](https://www.npmjs.com/package/qoq-compress) | Web | gzip, brotli |
 | [qoq-morgan](https://github.com/qoq-ts/qoq-morgan) | [![npm](https://img.shields.io/npm/v/qoq-morgan)](https://www.npmjs.com/package/qoq-morgan) | Web | logger |
 | [qoq-cors](https://github.com/qoq-ts/qoq-cors) | [![npm](https://img.shields.io/npm/v/qoq-cors)](https://www.npmjs.com/package/qoq-cors) | Web | CORS |
-| [qoq-etag](https://github.com/qoq-ts/qoq-etag) | [![npm](https://img.shields.io/npm/v/qoq-etag)](https://www.npmjs.com/package/qoq-etag) | Web | Header with etag |
-| [qoq-response-time](https://github.com/qoq-ts/qoq-response-time) | [![npm](https://img.shields.io/npm/v/qoq-response-time)](https://www.npmjs.com/package/qoq-response-time) | Web | Header with X-Response-Time |
+| [qoq-ratelimit](https://github.com/qoq-ts/qoq-ratelimit) | [![npm](https://img.shields.io/npm/v/qoq-ratelimit)](https://www.npmjs.com/package/qoq-ratelimit) | Web | request rate limiter |
+| [qoq-jwt](https://github.com/qoq-ts/qoq-jwt) | [![npm](https://img.shields.io/npm/v/qoq-jwt)](https://www.npmjs.com/package/qoq-jwt) | Web | validating json token |
+| [qoq-etag](https://github.com/qoq-ts/qoq-etag) | [![npm](https://img.shields.io/npm/v/qoq-etag)](https://www.npmjs.com/package/qoq-etag) | Web | header: etag |
+| [qoq-response-time](https://github.com/qoq-ts/qoq-response-time) | [![npm](https://img.shields.io/npm/v/qoq-response-time)](https://www.npmjs.com/package/qoq-response-time) | Web | header: X-Response-Time |
+| [qoq-helmet](https://github.com/qoq-ts/qoq-helmet) | [![npm](https://img.shields.io/npm/v/qoq-helmet)](https://www.npmjs.com/package/qoq-helmet) | Web | security headers |
 | [qoq-pretty-json](https://github.com/qoq-ts/qoq-pretty-json) | [![npm](https://img.shields.io/npm/v/qoq-pretty-json)](https://www.npmjs.com/package/qoq-pretty-json) | Web | format JSON |
 | [qoq-static](https://github.com/qoq-ts/qoq-static) | [![npm](https://img.shields.io/npm/v/qoq-static)](https://www.npmjs.com/package/qoq-static) | Web | static file serve |
+| [qoq-views](https://github.com/qoq-ts/qoq-views) | [![npm](https://img.shields.io/npm/v/qoq-views)](https://www.npmjs.com/package/qoq-views) | Web | template rendering |
+
 
 # Usage
 ### Create web app
