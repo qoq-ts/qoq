@@ -277,4 +277,67 @@ describe('Web Router', () => {
 
     await server.get('/').expect('456');
   });
+
+  it ('can use router prefix', async () => {
+    router = new WebRouter({
+      prefix: '/',
+      slots: new WebSlotManager(),
+    });
+    app.appendRoutes(router);
+
+    router.get('/').action((ctx) => {
+      ctx.send('ok');
+    });
+
+    router.get('/ping').action((ctx) => {
+      ctx.send('ok');
+    });
+
+    const router1 = new WebRouter({
+      prefix: '/users',
+      slots: new WebSlotManager(),
+    });
+
+    app.appendRoutes(router1);
+    router1.get('/').action((ctx) => {
+      ctx.send('ok');
+    });
+
+    router1.get('/ping').action((ctx) => {
+      ctx.send('ok');
+    });
+
+    await server.get('/').expect(200);
+    await server.get('/ping').expect(200);
+    await server.get('/ping/').expect(200);
+    await server.get('/users').expect(200);
+    await server.get('/users/ping').expect(200);
+    await server.get('/users/ping/').expect(200);
+  });
+
+  it ('should respond 404 when path with params is invalid', async () => {
+    router
+      .get('/test/:id')
+      .params({
+        id: validator.number,
+      })
+      .action((ctx) => {
+        ctx.send('ok');
+      });
+
+    router
+      .get('/test2/:name')
+      .params({
+        name: validator.string,
+      })
+      .action((ctx) => {
+        ctx.send('ok');
+      });
+
+    await server.get('/test/:id').expect(400);
+    await server.get('/test/20').expect(200);
+
+    await server.get('/test2/:name').expect(200);
+    await server.get('/test2/20').expect(200);
+  });
 });

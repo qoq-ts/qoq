@@ -12,7 +12,7 @@ import { Builder } from './Builder';
 export class WebBuilder<Props = any, State = any, Param extends string = string> extends Builder<Slot.Web | Slot.Mix, Props, State> {
   protected readonly uris: string[];
   protected readonly methods: Method[];
-  protected readonly uriPatterns: ([RegExp, Key[]] | string)[];
+  protected readonly uriPatterns: ([RegExp, Key[], string | undefined])[];
 
   protected queryData: Record<string, Validator> = {};
   protected bodyData: Record<string, Validator> = {};
@@ -28,16 +28,12 @@ export class WebBuilder<Props = any, State = any, Param extends string = string>
     for (let i = 0; i < uris.length; ++i) {
       const uri = (prefix + (uris[i] === '/' ? '' : uris[i])) || '/';
 
-      // Pure path
-      if (/^[\/a-z0-9-_]+$/i.test(uri)) {
-        this.uriPatterns.push(uri);
-      } else {
-        const keysRef: Key[] = [];
-        this.uriPatterns.push([
-          pathToRegexp(uri, keysRef),
-          keysRef
-        ]);
-      }
+      const keysRef: Key[] = [];
+      this.uriPatterns.push([
+        pathToRegexp(uri, keysRef),
+        keysRef,
+        /^[\/a-z0-9-_]+$/i.test(uri) ? uri : undefined,
+      ]);
     }
   }
 
@@ -80,22 +76,20 @@ export class WebBuilder<Props = any, State = any, Param extends string = string>
     }
 
     for (let i = 0; i < this.uriPatterns.length; ++i) {
-      const pattern = this.uriPatterns[i]!;
+      const [regexp, keys, pureUri] = this.uriPatterns[i]!;
       const params: Record<string, any> = {};
 
-      // Normal Path, to be compare faster.
-      if (typeof pattern === 'string') {
-        if (pattern == path) {
-          return params;
-        }
+      if (pureUri === path) {
+        return params;
+      }
+
+      const captures = path.match(regexp);
+      if (captures === null) {
         continue;
       }
 
-      const [regexp, keys] = pattern;
-      const captures = path.match(regexp);
-
-      if (captures === null) {
-        continue;
+      if (!keys.length) {
+        return params;
       }
 
       for (let keyIndex = 0; keyIndex < captures.length; ++keyIndex) {
