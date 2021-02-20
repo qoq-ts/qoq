@@ -15,7 +15,6 @@ import { Application } from './Application';
 import { Method } from '../util/Method';
 import { WebRouter } from '../router/WebRouter';
 import cookies from 'cookies';
-import { toArray } from '../util/toArray';
 import { Tree } from './Tree';
 import { WebSlotManager } from '../slot/SlotManager';
 
@@ -33,7 +32,7 @@ interface Options {
 
 export type QoqError = Error | HttpError | NodeJS.ErrnoException;
 
-export class WebApplication extends Application {
+export class WebApplication extends Application<WebRouter> {
   public/*protected*/ readonly options: Required<Options>;
 
   constructor(options: Options = {}) {
@@ -77,19 +76,7 @@ export class WebApplication extends Application {
     return super.once(event, listener);
   }
 
-  /**
-   * Useful for testing scenario.
-   */
-  public appendRoutes(routers: WebRouter | WebRouter[]): this {
-    toArray(routers).forEach((router) => {
-      this.parseRouters({ default: router });
-    });
-    this.refreshTreeTrunk();
-
-    return this;
-  }
-
-  protected getRouterInstance(): new (...args: any[]) => WebRouter {
+  protected getRouterInstance() {
     return WebRouter;
   }
 

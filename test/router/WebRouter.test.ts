@@ -15,7 +15,7 @@ describe('Web Router', () => {
     router = new WebRouter({
       slots: new WebSlotManager(),
     });
-    app.appendRoutes(router);
+    app.mountRouter(router);
     listen = app.listen();
     server = request(listen);
   });
@@ -253,7 +253,7 @@ describe('Web Router', () => {
       slots: globalSlots.use(new SlotDemo1('123')),
     });
     const listen = app.listen();
-    app.appendRoutes(router);
+    app.mountRouter(router);
     server = request(listen);
 
     router
@@ -283,7 +283,7 @@ describe('Web Router', () => {
       prefix: '/',
       slots: new WebSlotManager(),
     });
-    app.appendRoutes(router);
+    app.mountRouter(router);
 
     router.get('/').action((ctx) => {
       ctx.send('ok');
@@ -298,7 +298,7 @@ describe('Web Router', () => {
       slots: new WebSlotManager(),
     });
 
-    app.appendRoutes(router1);
+    app.mountRouter(router1);
     router1.get('/').action((ctx) => {
       ctx.send('ok');
     });

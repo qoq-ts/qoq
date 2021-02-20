@@ -7,7 +7,7 @@ import { Router } from '../router/Router';
 import { SlotManager } from '../slot/SlotManager';
 import { toArray } from '../util/toArray';
 
-export abstract class Application extends EventEmitter {
+export abstract class Application<R extends Router<any, any>> extends EventEmitter {
   protected readonly routerPath: string[];
   protected readonly compose: Composer;
   protected readonly treeBranch = compose([]);
@@ -24,6 +24,18 @@ export abstract class Application extends EventEmitter {
 
   public getPaths(): string[] {
     return this.routerPath;
+  }
+
+  /**
+   * Useful for testing scenario.
+   */
+  public mountRouter(routers: R | R[]): this {
+    toArray(routers).forEach((router) => {
+      this.parseRouters({ default: router });
+    });
+    this.refreshTreeTrunk();
+
+    return this;
   }
 
   protected searchRouters(routesPath: string[]): void {
@@ -65,7 +77,7 @@ export abstract class Application extends EventEmitter {
   }
 
   protected abstract getTrunkNode(): SlotManager<any, any, any>;
-  protected abstract getRouterInstance(): new (...args: any[]) => Router<any, any>;
+  protected abstract getRouterInstance(): new (...args: any[]) => R;
 
   protected abstract inspect(): object;
   protected abstract toJSON(): object;

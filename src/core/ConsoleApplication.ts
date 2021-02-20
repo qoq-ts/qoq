@@ -6,7 +6,6 @@ import { ConsoleContext } from './ConsoleContext';
 import chalk from 'chalk';
 import { Help } from '../slot/Help';
 import { ConsoleRouter } from '../router/ConsoleRouter';
-import { toArray } from '../util/toArray';
 import { Tree } from './Tree';
 import { ConsoleSlotManager } from '../slot/SlotManager';
 
@@ -14,7 +13,7 @@ interface Options {
   routerDir?: string | string[];
 }
 
-export class ConsoleApplication extends Application {
+export class ConsoleApplication extends Application<ConsoleRouter> {
   // @ts-ignore It should initialize on super constructor
   protected helper: Help;
   public/*protected*/ isChildProcess: boolean;
@@ -86,18 +85,6 @@ export class ConsoleApplication extends Application {
     return super.once(event, listener);
   }
 
-  /**
-   * Useful for testing scenario.
-   */
-  public appendCommands(routers: ConsoleRouter | ConsoleRouter[]): this {
-    toArray(routers).forEach((router) => {
-      this.parseRouters({ default: router });
-    });
-    this.refreshTreeTrunk();
-
-    return this;
-  }
-
   public onerror(err: Error) {
     // When dealing with cross-globals a normal `instanceof` check doesn't work properly.
     // See https://github.com/koajs/koa/issues/1466
@@ -117,7 +104,7 @@ export class ConsoleApplication extends Application {
     console.error();
   }
 
-  protected getRouterInstance(): new (...args: any[]) => ConsoleRouter {
+  protected getRouterInstance() {
     return ConsoleRouter;
   }
 
