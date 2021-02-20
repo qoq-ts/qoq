@@ -14,8 +14,8 @@ interface Options {
 }
 
 export class ConsoleApplication extends Application<ConsoleRouter> {
-  // @ts-ignore It should initialize on super constructor
-  protected helper: Help;
+  // It should initialize from super constructor
+  protected helper!: Help;
   public/*protected*/ isChildProcess: boolean;
 
   constructor(options: Options = {}) {
