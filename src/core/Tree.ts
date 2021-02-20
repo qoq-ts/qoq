@@ -7,6 +7,7 @@ export class Tree {
   public static setWebTrunk(manager: WebSlotManager<any, any>): void {
     Tree.webTrunk && Tree.throw('web');
     Tree.webTrunk = manager;
+    manager.setTrunk();
   }
 
   public static setConsoleTrunk(manager: ConsoleSlotManager<any, any>): void {
