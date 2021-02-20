@@ -1,8 +1,8 @@
-import { ConsoleSlotCtx, Slot, WebSlotCtx } from '../slot/Slot';
+import { ConsoleSlotCtx, SlotAllType, WebSlotCtx } from '../slot/Slot';
 import { SlotManager } from '../slot/SlotManager';
 import { Builder } from './Builder';
 
-export abstract class Router<T extends Slot.Mix | Slot.Web | Slot.Console, U extends Builder<T, any, any>> {
+export abstract class Router<T extends SlotAllType, U extends Builder<T, any, any>> {
   public/*protected*/ builders: U[] = [];
 
   constructor(

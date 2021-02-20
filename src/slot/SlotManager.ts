@@ -1,12 +1,12 @@
 import { createSlot } from '../util/createSlot';
-import { Slot, SlotCtx } from './Slot';
+import { Slot, SlotAllType, SlotCtx } from './Slot';
 
-export class SlotManager<T extends Slot.Mix | Slot.Web | Slot.Console, Props = {}, State = {}> {
+export class SlotManager<T extends SlotAllType, Props = {}, State = {}> {
   protected prev: SlotManager<T, any, any> | null = null;
   protected isTrunk: boolean = false;
   protected routers: Array<SlotCtx<T>> = [];
 
-  public static use<T extends Slot.Mix | Slot.Web | Slot.Console, P = {}, S = {}>(
+  public static use<T extends SlotAllType, P = {}, S = {}>(
     this: new (...args: any[]) => SlotManager<T, any, any>,
     slot: Slot<T, P, S> | SlotManager<T, P, S> | SlotCtx<Slot.Web extends T ? Slot.Web : Slot.Console> | null
   ): SlotManager<T, P, S> {

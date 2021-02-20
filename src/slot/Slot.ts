@@ -19,8 +19,10 @@ export namespace Slot {
   export type Mix = 'mix';
 }
 
+export type SlotAllType = Slot.Mix | Slot.Web | Slot.Console;
+
 export abstract class Slot<
-  Type extends Slot.Mix | Slot.Web | Slot.Console = Slot.Mix,
+  Type extends SlotAllType = Slot.Mix,
   Props = {},
   State = {}
 > {
