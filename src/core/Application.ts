@@ -27,12 +27,26 @@ export abstract class Application<R extends Router<any, any>> extends EventEmitt
   }
 
   /**
-   * Useful for testing scenario.
+   * Mount router from path or instance
    */
-  public mountRouter(routers: R | R[]): this {
-    toArray(routers).forEach((router) => {
-      this.parseRouters({ default: router });
-    });
+  public mountRouter(router: R | R[] | string | string[]): this {
+    const routers = toArray(router) as string[] | R[];
+
+    if (!routers.length) {
+      return this;
+    }
+
+    const isString = (data: string[] | R[]): data is string[] => {
+      return typeof data[0] === 'string';
+    };
+
+    if (isString(routers)) {
+      this.routerPath.push(...routers);
+      this.searchRouters(routers);
+    } else {
+      this.parseRouters(routers);
+    }
+
     this.refreshTreeTrunk();
 
     return this;

@@ -32,6 +32,20 @@ it ('can mount router from memory', async () => {
   listener.close();
 });
 
+it ('can mount router path after app is created', async () => {
+  const app = new WebApplication({
+    routerDir: [],
+  });
+  const listener = app.listen();
+
+  await request(listener).get('/test1').expect(404);
+
+  app.mountRouter(dirname(__dirname) + '/fixture');
+  await request(listener).get('/test1').expect('Hello router1');
+
+  listener.close();
+});
+
 it ('only search WebRouter', async () => {
   const app = new WebApplication({
     routerDir: dirname(__dirname) + '/fixture',
