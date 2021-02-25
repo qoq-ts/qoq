@@ -29,6 +29,7 @@ yarn add qoq
 # Related Middleware
 | Project | Version | Slot for | Description |
 | ------- | ------- | ------ | ------ |
+| [qoq-sequelize](https://github.com/qoq-ts/qoq-sequelize) | [![npm](https://img.shields.io/npm/v/qoq-sequelize)](https://www.npmjs.com/package/qoq-sequelize) | Web, Console | database ORM (mysql, sqlite, ...) |
 | [qoq-redis](https://github.com/qoq-ts/qoq-redis) | [![npm](https://img.shields.io/npm/v/qoq-redis)](https://www.npmjs.com/package/qoq-redis) | Web, Console | redis command, cache extension |
 | [qoq-compress](https://github.com/qoq-ts/qoq-compress) | [![npm](https://img.shields.io/npm/v/qoq-compress)](https://www.npmjs.com/package/qoq-compress) | Web | gzip, brotli |
 | [qoq-morgan](https://github.com/qoq-ts/qoq-morgan) | [![npm](https://img.shields.io/npm/v/qoq-morgan)](https://www.npmjs.com/package/qoq-morgan) | Web | logger |
