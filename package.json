@@ -1,6 +1,6 @@
 {
   "name": "qoq",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "main": "lib/index.js",
   "module": "es/index.js",
   "typings": "types/index.d.ts",
