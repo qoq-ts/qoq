@@ -10,7 +10,10 @@ import { Tree } from './Tree';
 import { ConsoleSlotManager } from '../slot/SlotManager';
 
 interface Options {
-  routerDir?: string | string[];
+  /**
+   * @default ./src/commands
+   */
+  commandsDir?: string | string[];
 }
 
 export class ConsoleApplication extends Application<ConsoleRouter> {
@@ -21,7 +24,7 @@ export class ConsoleApplication extends Application<ConsoleRouter> {
   constructor(options: Options = {}) {
     const dir = [
       path.join(__dirname, '..', 'command')
-    ].concat(options.routerDir || './src/commands');
+    ].concat(options.commandsDir || './src/commands');
     super(dir);
     this.compose.prepend(this.getHelper());
     this.isChildProcess = false;

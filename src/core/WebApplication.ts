@@ -19,7 +19,10 @@ import { Tree } from './Tree';
 import { WebSlotManager } from '../slot/SlotManager';
 
 interface Options {
-  routerDir?: string | string[];
+  /**
+   * @default ./src/routers
+   */
+  routersDir?: string | string[];
   // Trust proxy headers
   proxy?: boolean;
   proxyIpHeader?: string;
@@ -36,7 +39,7 @@ export class WebApplication extends Application<WebRouter> {
   public/*protected*/ readonly options: Required<Options>;
 
   constructor(options: Options = {}) {
-    const dir = options.routerDir || './src/routes';
+    const dir = options.routersDir || './src/routers';
     super(dir);
 
     this.options = {
@@ -45,7 +48,7 @@ export class WebApplication extends Application<WebRouter> {
       subdomainOffset: options.subdomainOffset || 2,
       maxIpsCount: options.maxIpsCount || 0,
       env: options.env && process.env.NODE_ENV || 'development',
-      routerDir: dir,
+      routersDir: dir,
       cookie: {},
     };
   }

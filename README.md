@@ -55,7 +55,7 @@ import { WebApplication } from 'qoq';
 
 const app = new WebApplication({
   // mount routers automatically
-  routerDir: './src/routers',
+  routersDir: './src/routers',
 });
 
 app.listen(3000, () => {
@@ -148,7 +148,7 @@ import { ConsoleApplication } from 'qoq';
 
 const app = new ConsoleApplication({
   // mount routers automatically
-  routerDir: './src/commands',
+  commandsDir: './src/commands',
 });
 
 app.run();

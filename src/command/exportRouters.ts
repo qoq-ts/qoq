@@ -19,7 +19,7 @@ router
     description: 'Export web routers to file and `ctx.state.routes`',
   })
   .options({
-    sourceDir: validator.array.each(validator.string).minItemLength(1).docs({
+    input: validator.array.each(validator.string).minItemLength(1).docs({
       description: 'The folders where web routers come from',
     }),
     output: validator
@@ -30,17 +30,17 @@ router
       }),
   })
   .alias({
-    sourceDir: 'd',
+    input: 'd',
     output: 'o',
   })
   .action((ctx) => {
-    let { sourceDir, output } = ctx.options;
+    let { input, output } = ctx.options;
     const routers: object[] = [];
     const now = Date.now();
 
     output = path.resolve(output);
 
-    sourceDir.forEach((dir) => {
+    input.forEach((dir) => {
       glob.sync(path.resolve(dir, '**/!(*.d).{ts,js}')).forEach((matchPath) => {
         const modules = require(matchPath);
         console.log('Parsing path: ' + matchPath);
