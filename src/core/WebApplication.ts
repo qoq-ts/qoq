@@ -60,7 +60,7 @@ export class WebApplication extends Application<WebRouter> {
   public listen(handle: any, backlog?: number, listeningListener?: () => void): Server;
   public listen(handle: any, listeningListener?: () => void): Server;
   public listen(...args: any[]): Server {
-    const server = http.createServer(this.serverCallback());
+    const server = http.createServer(this.callback());
     return server.listen(...args);
   }
 
@@ -76,11 +76,7 @@ export class WebApplication extends Application<WebRouter> {
     return super.once(event, listener);
   }
 
-  protected getRouterInstance() {
-    return WebRouter;
-  }
-
-  protected serverCallback() {
+  public callback() {
     if (!this.listenerCount('error')) {
       this.on('error', this.onerror);
     }
@@ -111,6 +107,10 @@ export class WebApplication extends Application<WebRouter> {
     console.error(chalk.red(msgs.shift()));
     console.error(msgs.join(EOL));
     console.error();
+  }
+
+  protected getRouterInstance() {
+    return WebRouter;
   }
 
   protected createRequest(req: IncomingMessage): WebRequest {
