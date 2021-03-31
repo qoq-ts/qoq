@@ -1,46 +1,80 @@
-import { createSlot } from '../util/createSlot';
+import { Middleware } from 'koa-compose';
 import { Slot, SlotAllType, SlotCtx } from './Slot';
 
+export type Use<T extends SlotAllType, P, S> =
+  | Slot<T, P, S>
+  | SlotManager<T, P, S>
+  | SlotCtx<Slot.Web extends T ? Slot.Web : Slot.Console extends T ? Slot.Console : Slot.Mix, P, S>
+  | null;
+
 export class SlotManager<T extends SlotAllType, Props = {}, State = {}> {
+  protected middleware: Middleware<any>[] = [];
+  protected routers: Array<SlotCtx<T>> = [];
   protected prev: SlotManager<T, any, any> | null = null;
   protected isTrunk: boolean = false;
-  protected routers: Array<SlotCtx<T>> = [];
 
   public static use<T extends SlotAllType, P = {}, S = {}>(
     this: new (...args: any[]) => SlotManager<T, any, any>,
-    slot: Slot<T, P, S> | SlotManager<T, P, S> | SlotCtx<Slot.Web extends T ? Slot.Web : Slot.Console> | null
+    slot: Use<T, P, S>
   ): SlotManager<T, P, S> {
-    // @ts-ignore
-    return new SlotManager([]).use(slot);
+    return new this([]).use(slot);
   }
 
-  constructor(protected slots: Slot<T, any, any>[] = []) {};
+  constructor(sources: (Slot<T, any, any> | Middleware<any>)[] = []) {
+    this.middleware = [];
 
-  use<P, S>(slot: Slot<T, P, S> | SlotManager<T, P, S> | SlotCtx<Slot.Web extends T ? Slot.Web : Slot.Console, Props, State> | null): SlotManager<T, Props & P, State & S> {
+    for (let i = 0; i < sources.length; ++i) {
+      const item = sources[i]!;
+
+      if (typeof item === 'function') {
+        this.middleware.push(item);
+      } else {
+        this.middleware = this.middleware.concat(item.collect());
+      }
+    }
+  };
+
+  use<P, S>(slot: Use<T, P, S>): SlotManager<T, Props & P, State & S> {
     if (slot === null) {
       return this;
     }
 
-    const manager = new SlotManager(
-      typeof slot === 'function'
-        ? [createSlot('mix', slot as SlotCtx<T, any, any>) as Slot<T>]
-        : slot instanceof SlotManager
-          ? slot.slots
-          : [slot]
-    );
+    const Target = this.constructor as typeof SlotManager;
+
+    if (slot instanceof SlotManager) {
+      let manager: SlotManager<T, any, any> = this;
+      let managers: SlotManager<T, any, any>[] = [];
+      let prev: SlotManager<T, any, any> | null = slot;
+
+      while (prev) {
+        managers.push(prev);
+        prev = prev.prev;
+      }
+
+      for (let i = managers.length - 1; i >= 0; --i) {
+        const node = managers[i]!;
+        const target: SlotManager<T, any, any> = new Target(node.middleware);
+        target.prev = manager;
+        target.routers = node.routers;
+        manager = target;
+      }
+
+      return manager;
+    }
+
+    const manager = new Target([slot]);
     manager.prev = this;
 
     return manager;
   }
 
-  public/*protected*/ getTrunkSlotsAndRouters() {
-    type Mix = (Slot<T, Props, State> | SlotCtx<T, Props, State>)[];
-    let mixData: Mix = [];
+  public/*protected*/ getTrunkMiddlewareAndRouters() {
+    let mixData: Middleware<any>[] = [];
     let prevManager: SlotManager<T, any, any> | null = this;
 
     while (prevManager) {
       if (prevManager.isTrunk) {
-        mixData = ([] as Mix).concat(prevManager.slots, prevManager.routers, mixData);
+        mixData = prevManager.middleware.concat(prevManager.routers, mixData);
       }
       prevManager = prevManager.prev;
     }
@@ -61,22 +95,22 @@ export class SlotManager<T extends SlotAllType, Props = {}, State = {}> {
     return null;
   }
 
-  public/*protected*/ getBranchSlots(): Slot<T, any, any>[] {
-    let slots: Slot<T, Props, State>[] = [];
+  public/*protected*/ getBranchMiddleware() {
+    let middleware: Middleware<any>[] = [];
     let prevManager: SlotManager<T, any, any> | null = this;
 
     while (prevManager && !prevManager.isTrunk) {
-      slots = prevManager.slots.concat(slots);
+      middleware = prevManager.middleware.concat(middleware);
       prevManager = prevManager.prev;
     }
 
-    return slots;
+    return middleware;
   }
 
   public/*protected*/ setTrunk(): void {
     let prevManager: SlotManager<T, any, any> | null = this;
 
-    do { prevManager.isTrunk = true; } while (prevManager = prevManager.prev);
+    do { prevManager.isTrunk = true } while (prevManager = prevManager.prev);
   }
 
   public/*protected*/ mountRouter(router: SlotCtx<T>) {

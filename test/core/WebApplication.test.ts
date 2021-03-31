@@ -21,7 +21,7 @@ it ('can mount router from memory', async () => {
   const router = new WebRouter({
     slots: new WebSlotManager(),
   });
-  router.get('/hello').action((ctx) => ctx.send('World'));
+  router.get('/hello').action((ctx) => ctx.body = 'World');
   app.mountRouter([router]);
 
   const listener = app.listen();

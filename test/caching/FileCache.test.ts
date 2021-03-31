@@ -7,11 +7,11 @@ import { FileCache } from '../../src';
 
 describe('File Cache', () => {
   let cache: FileCache;
-  let tempDir = fs.mkdtempSync(join(os.tmpdir(), 'cache-XXXXXX'));
+  let tempDir = fs.mkdtempSync(join(os.tmpdir(), 'cache-'));
 
   beforeEach(() => {
     cache = new FileCache({
-      slot: 'FileCache',
+      engine: 'FileCache',
       cacheDir: tempDir,
     });
   });
@@ -88,7 +88,7 @@ describe('File Cache', () => {
     expect(cache.buildKey('hello')).toEqual('hello');
 
     cache = new FileCache({
-      slot: 'FileCache',
+      engine: 'FileCache',
       cacheDir: tempDir,
       keyPrefix: 'cache-',
     });

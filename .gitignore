@@ -8,7 +8,7 @@ coverage
 TODO
 test.js
 test.ts
-es/
-lib/
-types/
-build/
+/es/
+/lib/
+/types/
+/build/

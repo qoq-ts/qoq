@@ -7,7 +7,7 @@ describe('Memory Cache', () => {
 
   beforeEach(() => {
     cache = new MemoryCache({
-      slot: 'MemoryCache',
+      engine: 'MemoryCache',
     });
   });
 
@@ -79,7 +79,7 @@ describe('Memory Cache', () => {
     expect(cache.buildKey('hello')).toEqual('hello');
 
     cache = new MemoryCache({
-      slot: 'MemoryCache',
+      engine: 'MemoryCache',
       keyPrefix: 'cache-',
     });
 
@@ -114,7 +114,7 @@ describe('Memory Cache', () => {
 
   it ('can set max size to limit memory usage', async () => {
     cache = new MemoryCache({
-      slot: 'MemoryCache',
+      engine: 'MemoryCache',
       max: 3,
     });
 

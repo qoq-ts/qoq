@@ -30,11 +30,11 @@ router
       }),
   })
   .alias({
-    input: 'd',
-    output: 'o',
+    d: 'input',
+    o: 'output',
   })
-  .action((ctx) => {
-    let { input, output } = ctx.options;
+  .action((ctx, payload) => {
+    let { input, output } = payload.options;
     const routers: object[] = [];
     const now = Date.now();
 

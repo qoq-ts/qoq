@@ -5,5 +5,5 @@ export const router = new WebRouter({
 });
 
 router.get('/test1').action((ctx) => {
-  ctx.send('Hello router1');
+  ctx.body = 'Hello router1';
 });

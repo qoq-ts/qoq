@@ -1,43 +1,50 @@
-import { Action } from '../slot/Action';
-import { CommandOption, OptionValidation } from '../slot/CommandOption';
-import { ConsoleSlotCtx, Slot } from '../slot/Slot';
-import { SlotManager } from '../slot/SlotManager';
+import { Next } from 'koa';
+import { ConsoleCtx } from '../core/ConsoleContext';
+import { optionParser } from '../parser/optionParser';
+import { Slot } from '../slot/Slot';
+import { Use } from '../slot/SlotManager';
 import { Validator } from '../validator/Validator';
-import { Builder } from './Builder';
+import { Builder, Parse } from './Builder';
 
 interface Document {
   description: string;
 }
 
-export class ConsoleBuilder<Props = any, State = any, Alias extends string = ''> extends Builder<Slot.Mix | Slot.Console, Props, State> {
+export class ConsoleBuilder<
+  Props = any,
+  State = any,
+  Alias extends string = '',
+  Payload extends { [key: string]: object } = {}
+> extends Builder<Slot.Mix | Slot.Console, Props, State, Payload> {
   public/*protected*/ readonly commands: string[];
   public/*protected*/ isShow: boolean = false;
-  public/*protected*/ commandOptions = CommandOption();
+  protected optionRules: Record<string, Validator> = {};
   public/*protected*/ readonly document: Document = {
     description: '',
   };
+
+  public/*protected*/ payload: {
+    options?: ReturnType<typeof optionParser>;
+  } = {};
 
   constructor(prefix: string, commands: string[]) {
     super();
     this.commands = commands.map((item) => prefix + item);
   }
 
-  public use<P, S>(
-    slot: Slot<Slot.Mix | Slot.Console, P, S> | SlotManager<Slot.Mix | Slot.Console, P, S>
-  ): ConsoleBuilder<Props & P, State & S> {
-    this.slots = this.slots.use(slot);
-    return this;
+  public use<P, S>(slot: Use<Slot.Mix | Slot.Console, P, S>): ConsoleBuilder<Props & P, State & S, Alias, Payload> {
+    return super.use(slot) as this;
   }
 
-  public options<T extends { [key: string]: Validator }>(options: T): ConsoleBuilder<Props & OptionValidation<T>, State, Exclude<keyof T, symbol | number>> {
-    this.use(this.commandOptions);
-    this.commandOptions.setData(options);
+  public options<T extends { [key: string]: Validator }>(options: T): ConsoleBuilder<Props, State, Exclude<keyof T, symbol | number>, Omit<Payload, 'options'> & { options: Parse<T> }> {
+    this.optionRules = options;
+    this.payload.options = optionParser(options);
     // @ts-expect-error
     return this;
   }
 
-  public action<P = {}, S = {}>(fn: ConsoleSlotCtx<Props & P, State & S>): ConsoleBuilder<Props & P, State & S> {
-    this.use(new Action(fn));
+  public action<P = {}, S = {}>(fn: (ctx: ConsoleCtx<Props & P, State & S>, payload: Payload, next: Next) => any): ConsoleBuilder<Props & P, State & S, Alias, Payload> {
+    this.useAction(fn);
     return this;
   }
 
@@ -46,8 +53,8 @@ export class ConsoleBuilder<Props = any, State = any, Alias extends string = ''>
     return this;
   }
 
-  public alias(optionAlias: { [key in Alias]?: string | string[] }): this {
-    this.commandOptions.setAlias(optionAlias);
+  public alias(optionAlias: { [key: string]: Alias }): this {
+    this.payload.options?.setAlias(optionAlias);
     return this;
   }
 

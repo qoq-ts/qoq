@@ -10,10 +10,8 @@ describe('Slot manager', () => {
       .use(new SlotDemo1('a'))
       .use(new SlotDemo2('b'));
 
-    expect(slots.getBranchSlots()).toHaveLength(2);
+    expect(slots.getBranchMiddleware()).toHaveLength(2);
     expect(slots.getTrunkNode()).toBeNull();
-    expect(slots.getBranchSlots()[0]).toBeInstanceOf(SlotDemo1);
-    expect(slots.getBranchSlots()[1]).toBeInstanceOf(SlotDemo2);
   });
 
   it ('can collect trunk slots', () => {
@@ -23,11 +21,9 @@ describe('Slot manager', () => {
 
     slots.setTrunk();
 
-    expect(slots.getBranchSlots()).toHaveLength(0);
+    expect(slots.getBranchMiddleware()).toHaveLength(0);
     expect(slots.getTrunkNode()).toEqual(slots);
-    expect(slots.getTrunkSlotsAndRouters()).toHaveLength(2);
-    expect(slots.getTrunkSlotsAndRouters()[0]).toBeInstanceOf(SlotDemo1);
-    expect(slots.getTrunkSlotsAndRouters()[1]).toBeInstanceOf(SlotDemo2);
+    expect(slots.getTrunkMiddlewareAndRouters()).toHaveLength(2);
   });
 
   it ('trunk and branch can write together', () => {
@@ -41,14 +37,10 @@ describe('Slot manager', () => {
       // @ts-expect-error
       .use(new SlotDemo4('d'));
 
-    expect(nextSlots.getBranchSlots()).toHaveLength(2);
-    expect(nextSlots.getBranchSlots()[0]).toBeInstanceOf(SlotDemo3);
-    expect(nextSlots.getBranchSlots()[1]).toBeInstanceOf(SlotDemo4);
+    expect(nextSlots.getBranchMiddleware()).toHaveLength(2);
 
     expect(nextSlots.getTrunkNode()).toEqual(slots);
-    expect(nextSlots.getTrunkSlotsAndRouters()).toHaveLength(2);
-    expect(nextSlots.getTrunkSlotsAndRouters()[0]).toBeInstanceOf(SlotDemo1);
-    expect(nextSlots.getTrunkSlotsAndRouters()[1]).toBeInstanceOf(SlotDemo2);
+    expect(nextSlots.getTrunkMiddlewareAndRouters()).toHaveLength(2);
   });
 
   it ('can mount router', () => {
@@ -61,8 +53,8 @@ describe('Slot manager', () => {
 
     slots.mountRouter(router);
 
-    expect(slots.getTrunkSlotsAndRouters()).toHaveLength(1);
-    expect(slots.getTrunkSlotsAndRouters()[0]).toEqual(router);
+    expect(slots.getTrunkMiddlewareAndRouters()).toHaveLength(1);
+    expect(slots.getTrunkMiddlewareAndRouters()[0]).toEqual(router);
   });
 
   it ('only tree trunk can mount router', () => {
@@ -75,9 +67,10 @@ describe('Slot manager', () => {
   });
 
   it ('can use slot manager in use()', () => {
-    const slots = WebSlotManager.use(WebSlotManager.use(WebSlotManager.use(new SlotDemo1('a'))));
+    const demo = new SlotDemo1('a');
+    const slots = WebSlotManager.use(WebSlotManager.use(WebSlotManager.use(demo)));
 
-    expect(slots.getBranchSlots()[0]).toBeInstanceOf(SlotDemo1);
+    expect(slots.getBranchMiddleware()[0]).toEqual(demo.collect()[0]);
   });
 
   it ('can set null to skip slot', () => {
@@ -96,6 +89,6 @@ describe('Slot manager', () => {
       return next();
     });
 
-    expect(slots.getBranchSlots()).toHaveLength(2);
+    expect(slots.getBranchMiddleware()).toHaveLength(2);
   });
 });

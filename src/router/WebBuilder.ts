@@ -1,22 +1,34 @@
 import { pathToRegexp, Key } from 'path-to-regexp';
-import { Action } from '../slot/Action';
-import { Payload, PayloadValidation } from '../slot/Payload';
-import { Param, ParamValidation } from '../slot/Param';
-import { Query, QueryValidation } from '../slot/Query';
-import { Slot, WebSlotCtx } from '../slot/Slot';
-import { SlotManager } from '../slot/SlotManager';
+import { Slot } from '../slot/Slot';
+import { Use } from '../slot/SlotManager';
 import { Method } from '../util/Method';
 import { Validator } from '../validator/Validator';
-import { Builder } from './Builder';
+import { Builder, Parse } from './Builder';
+import { Next } from 'koa';
+import { WebCtx } from '../core/WebContext';
+import { queryParser } from '../parser/queryParser';
+import { bodyParser } from '../parser/bodyParser';
+import { paramParser } from '../parser/paramParser';
 
-export class WebBuilder<Props = any, State = any, Param extends string = string> extends Builder<Slot.Web | Slot.Mix, Props, State> {
+export class WebBuilder<
+  Props = any,
+  State = any,
+  Param extends string = string,
+  Payload extends { [key: string]: object } = {}
+> extends Builder<Slot.Web | Slot.Mix, Props, State, Payload> {
   protected readonly uris: string[];
   protected readonly methods: Method[];
   protected readonly uriPatterns: ([RegExp, Key[], string | undefined])[];
 
-  protected queryData: Record<string, Validator> = {};
-  protected bodyData: Record<string, Validator> = {};
-  protected paramData: Record<string, Validator> = {};
+  protected queryRules: Record<string, Validator> = {};
+  protected bodyRules: Record<string, Validator> = {};
+  protected paramRules: Record<string, Validator> = {};
+
+  protected payload: {
+    query?: ReturnType<typeof queryParser>;
+    body?: ReturnType<typeof bodyParser>;
+    params?: ReturnType<typeof paramParser>;
+  } = {};
 
   constructor(prefix: string, uris: string[], methods: Method[]) {
     super();
@@ -37,37 +49,33 @@ export class WebBuilder<Props = any, State = any, Param extends string = string>
     }
   }
 
-  public use<P, S>(
-    slot: Slot<Slot.Mix | Slot.Web, P, S> | SlotManager<Slot.Mix | Slot.Web, P, S>
-  ): WebBuilder<Props & P, State & S, Param> {
-    this.slots = this.slots.use(slot);
+  public use<P, S>(slot: Use<Slot.Mix | Slot.Web, P, S>): WebBuilder<Props & P, State & S, Param, Payload> {
+    return super.use(slot) as this;
+  }
+
+  public query<T extends { [key: string]: Validator }>(rules: T): WebBuilder<Props, State, Param, Omit<Payload, 'query'> & { query: Parse<T> }> {
+    this.queryRules = rules;
+    this.payload.query = queryParser(rules);
+    // @ts-ignore
     return this;
   }
 
-  public query<T extends { [key: string]: Validator }>(rules: T): WebBuilder<Props & QueryValidation<T>, State, Param> {
-    this.queryData = rules;
-    this.use(new Query(rules));
+  public body<T extends { [key: string]: Validator }>(rules: T): WebBuilder<Props, State, Param, Omit<Payload, 'body'> & { body: Parse<T> }> {
+    this.bodyRules = rules;
+    this.payload.body = bodyParser(rules);
+    // @ts-ignore
     return this;
   }
 
-  /**
-   * An alias of request body.
-   */
-  public payload<T extends { [key: string]: Validator }>(rules: T): WebBuilder<Props & PayloadValidation<T>, State, Param> {
-    this.bodyData = rules;
-    this.use(new Payload(rules));
+  public params<T extends { [key in Param]: Validator }>(rules: T): WebBuilder<Props, State, Param, Omit<Payload, 'params'> & { params: Parse<T> }> {
+    this.paramRules = rules;
+    this.payload.params = paramParser(rules);
+    // @ts-ignore
     return this;
   }
 
-  public params<T extends { [key in Param]: Validator }>(rules: T): WebBuilder<Props & ParamValidation<T>, State, Param> {
-    this.paramData = rules;
-    this.use(new Param(rules));
-    return this;
-  }
-
-  public action<P = {}, S = {}>(fn: WebSlotCtx<Props & P, State & S>): WebBuilder<Props & P, State & S, Param> {
-    this.use(new Action(fn));
-    return this;
+  public action<P = {}, S = {}>(fn: (ctx: WebCtx<Props & P, State & S>, payload: Payload, next: Next) => any): WebBuilder<Props & P, State & S, Param, Payload> {
+    return this.useAction(fn), this;
   }
 
   public/*protected*/ matchAndGetParams(path: string, method: Method): false | Record<string, string> {

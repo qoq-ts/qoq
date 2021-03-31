@@ -8,37 +8,31 @@ import { version } from '../util/version';
 import { ConsoleRouter } from '../router/ConsoleRouter';
 import { toArray } from '../util/toArray';
 
-export class Help extends Slot<Slot.Console> {
+export class HelpSlot extends Slot<Slot.Console> {
   protected builders: ConsoleBuilder[] = [];
 
   constructor() {
     super();
     this.use((ctx, next) => {
       if (ctx.command === '') {
-        if (ctx.argv.some((argv) => argv === '--version' || argv === '-v')) {
+        ctx.commandMatched = true;
+
+        if (ctx.options['version'] || ctx.options['v']) {
           console.log(version);
         } else {
           this.showAllHelp(ctx.app.getPaths());
         }
 
-        ctx.commandMatched = true;
         return;
       }
 
-      if (ctx.argv.some((argv) => argv === '--help' || argv === '-h')) {
+      if (ctx.options['help'] || ctx.options['h']) {
         for (let i = 0; i < this.builders.length; ++i) {
           const builder = this.builders[i]!;
           if (builder.match(ctx.command)) {
-            const options = builder.commandOptions.getData();
-
-            if (
-              !options['help'] && ctx.argv.includes('--help') ||
-              !options['h'] && ctx.argv.includes('-h')
-            ) {
-              this.showCustomHelp(builder);
-              ctx.commandMatched = true;
-              return;
-            }
+            this.showCustomHelp(builder);
+            ctx.commandMatched = true;
+            return;
           }
         }
       }
@@ -90,8 +84,10 @@ export class Help extends Slot<Slot.Console> {
       .version(false)
       .help(false);
 
-    Object.entries(builder.commandOptions.getData()).forEach(([key, validator]) => {
-      const alias = builder.commandOptions.getAlias()[key];
+    const aliases = builder.payload.options?.getAlias();
+
+    Object.entries(builder.payload.options?.getRules() || {}).forEach(([key, validator]) => {
+      const alias = aliases?.[key];
       const options = validator.toJSON();
 
       cli.option(options.name || key, {

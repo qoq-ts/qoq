@@ -5,7 +5,7 @@ const router = new WebRouter({
 });
 
 router.get('/test4').action((ctx) => {
-  ctx.send('Hello router4');
+  ctx.body = 'Hello router4';
 });
 
 export default router;

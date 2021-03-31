@@ -6,12 +6,12 @@ const slots = WebSlotManager.use((ctx, next) => {
   return next();
 });
 
-Tree.setWebTrunk(slots);
+Tree.trunk(slots);
 
 export const router = new WebRouter({
   slots: slots,
 });
 
 router.get('/test2').action<{}, { data :string }>((ctx) => {
-  ctx.send('Hello ' + ctx.state.data);
+  ctx.body = 'Hello ' + ctx.state.data;
 });

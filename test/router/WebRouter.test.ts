@@ -1,4 +1,4 @@
-import { Cache, createConfig, MemoryCacheOptions, Tree, validator, WebApplication, WebRouter, WebSlotManager } from '../../src';
+import { Tree, validator, WebApplication, WebRouter, WebSlotManager } from '../../src';
 import request from 'supertest';
 import { SlotDemo1 } from '../fixture/SlotDemo1';
 import { resolve } from 'path';
@@ -34,8 +34,8 @@ describe('Web Router', () => {
       .query({
         name: validator.string.default('World'),
       })
-      .action(async (ctx) => {
-        ctx.send('Hello ' + ctx.query.name);
+      .action(async (ctx, payload) => {
+        ctx.body = 'Hello ' + payload.query.name;
       });
 
     await server.head('/').expect(200);
@@ -46,15 +46,16 @@ describe('Web Router', () => {
   it ('can create router with method post + payload', async () => {
     router
       .post('/user')
-      .payload({
+      .body({
         name: validator.string,
         age: validator.number,
       })
-      .action(async (ctx) => {
-        ctx.send({
-          name: ctx.payload.name,
-          age: ctx.payload.age
-        }, 201);
+      .action(async (ctx, payload) => {
+        ctx.body = {
+          name: payload.body.name,
+          age: payload.body.age
+        }
+        ctx.status = 201;
       });
 
     await server
@@ -75,15 +76,15 @@ describe('Web Router', () => {
   it ('can upload file', async () => {
     router
       .post('/avatar')
-      .payload({
+      .body({
         file: validator.file,
         ping: validator.string,
       })
-      .action(async (ctx) => {
-        ctx.send({
-          filename: ctx.payload.file.name,
-          ping: ctx.payload.ping,
-        });
+      .action(async (ctx, payload) => {
+        ctx.body = {
+          filename: payload.body.file.name,
+          ping: payload.body.ping,
+        };
       });
 
     await server
@@ -102,16 +103,18 @@ describe('Web Router', () => {
       .params({
         id: validator.number,
       })
-      .payload({
+      .body({
         name: validator.string,
         age: validator.number,
       })
-      .action(async (ctx) => {
-        ctx.send({
-          id: ctx.params.id,
-          name: ctx.payload.name,
-          age: ctx.payload.age,
-        }, 202);
+      .action(async (ctx, payload) => {
+        ctx.body = {
+          id: payload.params.id,
+          name: payload.body.name,
+          age: payload.body.age,
+        }
+
+        ctx.status = 202;
       });
 
     await server
@@ -134,16 +137,17 @@ describe('Web Router', () => {
       .params({
         id: validator.number,
       })
-      .payload({
+      .body({
         name: validator.string.optional(),
         age: validator.number.optional(),
       })
-      .action(async (ctx) => {
-        ctx.send({
-          id: ctx.params.id,
-          name: ctx.payload.name,
-          age: ctx.payload.age,
-        }, 202);
+      .action(async (ctx, payload) => {
+        ctx.body = {
+          id: payload.params.id,
+          name: payload.body.name,
+          age: payload.body.age,
+        };
+        ctx.status = 202;
       });
 
     await server
@@ -164,7 +168,7 @@ describe('Web Router', () => {
         id: validator.number,
       })
       .action(async (ctx) => {
-        ctx.send(null, 204);
+        ctx.status = 204;
       });
 
     await server.delete('/user/1').expect(204);
@@ -174,7 +178,7 @@ describe('Web Router', () => {
     router
       .all('/hello')
       .action(async (ctx) => {
-        ctx.send('Hello World');
+        ctx.body = 'Hello World';
       });
 
     await server.head('/hello').expect(200);
@@ -189,7 +193,7 @@ describe('Web Router', () => {
     router
       .get('/')
       .action(async (ctx) => {
-        ctx.send('Hello');
+        ctx.body = 'Hello';
       });
 
     await server.post('/').expect(404);
@@ -200,7 +204,7 @@ describe('Web Router', () => {
     router
       .get('/')
       .action(async (ctx) => {
-        ctx.send('Hello');
+        ctx.body = 'Hello';
       });
 
     await server.get('/hello').expect(404);
@@ -210,7 +214,7 @@ describe('Web Router', () => {
     router
       .get(['/(admin|a)', '/adm', '/ada'])
       .action(async (ctx) => {
-        ctx.send('Hello: Admin');
+        ctx.body = 'Hello: Admin';
       });
 
     await server.get('/admin').expect('Hello: Admin');
@@ -223,8 +227,8 @@ describe('Web Router', () => {
       .params({
         id: validator.number.default(10),
       })
-      .action(async (ctx) => {
-        ctx.send('Hello: ' + ctx.params.id);
+      .action(async (ctx, payload) => {
+        ctx.body = 'Hello: ' + payload.params.id;
       });
 
     router
@@ -232,8 +236,8 @@ describe('Web Router', () => {
       .params({
         name: validator.string,
       })
-      .action(async (ctx) => {
-        ctx.send('Hi: ' + ctx.params.name);
+      .action(async (ctx, payload) => {
+        ctx.body = 'Hi: ' + payload.params.name;
       });
 
     await server.get('/users').expect('Hello: 10');
@@ -242,11 +246,9 @@ describe('Web Router', () => {
   });
 
   it ('can use group slots', async () => {
-    const globalSlots = WebSlotManager.use(new Cache(createConfig<MemoryCacheOptions>({
-      slot: 'MemoryCache',
-    })));
+    const globalSlots = WebSlotManager.use(new SlotDemo1('567'));
 
-    Tree.setWebTrunk(globalSlots);
+    Tree.trunk(globalSlots);
 
     const app = new WebApplication();
     const router = new WebRouter({
@@ -259,10 +261,10 @@ describe('Web Router', () => {
     router
       .get('/')
       .action((ctx) => {
-        ctx.send(ctx.testData);
+        ctx.body = ctx.testData;
       });
 
-    await server.get('/').expect('123');
+    await server.get('/').expect(200).expect('123');
 
     listen.close();
   });
@@ -272,7 +274,7 @@ describe('Web Router', () => {
       .get('/')
       .use(new SlotDemo1('456'))
       .action((ctx) => {
-        ctx.send(ctx.testData);
+        ctx.body = ctx.testData;
       });
 
     await server.get('/').expect('456');
@@ -286,11 +288,11 @@ describe('Web Router', () => {
     app.mountRouter(router);
 
     router.get('/').action((ctx) => {
-      ctx.send('ok');
+      ctx.body = 'ok';
     });
 
     router.get('/ping').action((ctx) => {
-      ctx.send('ok');
+      ctx.body = 'ok';
     });
 
     const router1 = new WebRouter({
@@ -300,11 +302,11 @@ describe('Web Router', () => {
 
     app.mountRouter(router1);
     router1.get('/').action((ctx) => {
-      ctx.send('ok');
+      ctx.body = 'ok';
     });
 
     router1.get('/ping').action((ctx) => {
-      ctx.send('ok');
+      ctx.body = 'ok';
     });
 
     await server.get('/').expect(200);
@@ -322,7 +324,7 @@ describe('Web Router', () => {
         id: validator.number,
       })
       .action((ctx) => {
-        ctx.send('ok');
+        ctx.body = 'ok';
       });
 
     router
@@ -331,7 +333,7 @@ describe('Web Router', () => {
         name: validator.string,
       })
       .action((ctx) => {
-        ctx.send('ok');
+        ctx.body = 'ok';
       });
 
     await server.get('/test/:id').expect(400);

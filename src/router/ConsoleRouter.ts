@@ -1,7 +1,7 @@
+import compose, { Middleware } from 'koa-compose';
 import { ConsoleCtx } from '../core/ConsoleContext';
-import { Slot, ConsoleSlotCtx, Next } from '../slot/Slot';
+import { Slot, ConsoleSlotCtx } from '../slot/Slot';
 import { SlotManager } from '../slot/SlotManager';
-import { compose } from '../util/compose';
 import { toArray } from '../util/toArray';
 import { ConsoleBuilder } from './ConsoleBuilder';
 import { Router } from './Router';
@@ -24,36 +24,32 @@ export class ConsoleRouter<Props = any, State = any> extends Router<Slot.Console
 
   public/*protected*/ createMiddleware(): ConsoleSlotCtx {
     const builders = this.builders;
-    const groupSlots = this.globalSlots.getBranchSlots();
+    const groupSlots = this.globalSlots.getBranchMiddleware();
     const groupCompose = groupSlots.length > 0 && compose(groupSlots);
 
     return (ctx, next) => {
       const { command } = ctx;
-      const middleware: Array<Slot<Slot.Console> | ConsoleSlotCtx> = [];
+      const middleware: Middleware<ConsoleCtx>[] = [];
+      let matched: boolean = false;
+      groupCompose && middleware.push(groupCompose);
 
       for (let i = 0; i < builders.length; ++i) {
         const builder = builders[i]!;
         if (builder.match(command)) {
-          middleware.push(this.reset, ...builder.getSlots());
+          matched = matched || true;
+          middleware.push(
+            (_ctx, _next) => (_ctx.commandMatched = true, _next()),
+            ...builder.getMiddleware()
+          );
         }
       }
 
       // No command is found
-      if (!middleware.length) {
+      if (!matched) {
         return next();
       }
 
-      groupCompose && middleware.unshift(groupCompose);
-
       return compose(middleware)(ctx, next);
     };
-  }
-
-  protected reset(ctx: ConsoleCtx, next: Next) {
-    ctx.commandMatched = true;
-    // @ts-expect-error
-    ctx.options = undefined;
-
-    return next();
   }
 }

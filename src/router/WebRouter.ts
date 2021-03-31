@@ -1,6 +1,7 @@
+import compose, { Middleware } from 'koa-compose';
+import { WebCtx } from '../core/WebContext';
 import { Slot, WebSlotCtx } from '../slot/Slot';
 import { SlotManager } from '../slot/SlotManager';
-import { compose } from '../util/compose';
 import { Method } from '../util/Method';
 import { toArray } from '../util/toArray';
 import { Router } from './Router';
@@ -28,42 +29,48 @@ type GetParam<T extends string> = (
         : never
 );
 
-export class WebRouter<Props = any, State = any> extends Router<Slot.Web | Slot.Mix, WebBuilder<any, any>> {
+type Param<T extends string> = {
+  params: {
+    [key in GetParam<T>]?: unknown
+  }
+}
+
+export class WebRouter<Props = {}, State = {}> extends Router<Slot.Web | Slot.Mix, WebBuilder<any, any>> {
   constructor(options: WebRouterOptions<Props, State>) {
     super((options.prefix || '').replace(/\/+$/, ''), options.slots);
   }
 
-  public get<T extends string>(uri: T | T[]): WebBuilder<Props, State, GetParam<T>> {
+  public get<T extends string>(uri: T | T[]): WebBuilder<Props & Param<T>, State, GetParam<T>> {
     const builder = new WebBuilder(this.prefix, toArray(uri), [Method.get, Method.head]);
     this.builders.push(builder);
     return builder;
   }
 
-  public post<T extends string>(uri: T | T[]): WebBuilder<Props, State, GetParam<T>> {
+  public post<T extends string>(uri: T | T[]): WebBuilder<Props & Param<T>, State, GetParam<T>> {
     const builder = new WebBuilder(this.prefix, toArray(uri), [Method.post]);
     this.builders.push(builder);
     return builder;
   }
 
-  public put<T extends string>(uri: T | T[]): WebBuilder<Props, State, GetParam<T>> {
+  public put<T extends string>(uri: T | T[]): WebBuilder<Props & Param<T>, State, GetParam<T>> {
     const builder = new WebBuilder(this.prefix, toArray(uri), [Method.put]);
     this.builders.push(builder);
     return builder;
   }
 
-  public patch<T extends string>(uri: T | T[]): WebBuilder<Props, State, GetParam<T>> {
+  public patch<T extends string>(uri: T | T[]): WebBuilder<Props & Param<T>, State, GetParam<T>> {
     const builder = new WebBuilder(this.prefix, toArray(uri), [Method.patch]);
     this.builders.push(builder);
     return builder;
   }
 
-  public delete<T extends string>(uri: T | T[]): WebBuilder<Props, State, GetParam<T>> {
+  public delete<T extends string>(uri: T | T[]): WebBuilder<Props & Param<T>, State, GetParam<T>> {
     const builder = new WebBuilder(this.prefix, toArray(uri), [Method.delete]);
     this.builders.push(builder);
     return builder;
   }
 
-  public all<T extends string>(uri: T | T[]): WebBuilder<Props, State, GetParam<T>> {
+  public all<T extends string>(uri: T | T[]): WebBuilder<Props & Param<T>, State, GetParam<T>> {
     const builder = new WebBuilder(this.prefix, toArray(uri), Object.values(Method));
     this.builders.push(builder);
     return builder;
@@ -71,36 +78,36 @@ export class WebRouter<Props = any, State = any> extends Router<Slot.Web | Slot.
 
   public/*protected*/ createMiddleware(): WebSlotCtx {
     const builders = this.builders;
-    const groupSlots = this.globalSlots.getBranchSlots();
-    const groupCompose = groupSlots.length > 0 && compose(groupSlots);
+    const groupMiddleware = this.globalSlots.getBranchMiddleware();
+    const groupCompose = groupMiddleware.length > 0 && compose(groupMiddleware);
 
     return (ctx, next) => {
       const { path, method } = ctx.request;
-      const middleware: Array<Slot<Slot.Web> | WebSlotCtx> = [];
+      const middleware: Middleware<WebCtx>[] = [];
+      let matched: boolean = false;
+      groupCompose && middleware.push(groupCompose);
 
       for (let i = 0; i < builders.length; ++i) {
         const builder = builders[i]!;
-        const params = builder.matchAndGetParams(path, method);
+        const params = builder.matchAndGetParams(path, method as Method);
 
         if (params) {
+          matched = matched || true;
           middleware.push(
-            (_ctx, _next) => {
-              _ctx._params = params;
+            (_ctx, _next) => (
               // @ts-expect-error
-              _ctx['params'] = undefined;
-              return _next();
-            },
-            ...builder.getSlots(),
+              _ctx.params = params,
+              _next()
+            ),
+            ...builder.getMiddleware(),
           );
         }
       }
 
       // No path is found
-      if (!middleware.length) {
+      if (!matched) {
         return next();
       }
-
-      groupCompose && middleware.unshift(groupCompose);
 
       return compose(middleware)(ctx, next);
     };

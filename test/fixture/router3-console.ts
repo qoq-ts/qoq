@@ -6,7 +6,7 @@ const slots = ConsoleSlotManager.use((ctx, next) => {
   return next();
 });
 
-Tree.setConsoleTrunk(slots);
+Tree.trunk(slots);
 
 export const router = new ConsoleRouter({
   slots: slots,

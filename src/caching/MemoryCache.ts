@@ -2,8 +2,10 @@ import LRUCache from 'lru-cache';
 import { BaseCache, BaseCacheOptions } from './BaseCache';
 
 export interface MemoryCacheOptions extends BaseCacheOptions {
-  slot: 'MemoryCache';
-  // The maximum size of the cache, default to `Infinity`
+  engine: 'MemoryCache';
+  /**
+   * The maximum size of the cache. Default to `Infinity`
+   */
   max?: number;
 }
 

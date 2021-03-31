@@ -1,35 +1,32 @@
 import glob from 'glob';
 import path from 'path';
-import { EventEmitter } from 'events';
-import { setInspector } from '../util/setInspector';
-import { Composer, compose } from '../util/compose';
 import { Router } from '../router/Router';
 import { SlotManager } from '../slot/SlotManager';
+import compose, { Middleware, ComposedMiddleware } from 'koa-compose';
 import { toArray } from '../util/toArray';
 
-export abstract class Application<R extends Router<any, any>> extends EventEmitter {
-  protected readonly routerPath: string[];
-  protected readonly compose: Composer;
-  protected readonly treeBranch = compose([]);
-  protected readonly treeTrunk = compose([]);
+export abstract class RouterParser<R extends Router<any, any>> {
+  public readonly compose: ComposedMiddleware<any>;
+  public readonly paths: string[];
+
+  protected treeTrunk: Middleware<any>[] = [];
+  protected readonly tree: Middleware<any>[];
+  protected readonly treeBranch: Middleware<any>[] = [];
+
   private shouldTrunkRefresh: boolean = true;
 
-  constructor(routerPath: string | string[]) {
-    super();
-    this.compose = compose([this.treeBranch, this.treeTrunk]);
-    this.searchRouters(this.routerPath = toArray(routerPath));
+  constructor(paths: string | string[]) {
+    this.paths = toArray(paths);
+    this.searchRouters(this.paths);
     this.refreshTreeTrunk();
-    setInspector(this);
-  }
-
-  public getPaths(): string[] {
-    return this.routerPath;
+    this.tree = [compose(this.treeBranch), compose(this.treeTrunk)];
+    this.compose = compose(this.tree);
   }
 
   /**
    * Mount router from path or instance
    */
-  public mountRouter(router: R | R[] | string | string[]): this {
+   public mountRouter(router: R | R[] | string | string[]): this {
     const routers = toArray(router) as string[] | R[];
 
     if (!routers.length) {
@@ -41,7 +38,7 @@ export abstract class Application<R extends Router<any, any>> extends EventEmitt
     };
 
     if (isString(routers)) {
-      this.routerPath.push(...routers);
+      this.paths.push(...routers);
       this.searchRouters(routers);
     } else {
       this.parseRouters(routers);
@@ -77,7 +74,7 @@ export abstract class Application<R extends Router<any, any>> extends EventEmitt
           this.shouldTrunkRefresh = this.shouldTrunkRefresh || true;
           trunkNode.mountRouter(router);
         } else {
-          this.treeBranch.append(router);
+          this.treeBranch.push(router);
         }
       }
     }
@@ -86,13 +83,16 @@ export abstract class Application<R extends Router<any, any>> extends EventEmitt
   protected refreshTreeTrunk(): void {
     if (this.shouldTrunkRefresh) {
       this.shouldTrunkRefresh = false;
-      this.treeTrunk.set(this.getTrunkNode().getTrunkSlotsAndRouters());
+      if (this.tree) {
+        this.treeTrunk.splice(0, this.treeTrunk.length,
+          ...this.getTrunkNode().getTrunkMiddlewareAndRouters(),
+        );
+      } else {
+        this.treeTrunk = this.getTrunkNode().getTrunkMiddlewareAndRouters();
+      }
     }
   }
 
   protected abstract getTrunkNode(): SlotManager<any, any, any>;
   protected abstract getRouterInstance(): new (...args: any[]) => R;
-
-  protected abstract inspect(): object;
-  protected abstract toJSON(): object;
 }

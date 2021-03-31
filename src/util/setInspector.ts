@@ -1,8 +1,8 @@
-import util from 'util';
+import { inspect } from 'util';
 
 export const setInspector = (instance: object) => {
-  if (util.inspect.custom) {
+  if (inspect.custom) {
     // @ts-expect-error
-    instance[util.inspect.custom] = instance.inspect;
+    instance[inspect.custom] = instance.inspect.bind(instance);
   }
 };

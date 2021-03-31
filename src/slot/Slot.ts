@@ -1,17 +1,16 @@
+import { Next } from 'koa';
 import { ConsoleCtx } from '../core/ConsoleContext';
 import { WebCtx } from '../core/WebContext';
-
-export type Next = () => Promise<any>;
 
 export type MixSlotCtx<Props = {}, State = {}> = (ctx: WebCtx<Props, State> | ConsoleCtx<Props, State>, next: Next) => any;
 export type WebSlotCtx<Props = {}, State = {}> = (ctx: WebCtx<Props, State>, next: Next) => any;
 export type ConsoleSlotCtx<Props = {}, State = {}> = (ctx: ConsoleCtx<Props, State>, next: Next) => any;
 
-export type SlotCtx<Type, Props = {}, State = {}> = Type extends Slot.Mix
-  ? MixSlotCtx<Props, State>
+export type SlotCtx<Type extends SlotAllType, Props = {}, State = {}> = Type extends Slot.Web
+  ? WebSlotCtx<Props, State>
   : Type extends Slot.Console
     ? ConsoleSlotCtx<Props, State>
-    : WebSlotCtx<Props, State>;
+    : MixSlotCtx<Props, State>;
 
 export namespace Slot {
   export type Web = 'web';
@@ -43,10 +42,6 @@ export abstract class Slot<
         : Slot<Slot.Web, P, S> | Slot<Slot.Mix, P, S> | Slot<Slot.Console, P, S>
   ): {
     use: Slot<Type, P & Props, S & State>['use'];
-  };
-  // @ts-expect-error to compatible with koa.Middleware
-  protected use(fn: (ctx: any, next: Next) => any): {
-    use: Slot<Type, Props, State>['use'];
   };
   protected use(fn: SlotCtx<Type, any, any> | Slot<any>): object {
     if (typeof fn === 'function') {
