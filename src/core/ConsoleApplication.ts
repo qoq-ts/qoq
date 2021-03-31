@@ -6,6 +6,7 @@ import util from 'util';
 import { setInspector } from '../util/setInspector';
 import { ConsoleRouterParser } from './ConsoleRouterParser';
 import { ConsoleContext } from './ConsoleContext';
+import { ConsoleRouter } from '../router/ConsoleRouter';
 
 interface Options {
   /**
@@ -28,6 +29,14 @@ export class ConsoleApplication extends EventEmitter {
 
   public getPaths() {
     return this.routerParser.paths;
+  }
+
+  /**
+   * Mount router from path or instance
+   */
+  mountRouter(router: ConsoleRouter | ConsoleRouter[] | string | string[]): this {
+    this.routerParser.mountRouter(router);
+    return this;
   }
 
   public onerror(err: Error) {
