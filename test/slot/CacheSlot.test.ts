@@ -1,8 +1,7 @@
 import { existsSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
-import compose from 'koa-compose';
-import { defineConfig, FileCacheOptions, MemoryCacheOptions, CacheSlot, FileCache, MemoryCache, WebCtx } from '../../src';
+import { defineConfig, FileCacheOptions, MemoryCacheOptions, CacheSlot, FileCache, MemoryCache, testMiddleware } from '../../src';
 import CustomCache, { CustomCacheOptions } from '../fixture/CustomCache';
 
 describe('Cache Slot', () => {
@@ -48,14 +47,12 @@ describe('Cache Slot', () => {
   });
 
   it ('can inject ctx.cache to context', async () => {
-    // @ts-expect-error
-    const ctx: WebCtx & { cache: any } = {};
     const cache = new CacheSlot<MemoryCacheOptions>({
       engine: 'MemoryCache',
     });
 
-    await compose(cache.collect())(ctx);
+    const ctx = await testMiddleware(cache)({});
     expect(ctx).toHaveProperty('cache');
-    expect(ctx['cache']).toBeInstanceOf(MemoryCache);
+    expect(ctx.cache).toBeInstanceOf(MemoryCache);
   });
 });

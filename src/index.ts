@@ -22,3 +22,4 @@ export { WebCtx } from './core/WebContext';
 export { ConsoleCtx } from './core/ConsoleContext';
 export { HttpError } from 'http-errors';
 export { BaseCache, BaseCacheOptions } from './caching/BaseCache';
+export { testMiddleware } from './util/testMiddleware';
