@@ -1,7 +1,7 @@
 import createError from 'http-errors';
-import { Validator } from './Validator';
+import { Validator, ValidatorTypes } from './Validator';
 
-export const validate = (sourceData: Record<string, any>, validators: { [key: string]: Validator }) => {
+export const validate = <T extends { [key: string]: Validator }>(sourceData: Record<string, any>, validators: T): ValidatorTypes<T> => {
   const payload: Record<string, any> = {};
   const keys = Object.keys(validators);
 
@@ -16,5 +16,5 @@ export const validate = (sourceData: Record<string, any>, validators: { [key: st
     }
   }
 
-  return payload;
+  return payload as ValidatorTypes<T>;
 };

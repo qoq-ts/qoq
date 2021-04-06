@@ -8,6 +8,10 @@ export interface ValidatorOptions<Type, IsRequired extends boolean> extends Docu
   required: IsRequired;
 }
 
+export type ValidatorTypes<T> = {
+  [key in keyof T]: ValidatorType<T[key]>;
+};
+
 export type ValidatorType<T> = T extends Validator<infer Options>
 ? NonNullable<Options['defaultValue']> |
   (

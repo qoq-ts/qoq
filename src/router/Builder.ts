@@ -1,11 +1,6 @@
 import { Next } from 'koa';
 import { Slot, SlotAllType, SlotCtx } from '../slot/Slot';
 import { SlotManager, Use } from '../slot/SlotManager';
-import { ValidatorType } from '../validator/Validator';
-
-export type Parse<T> = {
-  [key in keyof T]: ValidatorType<T[key]>;
-};
 
 export abstract class Builder<
   T extends SlotAllType,

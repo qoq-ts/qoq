@@ -2,8 +2,8 @@ import { pathToRegexp, Key } from 'path-to-regexp';
 import { Slot } from '../slot/Slot';
 import { Use } from '../slot/SlotManager';
 import { Method } from '../util/Method';
-import { Validator } from '../validator/Validator';
-import { Builder, Parse } from './Builder';
+import { Validator, ValidatorTypes } from '../validator/Validator';
+import { Builder } from './Builder';
 import { Next } from 'koa';
 import { WebCtx } from '../core/WebContext';
 import { queryParser } from '../parser/queryParser';
@@ -53,21 +53,21 @@ export class WebBuilder<
     return super.use(slot) as this;
   }
 
-  public query<T extends { [key: string]: Validator }>(rules: T): WebBuilder<Props, State, Param, Omit<Payload, 'query'> & { query: Parse<T> }> {
+  public query<T extends { [key: string]: Validator }>(rules: T): WebBuilder<Props, State, Param, Omit<Payload, 'query'> & { query: ValidatorTypes<T> }> {
     this.queryRules = rules;
     this.payload.query = queryParser(rules);
     // @ts-ignore
     return this;
   }
 
-  public body<T extends { [key: string]: Validator }>(rules: T): WebBuilder<Props, State, Param, Omit<Payload, 'body'> & { body: Parse<T> }> {
+  public body<T extends { [key: string]: Validator }>(rules: T): WebBuilder<Props, State, Param, Omit<Payload, 'body'> & { body: ValidatorTypes<T> }> {
     this.bodyRules = rules;
     this.payload.body = bodyParser(rules);
     // @ts-ignore
     return this;
   }
 
-  public params<T extends { [key in Param]: Validator }>(rules: T): WebBuilder<Props, State, Param, Omit<Payload, 'params'> & { params: Parse<T> }> {
+  public params<T extends { [key in Param]: Validator }>(rules: T): WebBuilder<Props, State, Param, Omit<Payload, 'params'> & { params: ValidatorTypes<T> }> {
     this.paramRules = rules;
     this.payload.params = paramParser(rules);
     // @ts-ignore

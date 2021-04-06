@@ -3,8 +3,8 @@ import { ConsoleCtx } from '../core/ConsoleContext';
 import { optionParser } from '../parser/optionParser';
 import { Slot } from '../slot/Slot';
 import { Use } from '../slot/SlotManager';
-import { Validator } from '../validator/Validator';
-import { Builder, Parse } from './Builder';
+import { Validator, ValidatorTypes } from '../validator/Validator';
+import { Builder } from './Builder';
 
 interface Document {
   description: string;
@@ -36,7 +36,7 @@ export class ConsoleBuilder<
     return super.use(slot) as this;
   }
 
-  public options<T extends { [key: string]: Validator }>(options: T): ConsoleBuilder<Props, State, Exclude<keyof T, symbol | number>, Omit<Payload, 'options'> & { options: Parse<T> }> {
+  public options<T extends { [key: string]: Validator }>(options: T): ConsoleBuilder<Props, State, Exclude<keyof T, symbol | number>, Omit<Payload, 'options'> & { options: ValidatorTypes<T> }> {
     this.optionRules = options;
     this.payload.options = optionParser(options);
     // @ts-expect-error
