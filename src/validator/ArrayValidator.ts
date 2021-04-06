@@ -1,14 +1,15 @@
 import { Validator, ValidatorOptions, ValidatorType } from './Validator';
 
-interface ArrayOptions<T, IsRequired extends boolean> extends ValidatorOptions<T, IsRequired> {
+interface ArrayOptions<T> extends ValidatorOptions<T> {
   itemValidator?: Validator;
   minItemLength?: number;
   maxItemLength?: number;
 }
 
-export class ArrayValidator<Type extends any[] = never[], T extends boolean = true> extends Validator<ArrayOptions<Type, T>> {
-  public each<V extends Validator>(values: V): ArrayValidator<ValidatorType<V>[], T> {
+export class ArrayValidator<T = never[]> extends Validator<ArrayOptions<T>> {
+  public each<V extends Validator>(values: V): ArrayValidator<ValidatorType<V>[]> {
     this.config.itemValidator = values;
+    // @ts-expect-error
     return this;
   }
 
@@ -22,20 +23,29 @@ export class ArrayValidator<Type extends any[] = never[], T extends boolean = tr
     return this;
   }
 
-  public default(value: Type): ArrayValidator<Type, true> {
+  public default(value: NonNullable<T>): ArrayValidator<NonNullable<T>> {
     return super.default(value);
   }
 
-  public optional(): ArrayValidator<Type, false> {
+  public optional(): ArrayValidator<T | undefined> {
     return super.optional();
   }
 
-  protected validateValue(data: Record<string, any>, key: string, superKeys: string[]): string | void {
+  /**
+   * Make sure you call it at the ending of chain.
+   */
+  transform<T1>(fn: (value: T) => T1): ArrayValidator<T1> {
+    this.config.transform = fn;
+    // @ts-expect-error
+    return this;
+  }
+
+  protected validateValue(obj: Record<string, any>, key: string, superKeys: string[]): string | void {
     const { minItemLength, maxItemLength, itemValidator } = this.config;
-    let value: any[] = data[key];
+    let value: any[] = obj[key];
 
     if (!Array.isArray(value)) {
-      data[key] = value = [value];
+      obj[key] = value = [value];
     }
 
     if (minItemLength !== undefined || maxItemLength !== undefined) {

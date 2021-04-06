@@ -1,18 +1,18 @@
 import { Validator, ValidatorOptions } from './Validator';
 
-interface InOptions<T, IsRequired extends boolean> extends ValidatorOptions<T, IsRequired> {
+interface InOptions<T> extends ValidatorOptions<T> {
   ranges: T[];
   strict?: boolean;
 }
 
-export class InValidator<Type extends number | string = number | string, T extends boolean = true> extends Validator<InOptions<Type, T>> {
+export class InValidator<T = number | string> extends Validator<InOptions<T>> {
   constructor() {
     super();
     this.config.ranges = [];
     this.config.strict = false;
   }
 
-  public range<Types extends number | string>(values: Types[]): InValidator<Types, T> {
+  public range<Types extends number | string>(values: Types[]): InValidator<Types> {
     // @ts-expect-error
     this.config.ranges = values;
     // @ts-expect-error
@@ -24,12 +24,21 @@ export class InValidator<Type extends number | string = number | string, T exten
     return this;
   }
 
-  public default(value: Type): InValidator<Type, true> {
+  public default(value: NonNullable<T>): InValidator<NonNullable<T>> {
     return super.default(value);
   }
 
-  public optional(): InValidator<Type, false> {
+  public optional(): InValidator<T | undefined> {
     return super.optional();
+  }
+
+  /**
+   * Make sure you call it at the ending of chain.
+   */
+  transform<T1>(fn: (value: T) => T1): InValidator<T1> {
+    this.config.transform = fn;
+    // @ts-expect-error
+    return this;
   }
 
   protected validateValue(obj: Record<string, any>, key: string, superKeys: string[]): string | void {

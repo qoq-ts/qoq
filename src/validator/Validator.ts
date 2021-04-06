@@ -3,9 +3,10 @@ interface Document {
   description?: string;
 }
 
-export interface ValidatorOptions<Type, IsRequired extends boolean> extends Document {
-  defaultValue?: Type;
-  required: IsRequired;
+export interface ValidatorOptions<Type> extends Document {
+  defaultValue: Type;
+  required: boolean;
+  transform?: (value: Type) => any;
 }
 
 export type ValidatorTypes<T> = {
@@ -13,15 +14,10 @@ export type ValidatorTypes<T> = {
 };
 
 export type ValidatorType<T> = T extends Validator<infer Options>
-? NonNullable<Options['defaultValue']> |
-  (
-    Options['required'] extends true
-      ? NonNullable<Options['defaultValue']>
-      : undefined
-  )
+? Options['defaultValue']
 : never;
 
-export abstract class Validator<T extends ValidatorOptions<any, boolean> = ValidatorOptions<any, boolean>>{
+export abstract class Validator<T extends ValidatorOptions<any> = ValidatorOptions<any>>{
   protected readonly config: T;
 
   constructor() {
@@ -63,7 +59,12 @@ export abstract class Validator<T extends ValidatorOptions<any, boolean> = Valid
       }
     }
 
-    return this.validateValue(obj, key, superKeys);
+    const msg = this.validateValue(obj, key, superKeys);
+    if (msg === undefined && typeof this.config.transform === 'function') {
+      obj[key] = this.config.transform(obj[key]);
+    }
+
+    return msg;
   }
 
   protected getLabel(key: string, superKeys: string[]): string {

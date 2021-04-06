@@ -1,20 +1,22 @@
 
 import { validator } from '../../src';
+import { cloneDeep } from 'lodash';
 
+const defaultData = {
+  http: 'http://example.com',
+  https: 'https://www.example.com',
+  port: 'http://example.com:3000',
+  path: 'https://www.example.com/a/b',
+  portPath: 'http://example.com:3000/a/b',
+  ftp: 'ftp://www.example.com/a/b',
+  invalid: '//example.com',
+};
 
 describe('Url validator', () => {
-  let data: Record<string, any> = {};
+  let data: typeof defaultData;
 
   beforeEach(() => {
-    data = {
-      http: 'http://example.com',
-      https: 'https://www.example.com',
-      port: 'http://example.com:3000',
-      path: 'https://www.example.com/a/b',
-      portPath: 'http://example.com:3000/a/b',
-      ftp: 'ftp://www.example.com/a/b',
-      invalid: '//example.com',
-    };
+    data = cloneDeep(defaultData);
   });
 
   it ('should support many kinds', () => {
@@ -42,5 +44,14 @@ describe('Url validator', () => {
   it ('should have multiple schemes', () => {
     expect(validator.url.validate(data, 'ftp')).toContain('must be url');
     expect(validator.url.schemes(['ftp', 'http', 'https']).validate(data, 'ftp')).toEqual(undefined);
+  });
+
+  it ('can transform data by user', () => {
+    validator
+      .url
+      .transform((value) => value.substr(5))
+      .validate(data, 'http');
+
+    expect(data['http']).toEqual('//example.com');
   });
 });

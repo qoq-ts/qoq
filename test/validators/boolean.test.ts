@@ -1,18 +1,21 @@
 import { validator } from '../../src';
+import { cloneDeep } from 'lodash';
+
+const defaultData = {
+  true1: 1,
+  true1str: '1',
+  false0: 0,
+  false0str: '0',
+  trueboolean: true,
+  falseboolean: false,
+  id5: 5,
+};;
 
 describe('Boolean validator', () => {
-  let data: Record<string, any> = {};
+  let data: typeof defaultData;
 
   beforeEach(() => {
-    data = {
-      true1: 1,
-      true1str: '1',
-      false0: 0,
-      false0str: '0',
-      trueboolean: true,
-      falseboolean: false,
-      id5: 5,
-    };
+    data = cloneDeep(defaultData);
   });
 
   it ('may be undefined', () => {
@@ -59,5 +62,14 @@ describe('Boolean validator', () => {
 
     expect(validator.boolean.trueValues([false]).falseValues([true]).validate(data, 'trueboolean')).toEqual(undefined);
     expect(data['trueboolean']).toEqual(false);
+  });
+
+  it ('can transform data by user', () => {
+    validator
+      .boolean
+      .transform(String)
+      .validate(data, 'true1');
+
+    expect(data['true1']).toEqual('true');
   });
 });

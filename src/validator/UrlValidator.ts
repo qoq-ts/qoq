@@ -1,10 +1,10 @@
 import { Validator, ValidatorOptions } from './Validator';
 
-interface UrlOptions<IsRequired extends boolean> extends ValidatorOptions<string, IsRequired> {
+interface UrlOptions<T> extends ValidatorOptions<T> {
   schemes?: string[];
 }
 
-export class UrlValidator<T extends boolean = true> extends Validator<UrlOptions<T>> {
+export class UrlValidator<T = string> extends Validator<UrlOptions<T>> {
   protected validSchemes = ['http', 'https'];
 
   protected pattern = '^{schemes}:\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(?::\d{1,5})?(?:$|[?\/#])';
@@ -14,12 +14,21 @@ export class UrlValidator<T extends boolean = true> extends Validator<UrlOptions
     return this;
   }
 
-  optional(): UrlValidator<false> {
+  optional(): UrlValidator<T | undefined> {
     return super.optional();
   }
 
-  default(url: string): UrlValidator<true> {
+  default(url: NonNullable<T>): UrlValidator<NonNullable<T>> {
     return super.default(url);
+  }
+
+  /**
+   * Make sure you call it at the ending of chain.
+   */
+  transform<T1>(fn: (value: T) => T1): UrlValidator<T1> {
+    this.config.transform = fn;
+    // @ts-expect-error
+    return this;
   }
 
   protected validateValue(data: Record<string, any>, key: string, superKeys: string[]): string | void {

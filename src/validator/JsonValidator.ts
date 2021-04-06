@@ -2,23 +2,32 @@ import { Validator, ValidatorOptions, ValidatorType } from './Validator';
 
 type Constraint = Record<string, Validator>;
 
-interface JsonOptions<T, IsRequired extends boolean> extends ValidatorOptions<T, IsRequired> {
+interface JsonOptions<T> extends ValidatorOptions<T> {
   constraint?: Constraint;
 }
 
-export class JsonValidator<Type extends object = object, T extends boolean = true> extends Validator<JsonOptions<Type, T>> {
-  public constraint<V extends Constraint>(constraint: V): JsonValidator<{ [key in keyof V]: ValidatorType<V[key]> }, T> {
+export class JsonValidator<T = object> extends Validator<JsonOptions<T>> {
+  public constraint<V extends Constraint>(constraint: V): JsonValidator<{ [key in keyof V]: ValidatorType<V[key]> }> {
     this.config.constraint = constraint;
     // @ts-expect-error
     return this;
   }
 
-  public default(value: Type): JsonValidator<Type, true> {
+  public default(value: NonNullable<T>): JsonValidator<NonNullable<T>> {
     return super.default(value);
   }
 
-  public optional(): JsonValidator<Type, false> {
+  public optional(): JsonValidator<T | undefined> {
     return super.optional();
+  }
+
+  /**
+   * Make sure you call it at the ending of chain.
+   */
+  transform<T1>(fn: (value: T) => T1): JsonValidator<T1> {
+    this.config.transform = fn;
+    // @ts-expect-error
+    return this;
   }
 
   protected validateValue(data: Record<string, any>, key: string, superKeys: string[]): string | void {

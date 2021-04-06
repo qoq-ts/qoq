@@ -1,27 +1,29 @@
 
 import { validator } from '../../src';
+import { cloneDeep } from 'lodash';
 
+const defaultData = {
+  id2: 2,
+  invalidStr: '2222333[]',
+  arrayStr: '["2", "3"]',
+  objPlain: {},
+  objPlainStr: '{}',
+  objData: {
+    hello: 'world',
+    hi: {
+      man: 1,
+      woman: 2,
+      list: [1, 2],
+    }
+  },
+  objDataStr: '{"hello":"world"}'
+};
 
 describe('Json validator', () => {
-  let data: Record<string, any> = {};
+  let data: typeof defaultData;
 
   beforeEach(() => {
-    data = {
-      id2: 2,
-      invalidStr: '2222333[]',
-      arrayStr: '["2", "3"]',
-      objPlain: {},
-      objPlainStr: '{}',
-      objData: {
-        hello: 'world',
-        hi: {
-          man: 1,
-          woman: 2,
-          list: [1, 2],
-        }
-      },
-      objDataStr: '{"hello":"world"}'
-    };
+    data = cloneDeep(defaultData);
   });
 
   it ('may be undefined', () => {
@@ -80,5 +82,17 @@ describe('Json validator', () => {
         foo: validator.number,
       }),
     }).validate(data, 'objData')).toContain('hi.foo');
+  });
+
+  it ('can transform data by user', () => {
+    validator
+      .json
+      .constraint({
+        hello: validator.string,
+      })
+      .transform(Object.values)
+      .validate(data, 'objData');
+
+    expect(data['objData']).toEqual(['world']);
   });
 });

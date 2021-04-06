@@ -1,11 +1,11 @@
 import { Validator, ValidatorOptions } from './Validator';
 
-interface StringOptions<IsRequired extends boolean> extends ValidatorOptions<string, IsRequired> {
+interface StringOptions<T> extends ValidatorOptions<T> {
   minLength?: number;
   maxLength?: number;
 }
 
-export class StringValidator<T extends boolean = true> extends Validator<StringOptions<T>> {
+export class StringValidator<T = string> extends Validator<StringOptions<T>> {
   minLength(min: number): this {
     this.config.minLength = min;
     return this;
@@ -16,12 +16,21 @@ export class StringValidator<T extends boolean = true> extends Validator<StringO
     return this;
   }
 
-  optional(): StringValidator<false> {
+  optional(): StringValidator<T | undefined> {
     return super.optional();
   }
 
-  default(value: string): StringValidator<true> {
+  default(value: NonNullable<T>): StringValidator<NonNullable<T>> {
     return super.default(value);
+  }
+
+  /**
+   * Make sure you call it at the ending of chain.
+   */
+  transform<T1>(fn: (value: T) => T1): StringValidator<T1> {
+    this.config.transform = fn;
+    // @ts-expect-error
+    return this;
   }
 
   protected isEmpty(value: any): boolean {

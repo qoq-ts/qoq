@@ -1,16 +1,19 @@
 import { validator } from '../../src';
+import { cloneDeep } from 'lodash';
+
+const defaultData = {
+  numberArray: [2, 3, 4],
+  strArray: ['2', '5' , '7', '8', '12'],
+  age10: 10,
+  age20str: '20',
+  mixArray: [2, '5', 6],
+};
 
 describe('Array validator', () => {
-  let data: Record<string, any> = {};
+  let data: typeof defaultData;
 
   beforeEach(() => {
-    data = {
-      numberArray: [2, 3, 4],
-      strArray: ['2', '5' , '7', '8', '12'],
-      age10: 10,
-      age20str: '20',
-      mixArray: [2, '5', 6],
-    };
+    data = cloneDeep(defaultData);
   });
 
   it ('may be undefined', () => {
@@ -61,7 +64,7 @@ describe('Array validator', () => {
 
   it ('number item can convert to string', () => {
     expect(validator.array.each(validator.string).validate(data, 'numberArray')).toEqual(undefined);
-    (data.numberArray as string[]).forEach((item) => {
+    (data.numberArray).forEach((item) => {
       expect(typeof item).toEqual('string');
     });
 
@@ -72,9 +75,20 @@ describe('Array validator', () => {
   });
 
   it ('should support nested keys', () => {
+    // @ts-expect-error
     data.mixArray.push({});
     const result = validator.array.each(validator.number).validate(data, 'mixArray');
     expect(typeof result).toEqual('string');
     expect(result).toContain('mixArray.3');
+  });
+
+  it ('can transform data by user', () => {
+    validator
+      .array
+      .each(validator.number)
+      .transform((values) => values.map((value) => value + 1))
+      .validate(data, 'numberArray');
+
+    expect(data['numberArray']).toMatchObject([3, 4, 5]);
   });
 });

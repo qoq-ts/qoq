@@ -1,17 +1,19 @@
 
 import { validator } from '../../src';
+import { cloneDeep } from 'lodash';
 
+const defaultData = {
+  id2: 2,
+  hello: 'hello',
+  obj: {},
+  nan: Number.NaN,
+};
 
 describe('String validator', () => {
-  let data: Record<string, any> = {};
+  let data: typeof defaultData;
 
   beforeEach(() => {
-    data = {
-      id2: 2,
-      hello: 'hello',
-      obj: {},
-      nan: Number.NaN,
-    };
+    data = cloneDeep(defaultData);
   });
 
   it ('may be undefined', () => {
@@ -51,5 +53,14 @@ describe('String validator', () => {
 
     expect(validator.string.validate(data, 'nan')).toContain('must be string');
     expect(validator.string.validate(data, 'obj')).toContain('must be string');
+  });
+
+  it ('can transform data by user', () => {
+    validator
+      .string
+      .transform((value) => Object.prototype.toString.call(value))
+      .validate(data, 'hello');
+
+    expect(data['hello']).toEqual('[object String]');
   });
 });

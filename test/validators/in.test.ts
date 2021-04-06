@@ -1,17 +1,18 @@
-
 import { validator } from '../../src';
+import { cloneDeep } from 'lodash';
 
+const defaultData = {
+  id2: 2,
+  id2str: '2',
+  age10: 10,
+  age20str: '20',
+};
 
 describe('In validator', () => {
-  let data: Record<string, any> = {};
+  let data: typeof defaultData;
 
   beforeEach(() => {
-    data = {
-      id2: 2,
-      id2str: '2',
-      age10: 10,
-      age20str: '20',
-    };
+    data = cloneDeep(defaultData);
   });
 
   it ('may be undefined', () => {
@@ -42,5 +43,15 @@ describe('In validator', () => {
 
   it ('should not hint range data', () => {
     expect(validator.in.range(['2', 3, '4']).validate(data, 'age10')).toContain('["2",3,"4"]');
+  });
+
+  it ('can transform data by user', () => {
+    validator
+      .in
+      .range([2, 3, 4])
+      .transform((value) => value * 10)
+      .validate(data, 'id2');
+
+    expect(data['id2']).toEqual(20);
   });
 });

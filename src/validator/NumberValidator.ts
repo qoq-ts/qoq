@@ -1,6 +1,6 @@
 import { Validator, ValidatorOptions } from './Validator';
 
-interface NumberOptions<IsRequired extends boolean> extends ValidatorOptions<number, IsRequired> {
+interface NumberOptions<T> extends ValidatorOptions<T> {
   min?: number;
   minInclusive?: boolean;
   max?: number;
@@ -8,7 +8,7 @@ interface NumberOptions<IsRequired extends boolean> extends ValidatorOptions<num
   onlyInteger?: boolean;
 }
 
-export class NumberValidator<T extends boolean = true> extends Validator<NumberOptions<T>> {
+export class NumberValidator<T = number> extends Validator<NumberOptions<T>> {
   public min(min: number, inclusive: boolean = true): this {
     this.config.min = min;
     this.config.minInclusive = inclusive;
@@ -26,12 +26,21 @@ export class NumberValidator<T extends boolean = true> extends Validator<NumberO
     return this;
   }
 
-  public optional(): NumberValidator<false> {
+  public optional(): NumberValidator<T | undefined> {
     return super.optional();
   }
 
-  public default(value: number): NumberValidator<true> {
+  public default(value: NonNullable<T>): NumberValidator<NonNullable<T>> {
     return super.default(value);
+  }
+
+  /**
+   * Make sure you call it at the ending of chain.
+   */
+  transform<T1>(fn: (value: T) => T1): NumberValidator<T1> {
+    this.config.transform = fn;
+    // @ts-expect-error
+    return this;
   }
 
   protected validateValue(obj: Record<string, any>, key: string, superKeys: string[]): string | void {

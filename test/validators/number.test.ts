@@ -1,21 +1,23 @@
 
 import { validator } from '../../src';
+import { cloneDeep } from 'lodash';
 
+const defaultData = {
+  id2: 2,
+  id2str: '2',
+  age2: 2,
+  age10: 10,
+  age20: 20,
+  age20str: '20',
+  age20_1: 20.1,
+  nan: '2hello',
+};
 
 describe('Number validator', () => {
-  let data: Record<string, any> = {};
+  let data: typeof defaultData;
 
   beforeEach(() => {
-    data = {
-      id2: 2,
-      id2str: '2',
-      age2: 2,
-      age10: 10,
-      age20: 20,
-      age20str: '20',
-      age20_1: 20.1,
-      nan: '2hello',
-    };
+    data = cloneDeep(defaultData);
   });
 
   it ('may be undefined', () => {
@@ -62,5 +64,14 @@ describe('Number validator', () => {
 
   it ('should reject NAN', () => {
     expect(validator.number.validate(data, 'nan')).toContain('must be number');
+  });
+
+  it ('can transform data by user', () => {
+    validator
+      .number
+      .transform(String)
+      .validate(data, 'age20');
+
+    expect(data['age20']).toEqual('20');
   });
 });

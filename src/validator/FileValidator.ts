@@ -19,25 +19,25 @@ interface FileWithHash extends FileNoHash {
   hash: string;
 }
 
-interface FileOptions<Type, IsRequired extends boolean> extends ValidatorOptions<Type, IsRequired> {
+interface FileOptions<T> extends ValidatorOptions<T> {
   hash?: 'md5' | 'sha1';
   multiples?: boolean;
   maxSize?: number;
   mimeTypes?: string[];
 }
 
-export class FileValidator<Type = FileNoHash, T extends boolean = true> extends Validator<FileOptions<Type, T>> {
-  public optional(): FileValidator<Type, false> {
+export class FileValidator<T = FileNoHash> extends Validator<FileOptions<T>> {
+  public optional(): FileValidator<T | undefined> {
     return super.optional();
   }
 
-  public hash(crypto: 'md5' | 'sha1'): FileValidator<Type extends Array<any> ? FileWithHash[] : FileWithHash, T> {
+  public hash(crypto: 'md5' | 'sha1'): FileValidator<T extends Array<any> ? FileWithHash[] : FileWithHash> {
     this.config.hash = crypto;
     // @ts-expect-error
     return this;
   }
 
-  public multiples(): FileValidator<Type[], T> {
+  public multiples(): FileValidator<T[]> {
     this.config.multiples = true;
     // @ts-expect-error
     return this;
@@ -50,6 +50,15 @@ export class FileValidator<Type = FileNoHash, T extends boolean = true> extends 
 
   public allowMimeTypes(types: string[]): this {
     this.config.mimeTypes = types;
+    return this;
+  }
+
+  /**
+   * Make sure you call it at the ending of chain.
+   */
+  transform<T1>(fn: (value: T) => T1): FileValidator<T1> {
+    this.config.transform = fn;
+    // @ts-expect-error
     return this;
   }
 
