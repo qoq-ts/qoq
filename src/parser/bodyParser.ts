@@ -3,11 +3,16 @@ import { IncomingForm } from 'formidable';
 import { WebCtx } from '../core/WebContext';
 import { Validator } from '../validator/Validator';
 
+export const PARSED_BODY = Symbol('body_parsed');
+
 export const bodyParser = (rules: { [key: string]: Validator }) => {
   const parsedRules = Object.entries(rules);
 
   const respond = async (ctx: WebCtx) => {
-    const rawBody = await getRawBody(ctx);
+    const rawBody
+      // @ts-expect-error
+      = ctx.request.body = ctx[PARSED_BODY]
+      = await getRawBody(ctx);
     const body: Record<string, any> = {};
 
     for (let i = 0; i < parsedRules.length; ++i) {
@@ -29,10 +34,10 @@ export const bodyParser = (rules: { [key: string]: Validator }) => {
 
 const getRawBody = (ctx: WebCtx): Promise<Record<string, any>> => {
   // @ts-ignore Pre-parse the unknown content-type data to json.
-  const parsed = ctx._parsed_payload;
+  const parsed = ctx[PARSED_BODY];
 
   if (parsed && typeof parsed === 'object') {
-    return JSON.parse(JSON.stringify(parsed));
+    return parsed;
   }
 
   try {

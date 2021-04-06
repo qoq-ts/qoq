@@ -31,7 +31,7 @@ type GetParam<T extends string> = (
 
 type Param<T extends string> = {
   params: {
-    [key in GetParam<T>]?: unknown
+    [key in GetParam<T>]?: string;
   }
 }
 

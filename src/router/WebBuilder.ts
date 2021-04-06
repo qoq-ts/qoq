@@ -60,7 +60,7 @@ export class WebBuilder<
     return this;
   }
 
-  public body<T extends { [key: string]: Validator }>(rules: T): WebBuilder<Props, State, Param, Omit<Payload, 'body'> & { body: ValidatorTypes<T> }> {
+  public body<T extends { [key: string]: Validator }>(rules: T): WebBuilder<Props & { request: { body: Record<string, unknown> } }, State, Param, Omit<Payload, 'body'> & { body: ValidatorTypes<T> }> {
     this.bodyRules = rules;
     this.payload.body = bodyParser(rules);
     // @ts-ignore

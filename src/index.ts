@@ -24,3 +24,4 @@ export { ConsoleCtx } from './core/ConsoleContext';
 export { HttpError } from 'http-errors';
 export { BaseCache, BaseCacheOptions } from './caching/BaseCache';
 export { testMiddleware } from './util/testMiddleware';
+export { PARSED_BODY } from './parser/bodyParser';
