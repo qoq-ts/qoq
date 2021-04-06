@@ -6,6 +6,7 @@ export { Slot } from './slot/Slot';
 export { version } from './util/version';
 export { defineConfig } from './util/defineConfig';
 export { validator } from './validator';
+export { validate } from './validator/validate';
 export { WebApplication } from './core/WebApplication';
 export { ConsoleApplication } from './core/ConsoleApplication';
 export { Tree } from './core/Tree';
