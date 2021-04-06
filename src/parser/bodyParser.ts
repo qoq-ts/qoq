@@ -7,13 +7,13 @@ export const bodyParser = (rules: { [key: string]: Validator }) => {
   const parsedRules = Object.entries(rules);
 
   const respond = async (ctx: WebCtx) => {
-    const rawPayload = await getRawBody(ctx);
+    const rawBody = await getRawBody(ctx);
     const body: Record<string, any> = {};
 
     for (let i = 0; i < parsedRules.length; ++i) {
       const [key, validator] = parsedRules[i]!;
 
-      body[key] = rawPayload[key];
+      body[key] = rawBody[key];
 
       const msg = validator.validate(body, key);
       if (msg) {
