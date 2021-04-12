@@ -1,4 +1,5 @@
-import { Validator, ValidatorOptions, ValidatorType } from './Validator';
+import { JsonValidator } from './JsonValidator';
+import { Validator, ValidatorOptions, ValidatorType, ValidatorTypes } from './Validator';
 
 interface ArrayOptions<T> extends ValidatorOptions<T> {
   itemValidator?: Validator;
@@ -7,9 +8,15 @@ interface ArrayOptions<T> extends ValidatorOptions<T> {
 }
 
 export class ArrayValidator<T = never[]> extends Validator<ArrayOptions<T>> {
-  public each<V extends Validator>(values: V): ArrayValidator<ValidatorType<V>[]> {
-    this.config.itemValidator = values;
-    // @ts-expect-error
+  public each<V extends Validator>(values: V): ArrayValidator<ValidatorType<V>[]>;
+  public each<V extends { [key: string]: Validator }>(values: V): ArrayValidator<ValidatorTypes<V>[]>;
+  public each(values: Validator | { [key: string]: Validator }): ArrayValidator<any> {
+    if (values instanceof Validator) {
+      this.config.itemValidator = values;
+    } else {
+      this.config.itemValidator = new JsonValidator().constraint(values);
+    }
+
     return this;
   }
 

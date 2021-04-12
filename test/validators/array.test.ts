@@ -7,6 +7,11 @@ const defaultData = {
   age10: 10,
   age20str: '20',
   mixArray: [2, '5', 6],
+  objectArray: [
+    {
+      hello: 'world',
+    }
+  ]
 };
 
 describe('Array validator', () => {
@@ -90,5 +95,16 @@ describe('Array validator', () => {
       .validate(data, 'numberArray');
 
     expect(data['numberArray']).toMatchObject([3, 4, 5]);
+  });
+
+  it ('can accept object validators', () => {
+    const msg = validator
+      .array
+      .each({
+        hello: validator.number,
+      })
+      .validate(data, 'objectArray');
+
+    expect(msg).toContain('objectArray.0.hello');
   });
 });
