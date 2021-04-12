@@ -11,7 +11,7 @@ describe('File Cache', () => {
 
   beforeEach(() => {
     cache = new FileCache({
-      engine: 'FileCache',
+      engine: FileCache,
       cacheDir: tempDir,
     });
   });
@@ -88,7 +88,7 @@ describe('File Cache', () => {
     expect(cache.buildKey('hello')).toEqual('hello');
 
     cache = new FileCache({
-      engine: 'FileCache',
+      engine: FileCache,
       cacheDir: tempDir,
       keyPrefix: 'cache-',
     });

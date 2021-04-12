@@ -8,7 +8,7 @@ describe('Cache Slot', () => {
   it('can import file cache', () => {
     const dir = join(tmpdir(), 'cache-' + Date.now());
     const options = defineConfig<FileCacheOptions>({
-      engine: 'FileCache',
+      engine: FileCache,
       cacheDir: dir,
     });
 
@@ -22,7 +22,7 @@ describe('Cache Slot', () => {
 
   it('can import memory cache', () => {
     const options = defineConfig<MemoryCacheOptions>({
-      engine: 'MemoryCache',
+      engine: MemoryCache,
     });
 
     const slot = new CacheSlot(options);
@@ -32,7 +32,7 @@ describe('Cache Slot', () => {
 
   it ('can import cache engin from other module', () => {
     const options = defineConfig<CustomCacheOptions>({
-      engine: './test/fixture/CustomCache',
+      engine: CustomCache,
       test: true,
     });
 
@@ -41,14 +41,9 @@ describe('Cache Slot', () => {
     expect(slot.cache).toBeInstanceOf(CustomCache);
   });
 
-  it ('will throw error when module not found', () => {
-    expect(() => new CacheSlot({ engine: '----' })).toThrowError();
-    expect(() => new CacheSlot({ engine: '----/---' })).toThrowError();
-  });
-
   it ('can inject ctx.cache to context', async () => {
     const cache = new CacheSlot<MemoryCacheOptions>({
-      engine: 'MemoryCache',
+      engine: MemoryCache,
     });
 
     const ctx = await testMiddleware(cache)({});

@@ -1,7 +1,7 @@
 import { createHash } from 'crypto';
 
 export type BaseCacheOptions = {
-  engine: string;
+  engine: new (...args: any[]) => BaseCache;
   keyPrefix?: string;
 };
 

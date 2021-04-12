@@ -6,7 +6,7 @@ import { BaseCache, BaseCacheOptions } from './BaseCache';
 import { createHash } from 'crypto';
 
 export interface FileCacheOptions extends BaseCacheOptions {
-  engine: 'FileCache';
+  engine: new (...args: any[]) => FileCache;
   cacheDir: string;
 }
 
