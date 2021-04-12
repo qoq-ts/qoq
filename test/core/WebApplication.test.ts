@@ -40,7 +40,7 @@ it ('can mount router path after app is created', async () => {
 
   await request(listener).get('/test1').expect(404);
 
-  app.mountRouter(dirname(__dirname) + '/fixture');
+  await app.mountRouterPath(dirname(__dirname) + '/fixture');
   await request(listener).get('/test1').expect('Hello router1');
 
   listener.close();

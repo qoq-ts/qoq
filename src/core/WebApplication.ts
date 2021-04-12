@@ -42,10 +42,18 @@ export class WebApplication extends Koa {
   }
 
   /**
-   * Mount router from path or instance
+   * Mount router from instance
    */
-  mountRouter(router: WebRouter | WebRouter[] | string | string[]): this {
+  mountRouter(router: WebRouter | WebRouter[]): this {
     this.routerParser.mountRouter(router);
+    return this;
+  }
+
+  /**
+   * Mount router from path
+   */
+  async mountRouterPath(router: string | string[]): Promise<this> {
+    this.routerParser.mountRouterPath(router);
     return this;
   }
 
@@ -54,6 +62,6 @@ export class WebApplication extends Koa {
    * @throws Error
    */
   use(_: never): Koa<any, any> {
-    throw new Error('qoq.use() is denied to invoke.');
+    throw new Error('qoq.use() is denied to call.');
   }
 }

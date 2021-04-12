@@ -32,10 +32,18 @@ export class ConsoleApplication extends EventEmitter {
   }
 
   /**
-   * Mount router from path or instance
+   * Mount router from instance
    */
-  mountRouter(router: ConsoleRouter | ConsoleRouter[] | string | string[]): this {
+   mountRouter(router: ConsoleRouter | ConsoleRouter[]): this {
     this.routerParser.mountRouter(router);
+    return this;
+  }
+
+  /**
+   * Mount router from path
+   */
+  async mountRouterPath(router: string | string[]): Promise<this> {
+    this.routerParser.mountRouterPath(router);
     return this;
   }
 

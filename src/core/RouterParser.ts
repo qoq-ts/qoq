@@ -17,46 +17,49 @@ export abstract class RouterParser<R extends Router<any, any>> {
 
   constructor(paths: string | string[]) {
     this.paths = toArray(paths);
-    this.searchRouters(this.paths);
-    this.refreshTreeTrunk();
     this.tree = [compose(this.treeBranch), compose(this.treeTrunk)];
     this.compose = compose(this.tree);
+    this.searchRouters(this.paths);
   }
 
   /**
-   * Mount router from path or instance
+   * Mount router from instance
    */
-   public mountRouter(router: R | R[] | string | string[]): this {
+  public mountRouter(router: R | R[]): void {
     const routers = toArray(router) as string[] | R[];
 
-    if (!routers.length) {
-      return this;
-    }
-
-    const isString = (data: string[] | R[]): data is string[] => {
-      return typeof data[0] === 'string';
-    };
-
-    if (isString(routers)) {
-      this.paths.push(...routers);
-      this.searchRouters(routers);
-    } else {
+    if (routers.length) {
       this.parseRouters(routers);
+      this.refreshTreeTrunk();
     }
-
-    this.refreshTreeTrunk();
-
-    return this;
   }
 
-  protected searchRouters(routesPath: string[]): void {
-    routesPath.forEach((routePath) => {
-      glob.sync(path.resolve(routePath, '**/!(*.d).{ts,js}')).forEach((matchPath) => {
-        const modules = require(matchPath);
+  /**
+   * Mount router from path
+   */
+  public async mountRouterPath(path: string | string[]): Promise<void> {
+    const paths = toArray(path);
 
-        this.parseRouters(modules);
-      });
-    });
+    if (paths.length) {
+      this.paths.push(...paths);
+      await this.searchRouters(paths);
+    }
+  }
+
+  protected async searchRouters(routesPath: string[]): Promise<void> {
+    await Promise.all(
+      routesPath.map((routePath) => {
+        return Promise.all(
+          glob.sync(path.resolve(routePath, '**/!(*.d).{ts,js}')).map((file) => {
+            return import(file).then((modules) => {
+              this.parseRouters(modules);
+            });
+          }),
+        );
+      }),
+    );
+
+    this.refreshTreeTrunk();
   }
 
   protected parseRouters(modules: Record<string, any>): void {
@@ -83,13 +86,9 @@ export abstract class RouterParser<R extends Router<any, any>> {
   protected refreshTreeTrunk(): void {
     if (this.shouldTrunkRefresh) {
       this.shouldTrunkRefresh = false;
-      if (this.tree) {
-        this.treeTrunk.splice(0, this.treeTrunk.length,
-          ...this.getTrunkNode().getTrunkMiddlewareAndRouters(),
-        );
-      } else {
-        this.treeTrunk = this.getTrunkNode().getTrunkMiddlewareAndRouters();
-      }
+      this.treeTrunk.splice(0, this.treeTrunk.length,
+        ...this.getTrunkNode().getTrunkMiddlewareAndRouters(),
+      );
     }
   }
 

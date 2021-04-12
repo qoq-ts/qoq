@@ -9,7 +9,7 @@ rm -rf ./build
 mv ./build/src ./lib
 
 rm -rf ./build
-./node_modules/.bin/tsc --module ES6
+./node_modules/.bin/tsc --module es2020
 mv ./build/src ./es
 
 npx public-refactor --src ./src --dist ./build/types/src
