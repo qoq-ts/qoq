@@ -19,7 +19,7 @@ function js() {
   }
 
   if (jsFile) {
-    require(jsFile);
+    import(jsFile);
     return true;
   }
 
@@ -41,7 +41,7 @@ function ts() {
   if (tsFile) {
     // User should install ts-node
     require('ts-node/register');
-    require(tsFile);
+    import(tsFile);
     return true;
   }
 
@@ -49,6 +49,6 @@ function ts() {
 }
 
 if (!js() && !ts()) {
-  console.error(chalk.red('Command entry file console.{ts|js} not found.'));
+  console.error(chalk.red('Command entry file console.{ts|js} is not found.'));
   process.exit(127);
 }

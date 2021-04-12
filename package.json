@@ -12,7 +12,10 @@
     "test": "jest --runInBand",
     "prepublishOnly": "sh ./prepublish.sh"
   },
-  "bin": "./lib/bin.js",
+  "bin": {
+    "qoq": "./lib/bin.js",
+    "qoq-es": "./es/bin/js"
+  },
   "engines": {
     "node": "^10.17.0 || ^12.13.0 || ^14.15.0"
   },

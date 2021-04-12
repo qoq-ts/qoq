@@ -46,7 +46,7 @@ export class HelpSlot extends Slot<Slot.Console> {
     return this;
   }
 
-  protected showAllHelp(commandsPath: string[]) {
+  protected async showAllHelp(commandsPath: string[]) {
     const scriptName = 'qoq';
 
     const cli = yargs([])
@@ -56,21 +56,25 @@ export class HelpSlot extends Slot<Slot.Console> {
       .alias('v', 'version')
       .alias('h', 'help');
 
-    commandsPath.forEach((item) => {
-      glob.sync(path.resolve(item, '**/!(*.d).{ts,js}')).forEach((matchPath) => {
-        const modules = require(matchPath);
-        Object.values(modules).forEach((moduleItem) => {
-          if (moduleItem && moduleItem instanceof ConsoleRouter) {
-            moduleItem.getBuilders().forEach((builder) => {
-              if (builder.isShow) {
-                builder.commands[0] = chalk.yellow(builder.commands[0]);
-                cli.command(builder.commands, builder.document.description);
+    await Promise.all(
+      commandsPath.map((item) => {
+        return Promise.all(
+          glob.sync(path.resolve(item, '**/!(*.d).{ts,js}')).map(async (matchPath) => {
+            const modules = await import(matchPath);
+            Object.values(modules).forEach((moduleItem) => {
+              if (moduleItem && moduleItem instanceof ConsoleRouter) {
+                moduleItem.getBuilders().forEach((builder) => {
+                  if (builder.isShow) {
+                    builder.commands[0] = chalk.yellow(builder.commands[0]);
+                    cli.command(builder.commands, builder.document.description);
+                  }
+                });
               }
             });
-          }
-        });
-      });
-    });
+          }),
+        );
+      })
+    );
 
     cli.showHelp('log');
   }
