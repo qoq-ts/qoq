@@ -25,7 +25,7 @@ it ('can mount commands', async () => {
   expect(message).not.toContain('test3');
 
   message = '';
-  await app.mountRouterPath(dirname(__dirname) + '/fixture');
+  await app.mountCommandPath(dirname(__dirname) + '/fixture');
   await app.execute('-h');
   expect(message).toContain('test3');
 
