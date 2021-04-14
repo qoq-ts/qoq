@@ -20,7 +20,7 @@ export class HelpSlot extends Slot<Slot.Console> {
         if (ctx.options['version'] || ctx.options['v']) {
           console.log(version);
         } else {
-          this.showAllHelp(ctx.app.getPaths());
+          return this.showAllHelp(ctx.app.getPaths());
         }
 
         return;
@@ -57,13 +57,14 @@ export class HelpSlot extends Slot<Slot.Console> {
       .alias('h', 'help');
 
     await Promise.all(
-      commandsPath.map((item) => {
+      commandsPath.map((dir) => {
         return Promise.all(
-          glob.sync(path.resolve(item, '**/!(*.d).{ts,js}')).map(async (matchPath) => {
-            const modules = await import(matchPath);
-            Object.values(modules).forEach((moduleItem) => {
-              if (moduleItem && moduleItem instanceof ConsoleRouter) {
-                moduleItem.getBuilders().forEach((builder) => {
+          glob.sync(path.resolve(dir, '**/!(*.d).{ts,js}')).map(async (file) => {
+            const modules = await import(file);
+
+            Object.values(modules).forEach((item) => {
+              if (item && item instanceof ConsoleRouter) {
+                item.getBuilders().forEach((builder) => {
                   if (builder.isShow) {
                     builder.commands[0] = chalk.yellow(builder.commands[0]);
                     cli.command(builder.commands, builder.document.description);

@@ -3988,6 +3988,11 @@ toidentifier@1.0.0:
   resolved "https://registry.npmjs.org/toidentifier/-/toidentifier-1.0.0.tgz#7e1be3470f1e77948bc43d94a3c8f4d7752ba553"
   integrity sha512-yaOH/Pk/VEhBWWTlhI+qXxDFXlejDGcQipMlyxda9nthulaxLZUNcUqFxokp0vcYnvteJln5FNQDRrxj3YcbVw==
 
+topic@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.npmjs.org/topic/-/topic-2.1.2.tgz#4dfa8fd5755e700bd4095748d43ccc7c55635cbd"
+  integrity sha512-61zPh4fqF3W7MXKFpYlaU1ejSt0yoQiUi63x0dPH4IBOfTf/WWhX6NzM4AdTWFAnVNockJoCct1acH7GLv4euQ==
+
 tough-cookie@^2.3.3, tough-cookie@~2.5.0:
   version "2.5.0"
   resolved "https://registry.npmjs.org/tough-cookie/-/tough-cookie-2.5.0.tgz#cd9fb2a0aa1d5a12b473bd9fb96fa3dcff65ade2"

@@ -4,11 +4,14 @@ import { Router } from '../router/Router';
 import { SlotManager } from '../slot/SlotManager';
 import compose, { Middleware, ComposedMiddleware } from 'koa-compose';
 import { toArray } from '../util/toArray';
+import { Topic } from 'topic';
 
 export abstract class RouterParser<R extends Router<any, any>> {
   public readonly compose: ComposedMiddleware<any>;
   public readonly paths: string[];
 
+  protected ready: boolean = false;
+  protected topic = new Topic<{ ready: () => void }>();
   protected treeTrunk: Middleware<any>[] = [];
   protected readonly tree: Middleware<any>[];
   protected readonly treeBranch: Middleware<any>[] = [];
@@ -16,10 +19,21 @@ export abstract class RouterParser<R extends Router<any, any>> {
   private shouldTrunkRefresh: boolean = true;
 
   constructor(paths: string | string[]) {
+    this.topic.keep('ready', () => this.ready === true);
     this.paths = toArray(paths);
     this.tree = [compose(this.treeBranch), compose(this.treeTrunk)];
     this.compose = compose(this.tree);
-    this.searchRouters(this.paths);
+    this.searchRouters(this.paths).then(() => {
+      this.onReady();
+    });
+  }
+
+  public waitToReady() {
+    return new Promise((resolve) => {
+      this.topic.subscribeOnce('ready', () => {
+        resolve(undefined);
+      });
+    });
   }
 
   /**
@@ -41,8 +55,10 @@ export abstract class RouterParser<R extends Router<any, any>> {
     const paths = toArray(path);
 
     if (paths.length) {
+      this.ready = false;
       this.paths.push(...paths);
       await this.searchRouters(paths);
+      this.onReady();
     }
   }
 
@@ -90,6 +106,11 @@ export abstract class RouterParser<R extends Router<any, any>> {
         ...this.getTrunkNode().getTrunkMiddlewareAndRouters(),
       );
     }
+  }
+
+  protected onReady() {
+    this.topic.publish('ready');
+    this.ready = true;
   }
 
   protected abstract getTrunkNode(): SlotManager<any, any, any>;

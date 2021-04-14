@@ -42,8 +42,8 @@ export class ConsoleApplication extends EventEmitter {
   /**
    * Mount router from path
    */
-  async mountRouterPath(router: string | string[]): Promise<this> {
-    this.routerParser.mountRouterPath(router);
+  async mountRouterPath(paths: string | string[]): Promise<this> {
+    await this.routerParser.mountRouterPath(paths);
     return this;
   }
 
@@ -81,8 +81,10 @@ export class ConsoleApplication extends EventEmitter {
    * `app.execute('a:b', '--name', 'Peter', '--age', '15')`
    */
    public async execute(...commands: string[]): Promise<ConsoleContext> {
-     const isChildProcess = !!Reflect.get(this.execute, 'isChildProcess');
-     Reflect.deleteProperty(this.execute, 'isChildProcess');
+    await this.routerParser.waitToReady();
+
+    const isChildProcess = !!Reflect.get(this.execute, 'isChildProcess');
+    Reflect.deleteProperty(this.execute, 'isChildProcess');
     const ctx = new ConsoleContext(
       this,
       commands.length ? commands : process.argv.slice(2),

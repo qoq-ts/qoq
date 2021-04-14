@@ -12,6 +12,6 @@ export const router = new ConsoleRouter({
   slots: slots,
 });
 
-router.command('/test3').action<{}, { data :string }>((ctx) => {
+router.command('/test3').showInHelp().action<{}, { data: string }>((ctx) => {
   ctx.state.data = 'Hello ' + ctx.state.data;
 });

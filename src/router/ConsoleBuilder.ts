@@ -68,6 +68,25 @@ export class ConsoleBuilder<
   }
 
   public/*protected*/ toJSON() {
-    return {};
+    const optionsData = this.payload.options?.getRules() || {};
+    const aliases = this.payload.options?.getAlias() || {};
+
+    return {
+      commands: this.commands,
+      description: this.document.description || '',
+      showInHelp: this.isShow,
+      options: Object.entries(optionsData).map(([key, validator]) => {
+        const alias = aliases[key];
+        const options = validator.toJSON();
+
+        return {
+          alias: alias === undefined
+            ? undefined
+            : Array.isArray(alias) ? alias : [alias],
+          ...options,
+          name: options.name || key,
+        };
+      }),
+    };
   }
 }
