@@ -42,6 +42,7 @@ yarn add qoq
 | [qoq-pretty-json](https://github.com/qoq-ts/qoq-pretty-json) | [![npm](https://img.shields.io/npm/v/qoq-pretty-json)](https://www.npmjs.com/package/qoq-pretty-json) | Web | format JSON |
 | [qoq-static](https://github.com/qoq-ts/qoq-static) | [![npm](https://img.shields.io/npm/v/qoq-static)](https://www.npmjs.com/package/qoq-static) | Web | static file serve |
 | [qoq-views](https://github.com/qoq-ts/qoq-views) | [![npm](https://img.shields.io/npm/v/qoq-views)](https://www.npmjs.com/package/qoq-views) | Web | template rendering |
+| [qoq-json-error](https://github.com/qoq-ts/qoq-json-error) | [![npm](https://img.shields.io/npm/v/qoq-json-error)](https://www.npmjs.com/package/qoq-json-error) | Web | JSON error handler |
 
 
 # Demos
@@ -80,7 +81,7 @@ export const advancedSlots = webSlots.use(...).use(...);
 
 // the trunk will always run through
 // until slot or router interrput it ( by skip execute next() ).
-Tree.setWebTrunk(advancedSlots);
+Tree.trunk(advancedSlots);
 ```
 ### Create web router
 ```typescript
@@ -99,12 +100,12 @@ router
   .params({
     id: validator.number,
   })
-  .action(async (ctx) => {
-    const userId = ctx.params.id; // TS type annotation: number
+  .action(async (ctx, payload) => {
+    const userId = payload.params.id; // TS type annotation: number
     const user = await ctx.redis.get(`user-${userId}`);
 
     !user && ctx.throw(400, 'user not found');
-    ctx.send(user);
+    ctx.body = user;
   });
 
 router
@@ -115,29 +116,30 @@ router
     // pageSize is optional and will set to 10 when data is undefined/null.
     pageSize: validator.number.default(10),
   })
-  .action(async (ctx) => {
+  .action(async (ctx, payload) => {
     // TS type annotation: { page: number; pageSize: number }
-    const { page, pageSize } = ctx.query;
+    const { page, pageSize } = payload.query;
     const users = await User.findAll({
       offset: (page - 1) * pageSize,
       limit: pageSize,
     });
 
-    ctx.send(users);
+    ctx.body = users;
   });
 
 router
   .post('/user')
-  .payload({
+  .body({
     name: validator.string,
     vip: validator.boolean.default(false),
     homepage: validator.url.optional(),
   })
-  .action(async (ctx) => {
-    // TS type annotation of payload: { name: string; vip: boolean; homepage?: string }
-    const user = await User.create(ctx.payload);
+  .action(async (ctx, payload) => {
+    // TS type annotation of body: { name: string; vip: boolean; homepage?: string }
+    const user = await User.create(payload.body);
 
-    ctx.send(user, 201);
+    ctx.status = 201;
+    ctx.body = user;
   });
 ```
 
@@ -168,7 +170,7 @@ export const router = new ConsoleRouter({
 });
 
 router
-  .command('x:schedule')
+  .command('my:schedule')
   .options({
     dateFrom: validator.string.optional(),
     dateTo: validator.string.optional(),
@@ -177,9 +179,9 @@ router
     dateFrom: 'f',
     dateTo: 't',
   })
-  .action(async (ctx) => {
+  .action(async (ctx, payload) => {
     // TS type annotation: { dateFrom?: string; dateTo?: string }
-    const { dateFrom, dateTo } = ctx.options;
+    const { dateFrom, dateTo } = payload.options;
 
     // ...your business
     console.log('Done!');
@@ -187,17 +189,17 @@ router
 ```
 You can execute this command like this:
 ```bash
-npx qoq x:schedule
+npx qoq my:schedule
 # or
-npx qoq x:schedule --dateFrom '..' --dateTo '..'
+npx qoq my:schedule --dateFrom '..' --dateTo '..'
 # or
-npx qoq x:schedule -f '..' -t '..'
+npx qoq my:schedule -f '..' -t '..'
 ```
 For testing, feel free to execute command as follows:
 ```typescript
 test ('can do something', async () => {
   const app = new ConsoleApplication();
-  const ctx = await app.run('x:schedule', '-f', '..', '-t', '..');
+  const ctx = await app.execute('my:schedule', '-f', '..', '-t', '..');
   expect(...);
 });
 ```
