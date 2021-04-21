@@ -45,6 +45,7 @@ const getRawBody = (ctx: WebCtx): Promise<Record<string, any>> => {
       const form = new IncomingForm({
         multiples: true,
         hash: false,
+        keepExtensions: true,
       });
 
       return new Promise((resolve, reject) => {

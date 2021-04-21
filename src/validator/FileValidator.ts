@@ -1,19 +1,12 @@
 import fs from 'fs';
-import { File } from 'formidable';
+import formidable from 'formidable';
+// @ts-ignore FIXME
+import File from 'formidable/lib/file';
 import fileSize from 'filesize';
 import { Validator, ValidatorOptions } from './Validator';
 import { createHash } from 'crypto';
 
-interface FileNoHash {
-  size: number;
-  path: string;
-  name: string;
-  /**
-   * mime type like: image/jpeg
-   */
-  type: string;
-  mtime: Date;
-}
+type FileNoHash = Omit<formidable.File, 'hash'>;
 
 interface FileWithHash extends FileNoHash {
   hash: string;
@@ -64,7 +57,7 @@ export class FileValidator<T = FileNoHash> extends Validator<FileOptions<T>> {
 
   protected validateValue(obj: Record<string, any>, key: string, superKeys: string[]): string | void {
     const { hash, multiples, maxSize, mimeTypes } = this.config;
-    let value: File[] = obj[key];
+    let value: formidable.File[] = obj[key];
 
     obj[key] = value = Array.isArray(value) ? value : [value];
 
@@ -77,7 +70,7 @@ export class FileValidator<T = FileNoHash> extends Validator<FileOptions<T>> {
     }
 
     for (let i = 0, len = value.length; i < len; ++i) {
-      const item = value[i];
+      const item: formidable.File = value[i]!;
 
       if (!(item instanceof File)) {
         const label = this.getLabel(i.toString(), superKeys.concat(key));
@@ -89,7 +82,7 @@ export class FileValidator<T = FileNoHash> extends Validator<FileOptions<T>> {
         return `${label} size large than ${fileSize(maxSize, { spacer: '' })}`;
       }
 
-      if (mimeTypes && !mimeTypes.includes(item.type)) {
+      if (mimeTypes && (!item.type || !mimeTypes.includes(item.type))) {
         const label = this.getLabel(i.toString(), superKeys.concat(key));
         return `${label} doesn\'t match given mime types`;
       }
