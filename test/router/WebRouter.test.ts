@@ -82,7 +82,8 @@ describe('Web Router', () => {
       })
       .action(async (ctx, payload) => {
         ctx.body = {
-          filename: payload.body.file.name,
+          // @ts-expect-error
+          filename: payload.body.file.originalFilename,
           ping: payload.body.ping,
         };
       });
@@ -90,7 +91,7 @@ describe('Web Router', () => {
     await server
       .post('/avatar')
       .field('ping', 'pong')
-      .attach('file', resolve('./test/fixture/hello.txt'))
+      .attach('file', resolve('test', 'fixture', 'hello.txt'))
       .expect({
         filename: 'hello.txt',
         ping: 'pong',
