@@ -52,4 +52,18 @@ export abstract class Slot<
 
     return this;
   }
+
+  protected assume<P, S>(
+    _slot: Type extends Slot.Web
+      ? new(...args: any[]) => Slot<Slot.Web, P, S> | Slot<Slot.Mix, P, S>
+      : Type extends Slot.Console
+        ? new(...args: any[]) => Slot<Slot.Console, P, S> | Slot<Slot.Mix, P, S>
+        : new(...args: any[]) => Slot<Slot.Web, P, S> | Slot<Slot.Mix, P, S> | Slot<Slot.Console, P, S>
+  ): {
+    use: Slot<Type, P & Props, S & State>['use'];
+    assume: Slot<Type, P & Props, S & State>['assume'];
+  } {
+    // @ts-expect-error
+    return this;
+  }
 }
