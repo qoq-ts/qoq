@@ -37,6 +37,9 @@ export abstract class BaseCache {
     }
   }
 
+  // Notice: Overloading of functions to against the complex object such as `sequelize Model`
+  async getOrSet<T extends string | number | object | boolean>(key: string, orSet: () => T, ttl?: number): Promise<T>;
+  async getOrSet<T extends string | number | object | boolean>(key: string, orSet: () => Promise<T>, ttl?: number): Promise<T>;
   async getOrSet<T extends string | number | object | boolean>(key: string, orSet: () => T | Promise<T>, ttl?: number): Promise<T> {
     let value: T | null = await this.get(key);
 

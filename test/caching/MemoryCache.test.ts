@@ -104,6 +104,15 @@ describe('Memory Cache', () => {
     expect(await cache.getOrSet('test1', () => 'new test data', 500)).toEqual('new test data');
   });
 
+  it ('can set async value when value doesn\'t exist', async () => {
+    expect(await cache.get('hello')).toBeNull();
+    expect(await cache.getOrSet('hello', async () => {
+      await sleep(100);
+      return 'world';
+    })).toEqual('world');
+    expect(await cache.get('hello')).toEqual('world');
+  });
+
   it ('can use default value', async () => {
     expect(await cache.get('hello')).toBeNull();
     expect(await cache.get('hello', 'world')).toEqual('world');
