@@ -1,6 +1,6 @@
 {
   "name": "qoq",
-  "version": "0.0.34",
+  "version": "0.0.35",
   "main": "lib/index.js",
   "module": "es/index.js",
   "typings": "types/index.d.ts",
@@ -66,6 +66,7 @@
     "sleep-promise": "^9.1.0",
     "supertest": "^6.1.3",
     "ts-jest": "^26.5.5",
+    "ts-node": "^9.1.1",
     "typescript": "^4.2.4"
   }
 }

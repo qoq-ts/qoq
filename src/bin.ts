@@ -7,7 +7,7 @@ import chalk from 'chalk';
 const files = ['./src/console', './lib/console', './console'];
 
 function js() {
-  let jsFile: string | undefined = undefined;
+  let jsFile: string | undefined;
 
   for (let i = 0; i < files.length; ++i) {
     const file = path.resolve(files[i] + '.js');
@@ -27,7 +27,7 @@ function js() {
 };
 
 function ts() {
-  let tsFile: string | undefined = undefined;
+  let tsFile: string | undefined;
 
   for (let i = 0; i < files.length; ++i) {
     const file = path.resolve(files[i] + '.ts');
@@ -40,8 +40,9 @@ function ts() {
 
   if (tsFile) {
     // User should install ts-node
-    require('ts-node/register');
-    import(tsFile);
+    import('ts-node/register/transpile-only').then(() => {
+      import(tsFile!);
+    });
     return true;
   }
 
