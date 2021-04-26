@@ -153,7 +153,10 @@ const app = new ConsoleApplication({
   commandsDir: './src/commands',
 });
 
-app.run();
+app.execute().then(() => {
+  // Optional invoke here.
+  process.exit(0);
+});
 ```
 
 ### Create console router
