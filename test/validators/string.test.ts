@@ -8,6 +8,7 @@ const defaultData = {
   HELLO: 'HELLO',
   obj: {},
   nan: Number.NaN,
+  whiteSpaceHello: ' hello  ',
 };
 
 describe('String validator', () => {
@@ -86,5 +87,10 @@ describe('String validator', () => {
   it ('string should match regular expression', async () => {
     expect(await validator.string.match(/^hell$/i).validate(data, 'hello')).toContain('doesn\'t match');
     expect(await validator.string.match(/^Hello$/i).validate(data, 'hello')).toEqual(undefined);
+  });
+
+  it ('can use trim option', async () => {
+    expect(await validator.string.trim().validate(data, 'whiteSpaceHello')).toEqual(undefined);
+    expect(data.whiteSpaceHello).toEqual('hello');
   });
 });

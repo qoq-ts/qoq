@@ -5,6 +5,7 @@ interface StringOptions<T> extends ValidatorOptions<T> {
   maxLength?: number;
   caseType?: 'lower' | 'upper' | 'title';
   pattern?: RegExp;
+  trim?: boolean;
 }
 
 export class StringValidator<T = string> extends Validator<StringOptions<T>> {
@@ -33,6 +34,11 @@ export class StringValidator<T = string> extends Validator<StringOptions<T>> {
     return this;
   }
 
+  trim(): this {
+    this.config.trim = true;
+    return this;
+  }
+
   match(pattern: RegExp): this {
     this.config.pattern = pattern;
     return this;
@@ -49,7 +55,7 @@ export class StringValidator<T = string> extends Validator<StringOptions<T>> {
   }
 
   protected async validateValue(data: Record<string, any>, key: string, superKeys: string[]): Promise<string | void> {
-    const { minLength, maxLength, caseType, pattern } = this.config;
+    const { minLength, maxLength, caseType, pattern, trim } = this.config;
     let value: string = data[key];
 
     if (typeof value !== 'string') {
@@ -58,6 +64,10 @@ export class StringValidator<T = string> extends Validator<StringOptions<T>> {
       } else {
         return `${this.getLabel(key, superKeys)} must be string`;
       }
+    }
+
+    if (trim) {
+      data[key] = value = value.trim();
     }
 
     if (minLength !== undefined && value.length < minLength) {
