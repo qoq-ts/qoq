@@ -24,11 +24,11 @@ export class WebBuilder<
   protected bodyRules: Record<string, Validator> = {};
   protected paramRules: Record<string, Validator> = {};
 
-  protected payload: {
+  protected declare payload: {
     query?: ReturnType<typeof queryParser>;
     body?: ReturnType<typeof bodyParser>;
     params?: ReturnType<typeof paramParser>;
-  } = {};
+  };
 
   constructor(prefix: string, uris: string[], methods: Method[]) {
     super();
@@ -49,9 +49,7 @@ export class WebBuilder<
     }
   }
 
-  public use<P, S>(slot: Use<Slot.Mix | Slot.Web, P, S>): WebBuilder<Props & P, State & S, Param, Payload> {
-    return super.use(slot) as this;
-  }
+  public declare use: <P, S>(slot: Use<Slot.Mix | Slot.Web, P, S>) => WebBuilder<Props & P, State & S, Param, Payload>;
 
   public query<T extends { [key: string]: Validator }>(rules: T): WebBuilder<Props, State, Param, Omit<Payload, 'query'> & { query: ValidatorTypes<T> }> {
     this.queryRules = rules;

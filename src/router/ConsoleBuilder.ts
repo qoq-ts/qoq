@@ -23,18 +23,16 @@ export class ConsoleBuilder<
     description: '',
   };
 
-  public/*protected*/ payload: {
+  public/*protected*/ declare payload: {
     options?: ReturnType<typeof optionParser>;
-  } = {};
+  };
 
   constructor(prefix: string, commands: string[]) {
     super();
     this.commands = commands.map((item) => prefix + item);
   }
 
-  public use<P, S>(slot: Use<Slot.Mix | Slot.Console, P, S>): ConsoleBuilder<Props & P, State & S, Alias, Payload> {
-    return super.use(slot) as this;
-  }
+  public declare use: <P, S>(slot: Use<Slot.Mix | Slot.Console, P, S>) => ConsoleBuilder<Props & P, State & S, Alias, Payload>;
 
   public options<T extends { [key: string]: Validator }>(options: T): ConsoleBuilder<Props, State, Exclude<keyof T, symbol | number>, Omit<Payload, 'options'> & { options: ValidatorTypes<T> }> {
     this.optionRules = options;
