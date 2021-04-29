@@ -1,18 +1,18 @@
 import { Validator, ValidatorOptions } from './Validator';
 
-interface InOptions<T> extends ValidatorOptions<T> {
+interface EnumOptions<T> extends ValidatorOptions<T> {
   ranges: T[];
   strict?: boolean;
 }
 
-export class InValidator<T = number | string> extends Validator<InOptions<T>> {
+export class EnumValidator<T = number | string> extends Validator<EnumOptions<T>> {
   constructor() {
     super();
     this.config.ranges = [];
     this.config.strict = false;
   }
 
-  public range<Types extends number | string>(values: Types[]): InValidator<Types> {
+  public range<Types extends number | string>(values: Types[]): EnumValidator<Types> {
     // @ts-expect-error
     this.config.ranges = values;
     // @ts-expect-error
@@ -24,18 +24,18 @@ export class InValidator<T = number | string> extends Validator<InOptions<T>> {
     return this;
   }
 
-  public default(value: NonNullable<T>): InValidator<NonNullable<T>> {
+  public default(value: NonNullable<T>): EnumValidator<NonNullable<T>> {
     return super.default(value);
   }
 
-  public optional(): InValidator<T | undefined> {
+  public optional(): EnumValidator<T | undefined> {
     return super.optional();
   }
 
   /**
    * Make sure you call it at the ending of chain.
    */
-  transform<T1>(fn: (value: T) => T1): InValidator<T1> {
+  transform<T1>(fn: (value: T) => T1): EnumValidator<T1> {
     this.config.transform = fn;
     // @ts-expect-error
     return this;
