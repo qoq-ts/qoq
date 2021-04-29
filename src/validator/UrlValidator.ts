@@ -1,3 +1,4 @@
+import { URL } from 'url';
 import { Validator, ValidatorOptions } from './Validator';
 
 interface UrlOptions<T> extends ValidatorOptions<T> {
@@ -5,12 +6,13 @@ interface UrlOptions<T> extends ValidatorOptions<T> {
 }
 
 export class UrlValidator<T = string> extends Validator<UrlOptions<T>> {
-  protected validSchemes = ['http', 'https'];
+  protected protocols = ['http:', 'https:'];
 
-  protected pattern = '^{schemes}:\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(?::\d{1,5})?(?:$|[?\/#])';
-
+  /**
+   * The first part of url. Default to `['http', 'https']`
+   */
   public schemes(schemes: string[]): this {
-    this.validSchemes = schemes;
+    this.protocols = schemes.map((scheme) => scheme.toLowerCase() + ':');
     return this;
   }
 
@@ -21,16 +23,28 @@ export class UrlValidator<T = string> extends Validator<UrlOptions<T>> {
   declare transform: <T1>(fn: (value: T) => T1) => UrlValidator<T1>;
 
   protected async validateValue(data: Record<string, any>, key: string, superKeys: string[]): Promise<string | void> {
-    const value = data[key];
+    const url = this.getURL(data[key]);
 
-    if (typeof value === 'string' && value.length < 2000) {
-      const pattern = new RegExp(this.pattern.replace('{schemes}', this.validSchemes.join('|')), 'i');
-
-      if (pattern.test(value)) {
-        return;
-      }
+    if (!url) {
+      return `${this.getLabel(key, superKeys)} must be url`;
     }
 
-    return `${this.getLabel(key, superKeys)} must be url`;
+    if (!this.protocols.includes(url.protocol)) {
+      return `${this.getLabel(key, superKeys)} doesn't match url scheme`;
+    }
+
+    return;
+  }
+
+  protected getURL(url: string) {
+    if (typeof url !== 'string') {
+      return false;
+    }
+
+    try {
+      return new URL(url);
+    } catch {
+      return false;
+    }
   }
 }

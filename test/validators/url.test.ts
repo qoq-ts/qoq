@@ -42,15 +42,17 @@ describe('Url validator', () => {
   });
 
   it ('should have multiple schemes', async () => {
-    expect(await validator.url.validate(data, 'ftp')).toContain('must be url');
+    expect(await validator.url.validate(data, 'ftp')).toContain('scheme');
     expect(await validator.url.schemes(['ftp', 'http', 'https']).validate(data, 'ftp')).toEqual(undefined);
   });
 
   it ('can transform data by user', async () => {
-    await validator
+    const msg = await validator
       .url
       .transform((value) => value.substr(5))
       .validate(data, 'http');
+
+    expect(msg).toBeUndefined();
 
     expect(data['http']).toEqual('//example.com');
   });
