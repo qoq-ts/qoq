@@ -6,6 +6,7 @@ import { ArrayValidator } from './ArrayValidator';
 import { JsonValidator } from './JsonValidator';
 import { BooleanValidator } from './BooleanValidator';
 import { FileValidator } from './FileValidator';
+import { EmailValidator } from './EmailValidator';
 
 export class ValidatorStatic {
   get number(): NumberValidator {
@@ -42,6 +43,10 @@ export class ValidatorStatic {
 
   get file(): FileValidator {
     return new FileValidator();
+  }
+
+  get email(): EmailValidator {
+    return new EmailValidator();
   }
 }
 
