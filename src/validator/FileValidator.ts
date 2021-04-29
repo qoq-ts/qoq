@@ -79,9 +79,22 @@ export class FileValidator<T = FileNoHash> extends Validator<FileOptions<T>> {
       }
 
       if (hash) {
-        item.hash = createHash(hash)
-          .update(fs.readFileSync(item.path))
-          .digest('hex');
+        const hashHandle = createHash(hash);
+        const steam = fs.createReadStream(item.path, {
+          flags: 'r',
+        });
+
+        item.hash = await new Promise<string>((resolve, reject) => {
+          steam.on('data', (chunk) => {
+            hashHandle.update(chunk);
+          });
+          steam.on('end', () => {
+            resolve(hashHandle.digest('hex'));
+          });
+          steam.on('error', (err) => {
+            reject(err);
+          });
+        });
       }
     }
 
