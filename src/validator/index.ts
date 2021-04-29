@@ -7,6 +7,7 @@ import { JsonValidator } from './JsonValidator';
 import { BooleanValidator } from './BooleanValidator';
 import { FileValidator } from './FileValidator';
 import { EmailValidator } from './EmailValidator';
+import { UUIDValidator } from './UUIDValidator';
 
 export class ValidatorStatic {
   get number(): NumberValidator {
@@ -47,6 +48,10 @@ export class ValidatorStatic {
 
   get email(): EmailValidator {
     return new EmailValidator();
+  }
+
+  get uuid(): UUIDValidator {
+    return new UUIDValidator;
   }
 }
 
