@@ -51,12 +51,12 @@ export abstract class Validator<T extends ValidatorOptions<any> = ValidatorOptio
     return this;
   }
 
-  public/*protected*/ validate(obj: Record<string, any>, key: string, superKeys: string[] = []): string | void {
+  public/*protected*/ async validate(data: Record<string, any>, key: string, superKeys: string[] = []): Promise<string | void> {
     const { defaultValue, required } = this.config;
-    let value = obj[key];
+    let value = data[key];
 
     if (this.isEmpty(value)) {
-      obj[key] = value = defaultValue;
+      data[key] = value = defaultValue;
 
       if (value === undefined) {
         if (required) {
@@ -67,9 +67,9 @@ export abstract class Validator<T extends ValidatorOptions<any> = ValidatorOptio
       }
     }
 
-    const msg = this.validateValue(obj, key, superKeys);
+    const msg = await this.validateValue(data, key, superKeys);
     if (msg === undefined && typeof this.config.transform === 'function') {
-      obj[key] = this.config.transform(obj[key]);
+      data[key] = this.config.transform(data[key]);
     }
 
     return msg;
@@ -83,7 +83,7 @@ export abstract class Validator<T extends ValidatorOptions<any> = ValidatorOptio
     return value === undefined || value === null || value === '';
   }
 
-  protected abstract validateValue(data: Record<string, any>, key: string, superKeys: string[]): string | void;
+  protected abstract validateValue(data: Record<string, any>, key: string, superKeys: string[]): Promise<string | void>;
 
   public/*protected*/ toJSON() {
     return {

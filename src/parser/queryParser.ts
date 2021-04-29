@@ -4,7 +4,7 @@ import { Validator } from '../validator/Validator';
 export const queryParser = (rules: { [key: string]: Validator }) => {
   const parsedRules = Object.entries(rules);
 
-  const respond = (ctx: WebCtx) => {
+  const respond = async (ctx: WebCtx) => {
     const rawQuery: Record<string, any> = ctx.request.query;
     const query: typeof ctx.query = {};
 
@@ -12,7 +12,7 @@ export const queryParser = (rules: { [key: string]: Validator }) => {
       const [key, validator] = parsedRules[i]!;
       query[key] = rawQuery[key];
 
-      const msg = validator.validate(query, key);
+      const msg = await validator.validate(query, key);
       if (msg) {
         ctx.throw(400, msg);
       }
@@ -21,7 +21,7 @@ export const queryParser = (rules: { [key: string]: Validator }) => {
     return query;
   };
 
-  return (respond.usePromise = false, respond);
+  return respond;
 };
 
 queryParser.usePromise = false;

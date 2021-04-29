@@ -30,9 +30,9 @@ export class EnumValidator<T = number | string> extends Validator<EnumOptions<T>
 
   declare transform: <T1>(fn: (value: T) => T1) => EnumValidator<T1>;
 
-  protected validateValue(obj: Record<string, any>, key: string, superKeys: string[]): string | void {
+  protected async validateValue(data: Record<string, any>, key: string, superKeys: string[]): Promise<string | void> {
     const { ranges, strict } = this.config;
-    let value = obj[key];
+    let value = data[key];
 
     if (ranges.includes(value)) {
       return;
@@ -47,14 +47,14 @@ export class EnumValidator<T = number | string> extends Validator<EnumOptions<T>
         const tempValue = value.toString();
 
         if (tempValue === range) {
-          obj[key] = tempValue;
+          data[key] = tempValue;
           return;
         }
       } else if (typeof range === 'number' && typeof value === 'string') {
         const tempValue = Number(value);
 
         if (tempValue === range) {
-          obj[key] = tempValue;
+          data[key] = tempValue;
           return;
         }
       }

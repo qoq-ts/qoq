@@ -4,7 +4,7 @@ import { Validator } from '../validator/Validator';
 export const paramParser = (rules: { [key: string]: Validator }) => {
   const parsedRules = Object.entries(rules);
 
-  const respond = (ctx: WebCtx<{ params: { [key: string]: unknown } }>) => {
+  const respond = async (ctx: WebCtx<{ params: { [key: string]: unknown } }>) => {
     const rawParams: Record<string, any> = ctx.params || {};
     const params: typeof ctx.params = {};
 
@@ -12,7 +12,7 @@ export const paramParser = (rules: { [key: string]: Validator }) => {
       const [key, validator] = parsedRules[i]!;
       params[key] = rawParams[key];
 
-      const msg = validator.validate(params, key);
+      const msg = await validator.validate(params, key);
       if (msg) {
         ctx.throw(400, msg);
       }
@@ -21,5 +21,5 @@ export const paramParser = (rules: { [key: string]: Validator }) => {
     return params;
   };
 
-  return (respond.usePromise = false, respond);
+  return respond;
 };

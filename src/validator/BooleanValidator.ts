@@ -25,17 +25,17 @@ export class BooleanValidator<T = boolean> extends Validator<BooleanOptions<T>> 
 
   declare transform: <T1>(fn: (boolean: T) => T1) => BooleanValidator<T1>;
 
-  protected validateValue(obj: Record<string, any>, key: string, superKeys: string[]): string | void {
+  protected async validateValue(data: Record<string, any>, key: string, superKeys: string[]): Promise<string | void> {
     const {
        trueValues = BooleanValidator.trueValues,
        falseValues = BooleanValidator.falseValues,
     } = this.config;
-    const value = obj[key];
+    const value = data[key];
 
     if (trueValues.includes(value)) {
-      obj[key] = true;
+      data[key] = true;
     } else if (falseValues.includes(value)) {
-      obj[key] = false;
+      data[key] = false;
     } else {
       return `${this.getLabel(key, superKeys)} must be boolean`;
     }

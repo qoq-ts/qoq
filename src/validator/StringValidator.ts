@@ -48,13 +48,13 @@ export class StringValidator<T = string> extends Validator<StringOptions<T>> {
     return typeof value !== 'string' && super.isEmpty(value);
   }
 
-  protected validateValue(obj: Record<string, any>, key: string, superKeys: string[]): string | void {
+  protected async validateValue(data: Record<string, any>, key: string, superKeys: string[]): Promise<string | void> {
     const { minLength, maxLength, caseType, pattern } = this.config;
-    let value: string = obj[key];
+    let value: string = data[key];
 
     if (typeof value !== 'string') {
       if (typeof value === 'number' && !Number.isNaN(value)) {
-        obj[key] = value = (value as number).toString();
+        data[key] = value = (value as number).toString();
       } else {
         return `${this.getLabel(key, superKeys)} must be string`;
       }
@@ -78,13 +78,13 @@ export class StringValidator<T = string> extends Validator<StringOptions<T>> {
 
     switch (caseType) {
       case 'lower':
-        obj[key] = value = value.toLowerCase();
+        data[key] = value = value.toLowerCase();
         break;
       case 'upper':
-        obj[key] = value = value.toUpperCase();
+        data[key] = value = value.toUpperCase();
         break;
       case 'title':
-        obj[key] = value = value.substr(0, 1).toUpperCase() + value.substr(1).toLowerCase();
+        data[key] = value = value.substr(0, 1).toUpperCase() + value.substr(1).toLowerCase();
         break;
     }
 

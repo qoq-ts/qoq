@@ -19,7 +19,7 @@ export class JsonValidator<T = object> extends Validator<JsonOptions<T>> {
 
   declare transform: <T1>(fn: (object: T) => T1) => JsonValidator<T1>;
 
-  protected validateValue(data: Record<string, any>, key: string, superKeys: string[]): string | void {
+  protected async validateValue(data: Record<string, any>, key: string, superKeys: string[]): Promise<string | void> {
     const { constraint } = this.config;
     let value = data[key];
 
@@ -43,7 +43,7 @@ export class JsonValidator<T = object> extends Validator<JsonOptions<T>> {
 
       for (const subKey of Object.keys(constraint)) {
         tempObj[subKey] = value[subKey];
-        const result = constraint[subKey]!.validate(tempObj, subKey, superKeys.concat(key));
+        const result = await constraint[subKey]!.validate(tempObj, subKey, superKeys.concat(key));
         if (result) {
           return result;
         }

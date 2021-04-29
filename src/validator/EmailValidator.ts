@@ -10,7 +10,7 @@ export class EmailValidator<T = string> extends Validator<EmailOptions<T>> {
 
   declare transform: <T1>(fn: (email: T) => T1) => EmailValidator<T1>;
 
-  protected validateValue(data: Record<string, any>, key: string, superKeys: string[]): string | void {
+  protected async validateValue(data: Record<string, any>, key: string, superKeys: string[]): Promise<string | void> {
     const value = data[key];
 
     if (typeof value === 'string' && email.validate(value)) {

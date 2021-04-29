@@ -20,7 +20,7 @@ export const bodyParser = (rules: { [key: string]: Validator }) => {
 
       body[key] = rawBody[key];
 
-      const msg = validator.validate(body, key);
+      const msg = await validator.validate(body, key);
       if (msg) {
         ctx.throw(400, msg);
       }
@@ -29,7 +29,7 @@ export const bodyParser = (rules: { [key: string]: Validator }) => {
     return body;
   };
 
-  return (respond.usePromise = true, respond);
+  return respond;
 };
 
 const getRawBody = (ctx: WebCtx): Promise<Record<string, any>> => {

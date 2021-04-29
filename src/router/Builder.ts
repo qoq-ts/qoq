@@ -9,10 +9,7 @@ export abstract class Builder<
   Payload = {}
 > {
   protected slots = new SlotManager<T, any, any>([]);
-  protected payload: Record<string, {
-    (ctx: any): any;
-    usePromise: boolean;
-  }> = {};
+  protected payload: Record<string, (ctx: any) => any> = {};
 
   public use<P, S>(slot: Use<T, P, S>): Builder<T, Props & P, State & S, Payload> {
     this.slots = this.slots.use(slot);
@@ -27,40 +24,24 @@ export abstract class Builder<
 
   protected useAction(fn: (ctx: any, payload: Payload, next: Next) => any) {
     const payload = Object.entries(this.payload);
-    let usePromise = false;
-
-    for (let i = 0; i < payload.length; ++i) {
-      if (payload[i]![1].usePromise) {
-        usePromise = true;
-        break;
-      }
-    }
 
     const middleware: SlotCtx<Slot.Mix> = (ctx, next) => {
       // @ts-expect-error
       const parsed: Payload = {};
-      const promises: any[] = [];
+      const promises: Promise<any>[] = [];
 
       for (let i = 0; i < payload.length; ++i) {
         const key = payload[i]![0] as keyof Payload;
-        const result = payload[i]![1](ctx) as Payload[keyof Payload];
+        const result = payload[i]![1](ctx) as Promise<any>;
 
-        if (usePromise) {
-          promises.push(
-            Promise.resolve(result).then((data) => {
-              parsed[key] = data;
-            })
-          );
-        } else {
-          parsed[key] = result;
-        }
+        promises.push(
+          result.then((data) => {
+            parsed[key] = data;
+          })
+        );
       }
 
-      if (usePromise) {
-        return Promise.all(promises).then(() => fn(ctx, parsed, next));
-      }
-
-      return fn(ctx, parsed, next);
+      return Promise.all(promises).then(() => fn(ctx, parsed, next));
     };
 
     // @ts-expect-error

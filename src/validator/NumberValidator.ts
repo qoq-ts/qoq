@@ -32,12 +32,12 @@ export class NumberValidator<T = number> extends Validator<NumberOptions<T>> {
 
   declare transform: <T1>(fn: (number: T) => T1) => NumberValidator<T1>;
 
-  protected validateValue(obj: Record<string, any>, key: string, superKeys: string[]): string | void {
+  protected async validateValue(data: Record<string, any>, key: string, superKeys: string[]): Promise<string | void> {
     const { min, max, minInclusive, maxInclusive, onlyInteger } = this.config;
-    let value = obj[key];
+    let value = data[key];
 
     if (typeof value !== 'number') {
-      obj[key] = value = Number(value);
+      data[key] = value = Number(value);
     }
 
     if (Number.isNaN(value)) {

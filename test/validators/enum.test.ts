@@ -15,38 +15,38 @@ describe('Enum validator', () => {
     data = cloneDeep(defaultData);
   });
 
-  it ('may be undefined', () => {
-    expect(validator.enum.range([2, 3, '4']).validate(data, 'id2')).toEqual(undefined);
-    expect(validator.enum.optional().validate(data, 'notfound')).toEqual(undefined);
-    expect(validator.enum.validate(data, 'notfound')).toContain('is required');
+  it ('may be undefined', async () => {
+    expect(await validator.enum.range([2, 3, '4']).validate(data, 'id2')).toEqual(undefined);
+    expect(await validator.enum.optional().validate(data, 'notfound')).toEqual(undefined);
+    expect(await validator.enum.validate(data, 'notfound')).toContain('is required');
   });
 
-  it ('should has default value', () => {
+  it ('should has default value', async () => {
     const newlyData: Record<string, any> = {};
 
-    expect(validator.enum.range([15, 20]).default(15).validate(newlyData, 'id2')).toEqual(undefined);
+    expect(await validator.enum.range([15, 20]).default(15).validate(newlyData, 'id2')).toEqual(undefined);
     expect(newlyData['id2']).toEqual(15);
   });
 
-  it ('should be not strict by default', () => {
-    expect(validator.enum.range(['2', 3, '4']).validate(data, 'id2')).toEqual(undefined);
+  it ('should be not strict by default', async () => {
+    expect(await validator.enum.range(['2', 3, '4']).validate(data, 'id2')).toEqual(undefined);
     expect(data['id2']).toEqual('2');
 
-    expect(validator.enum.range([2, 3, '4']).validate(data, 'id2str')).toEqual(undefined);
+    expect(await validator.enum.range([2, 3, '4']).validate(data, 'id2str')).toEqual(undefined);
     expect(data['id2str']).toEqual(2);
   });
 
-  it ('can set strict mode', () => {
-    expect(validator.enum.strict().range(['2', 3, '4']).validate(data, 'id2')).toContain('["2",3,"4"]');
-    expect(validator.enum.strict().range([2, 3, '4']).validate(data, 'id2str')).toContain('[2,3,"4"]');
+  it ('can set strict mode', async () => {
+    expect(await validator.enum.strict().range(['2', 3, '4']).validate(data, 'id2')).toContain('["2",3,"4"]');
+    expect(await validator.enum.strict().range([2, 3, '4']).validate(data, 'id2str')).toContain('[2,3,"4"]');
   });
 
-  it ('should not hint range data', () => {
-    expect(validator.enum.range(['2', 3, '4']).validate(data, 'age10')).toContain('["2",3,"4"]');
+  it ('should not hint range data', async () => {
+    expect(await validator.enum.range(['2', 3, '4']).validate(data, 'age10')).toContain('["2",3,"4"]');
   });
 
-  it ('can transform data by user', () => {
-    validator
+  it ('can transform data by user', async () => {
+    await validator
       .enum
       .range([2, 3, 4])
       .transform((value) => value * 10)

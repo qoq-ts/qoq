@@ -36,12 +36,12 @@ export class ArrayValidator<T = never[]> extends Validator<ArrayOptions<T>> {
 
   declare transform: <T1>(fn: (array: T) => T1) => ArrayValidator<T1>;
 
-  protected validateValue(obj: Record<string, any>, key: string, superKeys: string[]): string | void {
+  protected async validateValue(data: Record<string, any>, key: string, superKeys: string[]): Promise<string | void> {
     const { minItemLength, maxItemLength, itemValidator } = this.config;
-    let value: any[] = obj[key];
+    let value: any[] = data[key];
 
     if (!Array.isArray(value)) {
-      obj[key] = value = [value];
+      data[key] = value = [value];
     }
 
     if (minItemLength !== undefined || maxItemLength !== undefined) {
@@ -64,7 +64,7 @@ export class ArrayValidator<T = never[]> extends Validator<ArrayOptions<T>> {
 
     if (itemValidator) {
       for (let index = 0, length = value.length; index < length; ++index) {
-        const result = itemValidator.validate(value, index.toString(), superKeys.concat(key));
+        const result = await itemValidator.validate(value, index.toString(), superKeys.concat(key));
         if (result) {
           return result;
         }

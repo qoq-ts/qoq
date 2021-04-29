@@ -20,7 +20,7 @@ export class UrlValidator<T = string> extends Validator<UrlOptions<T>> {
 
   declare transform: <T1>(fn: (value: T) => T1) => UrlValidator<T1>;
 
-  protected validateValue(data: Record<string, any>, key: string, superKeys: string[]): string | void {
+  protected async validateValue(data: Record<string, any>, key: string, superKeys: string[]): Promise<string | void> {
     const value = data[key];
 
     if (typeof value === 'string' && value.length < 2000) {

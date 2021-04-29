@@ -46,11 +46,11 @@ export class FileValidator<T = FileNoHash> extends Validator<FileOptions<T>> {
 
   declare transform: <T1>(fn: (file: T) => T1) => FileValidator<T1>;
 
-  protected validateValue(obj: Record<string, any>, key: string, superKeys: string[]): string | void {
+  protected async validateValue(data: Record<string, any>, key: string, superKeys: string[]): Promise<string | void> {
     const { hash, multiples, maxSize, mimeTypes } = this.config;
-    let value: formidable.File[] = obj[key];
+    let value: formidable.File[] = data[key];
 
-    obj[key] = value = Array.isArray(value) ? value : [value];
+    data[key] = value = Array.isArray(value) ? value : [value];
 
     if (!multiples) {
       if (value.length === 0) {
@@ -86,7 +86,7 @@ export class FileValidator<T = FileNoHash> extends Validator<FileOptions<T>> {
     }
 
     if (!multiples) {
-      obj[key] = value[0];
+      data[key] = value[0];
     }
   }
 }

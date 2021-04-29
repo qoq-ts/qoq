@@ -1,7 +1,7 @@
 import createError from 'http-errors';
 import { Validator, ValidatorTypes } from './Validator';
 
-export const validate = <T extends { [key: string]: Validator }>(sourceData: Record<string, any>, validators: T): ValidatorTypes<T> => {
+export const validate = async <T extends { [key: string]: Validator }>(sourceData: Record<string, any>, validators: T): Promise<ValidatorTypes<T>> => {
   const payload: Record<string, any> = {};
   const keys = Object.keys(validators);
 
@@ -10,7 +10,7 @@ export const validate = <T extends { [key: string]: Validator }>(sourceData: Rec
 
     payload[key] = sourceData[key];
 
-    const msg = validators[key]!.validate(payload, key);
+    const msg = await validators[key]!.validate(payload, key);
     if (msg) {
       throw createError(400, msg);
     }

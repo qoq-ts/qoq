@@ -6,7 +6,7 @@ export const optionParser = (rules: { [key: string]: Validator }) => {
   const parsedRules = Object.entries(rules);
   let aliases: Record<string, string> | undefined;
 
-  const respond = (ctx: ConsoleCtx) => {
+  const respond = async (ctx: ConsoleCtx) => {
     const input = yargs([]).help(false).version(false);
 
     if (aliases) {
@@ -23,7 +23,7 @@ export const optionParser = (rules: { [key: string]: Validator }) => {
     for (const [key, validator] of parsedRules) {
       options[key] = rawOptions[key];
 
-      const msg = validator.validate(options, key);
+      const msg = await validator.validate(options, key);
       if (msg) {
         throw new Error(msg);
       }
