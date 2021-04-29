@@ -3,6 +3,8 @@ import { Validator, ValidatorOptions } from './Validator';
 interface StringOptions<T> extends ValidatorOptions<T> {
   minLength?: number;
   maxLength?: number;
+  caseType?: 'lower' | 'upper' | 'title';
+  pattern?: RegExp;
 }
 
 export class StringValidator<T = string> extends Validator<StringOptions<T>> {
@@ -13,6 +15,26 @@ export class StringValidator<T = string> extends Validator<StringOptions<T>> {
 
   maxLength(max: number): this {
     this.config.maxLength = max;
+    return this;
+  }
+
+  toLowerCase(): this {
+    this.config.caseType = 'lower';
+    return this;
+  }
+
+  toUpperCase(): this {
+    this.config.caseType = 'upper';
+    return this;
+  }
+
+  toTitleCase(): this {
+    this.config.caseType = 'title';
+    return this;
+  }
+
+  match(pattern: RegExp): this {
+    this.config.pattern = pattern;
     return this;
   }
 
@@ -27,12 +49,12 @@ export class StringValidator<T = string> extends Validator<StringOptions<T>> {
   }
 
   protected validateValue(obj: Record<string, any>, key: string, superKeys: string[]): string | void {
-    const { minLength, maxLength } = this.config;
-    let value = obj[key];
+    const { minLength, maxLength, caseType, pattern } = this.config;
+    let value: string = obj[key];
 
     if (typeof value !== 'string') {
       if (typeof value === 'number' && !Number.isNaN(value)) {
-        obj[key] = value = value.toString();
+        obj[key] = value = (value as number).toString();
       } else {
         return `${this.getLabel(key, superKeys)} must be string`;
       }
@@ -52,6 +74,22 @@ export class StringValidator<T = string> extends Validator<StringOptions<T>> {
       }
 
       return `${this.getLabel(key, superKeys)} must has between ${minLength} and ${maxLength} characters`;
+    }
+
+    switch (caseType) {
+      case 'lower':
+        obj[key] = value = value.toLowerCase();
+        break;
+      case 'upper':
+        obj[key] = value = value.toUpperCase();
+        break;
+      case 'title':
+        obj[key] = value = value.substr(0, 1).toUpperCase() + value.substr(1).toLowerCase();
+        break;
+    }
+
+    if (pattern && !pattern.test(value)) {
+      return `${this.getLabel(key, superKeys)} doesn't match regular expression`;
     }
 
     return;

@@ -5,6 +5,7 @@ import { cloneDeep } from 'lodash';
 const defaultData = {
   id2: 2,
   hello: 'hello',
+  HELLO: 'HELLO',
   obj: {},
   nan: Number.NaN,
 };
@@ -62,5 +63,28 @@ describe('String validator', () => {
       .validate(data, 'hello');
 
     expect(data['hello']).toEqual('[object String]');
+  });
+
+  it ('can make string lower case', () => {
+    expect(validator.string.toLowerCase().validate(data, 'HELLO')).toEqual(undefined);
+    expect(data.HELLO).toEqual('hello');
+  });
+
+  it ('can make string upper case', () => {
+    expect(validator.string.toUpperCase().validate(data, 'hello')).toEqual(undefined);
+    expect(data.hello).toEqual('HELLO');
+  });
+
+  it ('can make string title case', () => {
+    expect(validator.string.toTitleCase().validate(data, 'hello')).toEqual(undefined);
+    expect(data.hello).toEqual('Hello');
+
+    expect(validator.string.toTitleCase().validate(data, 'HELLO')).toEqual(undefined);
+    expect(data.HELLO).toEqual('Hello');
+  });
+
+  it ('string should match regular expression', () => {
+    expect(validator.string.match(/^hell$/i).validate(data, 'hello')).toContain('doesn\'t match');
+    expect(validator.string.match(/^Hello$/i).validate(data, 'hello')).toEqual(undefined);
   });
 });
