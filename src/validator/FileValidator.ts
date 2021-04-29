@@ -44,7 +44,7 @@ export class FileValidator<T = FileNoHash> extends Validator<FileOptions<T>> {
 
   declare optional: () => FileValidator<T | undefined>;
 
-  declare transform: <T1>(fn: (file: T) => T1) => FileValidator<T1>;
+  declare transform: <T1>(fn: (file: T) => Promise<T1> | T1) => FileValidator<T1>;
 
   protected async validateValue(data: Record<string, any>, key: string, superKeys: string[]): Promise<string | void> {
     const { hash, multiples, maxSize, mimeTypes } = this.config;

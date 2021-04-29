@@ -34,7 +34,7 @@ export class ArrayValidator<T = never[]> extends Validator<ArrayOptions<T>> {
 
   declare optional: () => ArrayValidator<T | undefined>;
 
-  declare transform: <T1>(fn: (array: T) => T1) => ArrayValidator<T1>;
+  declare transform: <T1>(fn: (array: T) => Promise<T1> | T1) => ArrayValidator<T1>;
 
   protected async validateValue(data: Record<string, any>, key: string, superKeys: string[]): Promise<string | void> {
     const { minItemLength, maxItemLength, itemValidator } = this.config;

@@ -30,7 +30,7 @@ export class NumberValidator<T = number> extends Validator<NumberOptions<T>> {
 
   declare default: (number: NonNullable<T>) => NumberValidator<NonNullable<T>>;
 
-  declare transform: <T1>(fn: (number: T) => T1) => NumberValidator<T1>;
+  declare transform: <T1>(fn: (number: T) => Promise<T1> | T1) => NumberValidator<T1>;
 
   protected async validateValue(data: Record<string, any>, key: string, superKeys: string[]): Promise<string | void> {
     const { min, max, minInclusive, maxInclusive, onlyInteger } = this.config;

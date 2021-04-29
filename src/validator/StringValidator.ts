@@ -42,7 +42,7 @@ export class StringValidator<T = string> extends Validator<StringOptions<T>> {
 
   declare default: (string: NonNullable<T>) => StringValidator<NonNullable<T>>;
 
-  declare transform: <T1>(fn: (string: T) => T1) => StringValidator<T1>;
+  declare transform: <T1>(fn: (string: T) => Promise<T1> | T1) => StringValidator<T1>;
 
   protected isEmpty(value: any): boolean {
     return typeof value !== 'string' && super.isEmpty(value);

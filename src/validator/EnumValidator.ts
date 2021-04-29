@@ -28,7 +28,7 @@ export class EnumValidator<T = number | string> extends Validator<EnumOptions<T>
 
   declare optional: () => EnumValidator<T | undefined>;
 
-  declare transform: <T1>(fn: (value: T) => T1) => EnumValidator<T1>;
+  declare transform: <T1>(fn: (value: T) => Promise<T1> | T1) => EnumValidator<T1>;
 
   protected async validateValue(data: Record<string, any>, key: string, superKeys: string[]): Promise<string | void> {
     const { ranges, strict } = this.config;

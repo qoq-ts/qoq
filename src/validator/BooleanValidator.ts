@@ -23,7 +23,7 @@ export class BooleanValidator<T = boolean> extends Validator<BooleanOptions<T>> 
 
   declare default: (boolean: NonNullable<T>) => BooleanValidator<NonNullable<T>>;
 
-  declare transform: <T1>(fn: (boolean: T) => T1) => BooleanValidator<T1>;
+  declare transform: <T1>(fn: (boolean: T) => Promise<T1> | T1) => BooleanValidator<T1>;
 
   protected async validateValue(data: Record<string, any>, key: string, superKeys: string[]): Promise<string | void> {
     const {

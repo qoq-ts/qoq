@@ -17,7 +17,7 @@ export class JsonValidator<T = object> extends Validator<JsonOptions<T>> {
 
   declare optional: () => JsonValidator<T | undefined>;
 
-  declare transform: <T1>(fn: (object: T) => T1) => JsonValidator<T1>;
+  declare transform: <T1>(fn: (object: T) => Promise<T1> | T1) => JsonValidator<T1>;
 
   protected async validateValue(data: Record<string, any>, key: string, superKeys: string[]): Promise<string | void> {
     const { constraint } = this.config;

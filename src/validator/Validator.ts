@@ -6,7 +6,7 @@ interface Document {
 export interface ValidatorOptions<Type> extends Document {
   defaultValue: Type;
   required: boolean;
-  transform?: (value: Type) => any;
+  transform?: (value: Type) => Promise<any> | any;
 }
 
 export type ValidatorTypes<T> = {
@@ -35,7 +35,7 @@ export abstract class Validator<T extends ValidatorOptions<any> = ValidatorOptio
   /**
    * Make sure you call it at the ending of chain.
    */
-  transform<T1>(fn: (value: any) => T1): Validator {
+  transform<T1>(fn: (value: any) => Promise<T1> | T1): Validator {
     this.config.transform = fn;
     return this;
   }
@@ -69,7 +69,7 @@ export abstract class Validator<T extends ValidatorOptions<any> = ValidatorOptio
 
     const msg = await this.validateValue(data, key, superKeys);
     if (msg === undefined && typeof this.config.transform === 'function') {
-      data[key] = this.config.transform(data[key]);
+      data[key] = await this.config.transform(data[key]);
     }
 
     return msg;

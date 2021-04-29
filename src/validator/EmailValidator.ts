@@ -8,7 +8,7 @@ export class EmailValidator<T = string> extends Validator<EmailOptions<T>> {
 
   declare default: (email: NonNullable<T>) => EmailValidator<NonNullable<T>>;
 
-  declare transform: <T1>(fn: (email: T) => T1) => EmailValidator<T1>;
+  declare transform: <T1>(fn: (email: T) => Promise<T1> | T1) => EmailValidator<T1>;
 
   protected async validateValue(data: Record<string, any>, key: string, superKeys: string[]): Promise<string | void> {
     const value = data[key];
