@@ -19,22 +19,11 @@ export class BooleanValidator<T = boolean> extends Validator<BooleanOptions<T>> 
     return this;
   }
 
-  public optional(): BooleanValidator<T | undefined> {
-    return super.optional();
-  }
+  declare optional: () => BooleanValidator<T | undefined>;
 
-  public default(value: NonNullable<T>): BooleanValidator<NonNullable<T>> {
-    return super.default(value);
-  }
+  declare default: (boolean: NonNullable<T>) => BooleanValidator<NonNullable<T>>;
 
-  /**
-   * Make sure you call it at the ending of chain.
-   */
-  transform<T1>(fn: (value: T) => T1): BooleanValidator<T1> {
-    this.config.transform = fn;
-    // @ts-expect-error
-    return this;
-  }
+  declare transform: <T1>(fn: (boolean: T) => T1) => BooleanValidator<T1>;
 
   protected validateValue(obj: Record<string, any>, key: string, superKeys: string[]): string | void {
     const {

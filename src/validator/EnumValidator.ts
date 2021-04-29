@@ -24,22 +24,11 @@ export class EnumValidator<T = number | string> extends Validator<EnumOptions<T>
     return this;
   }
 
-  public default(value: NonNullable<T>): EnumValidator<NonNullable<T>> {
-    return super.default(value);
-  }
+  declare default: (value: NonNullable<T>) => EnumValidator<NonNullable<T>>;
 
-  public optional(): EnumValidator<T | undefined> {
-    return super.optional();
-  }
+  declare optional: () => EnumValidator<T | undefined>;
 
-  /**
-   * Make sure you call it at the ending of chain.
-   */
-  transform<T1>(fn: (value: T) => T1): EnumValidator<T1> {
-    this.config.transform = fn;
-    // @ts-expect-error
-    return this;
-  }
+  declare transform: <T1>(fn: (value: T) => T1) => EnumValidator<T1>;
 
   protected validateValue(obj: Record<string, any>, key: string, superKeys: string[]): string | void {
     const { ranges, strict } = this.config;

@@ -26,22 +26,11 @@ export class NumberValidator<T = number> extends Validator<NumberOptions<T>> {
     return this;
   }
 
-  public optional(): NumberValidator<T | undefined> {
-    return super.optional();
-  }
+  declare optional: () => NumberValidator<T | undefined>;
 
-  public default(value: NonNullable<T>): NumberValidator<NonNullable<T>> {
-    return super.default(value);
-  }
+  declare default: (number: NonNullable<T>) => NumberValidator<NonNullable<T>>;
 
-  /**
-   * Make sure you call it at the ending of chain.
-   */
-  transform<T1>(fn: (value: T) => T1): NumberValidator<T1> {
-    this.config.transform = fn;
-    // @ts-expect-error
-    return this;
-  }
+  declare transform: <T1>(fn: (number: T) => T1) => NumberValidator<T1>;
 
   protected validateValue(obj: Record<string, any>, key: string, superKeys: string[]): string | void {
     const { min, max, minInclusive, maxInclusive, onlyInteger } = this.config;

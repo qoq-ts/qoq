@@ -30,22 +30,11 @@ export class ArrayValidator<T = never[]> extends Validator<ArrayOptions<T>> {
     return this;
   }
 
-  public default(value: NonNullable<T>): ArrayValidator<NonNullable<T>> {
-    return super.default(value);
-  }
+  declare default: (array: NonNullable<T>) => ArrayValidator<NonNullable<T>>;
 
-  public optional(): ArrayValidator<T | undefined> {
-    return super.optional();
-  }
+  declare optional: () => ArrayValidator<T | undefined>;
 
-  /**
-   * Make sure you call it at the ending of chain.
-   */
-  transform<T1>(fn: (value: T) => T1): ArrayValidator<T1> {
-    this.config.transform = fn;
-    // @ts-expect-error
-    return this;
-  }
+  declare transform: <T1>(fn: (array: T) => T1) => ArrayValidator<T1>;
 
   protected validateValue(obj: Record<string, any>, key: string, superKeys: string[]): string | void {
     const { minItemLength, maxItemLength, itemValidator } = this.config;

@@ -14,22 +14,11 @@ export class UrlValidator<T = string> extends Validator<UrlOptions<T>> {
     return this;
   }
 
-  optional(): UrlValidator<T | undefined> {
-    return super.optional();
-  }
+  declare optional: () => UrlValidator<T | undefined>;
 
-  default(url: NonNullable<T>): UrlValidator<NonNullable<T>> {
-    return super.default(url);
-  }
+  declare default: (url: NonNullable<T>) => UrlValidator<NonNullable<T>>;
 
-  /**
-   * Make sure you call it at the ending of chain.
-   */
-  transform<T1>(fn: (value: T) => T1): UrlValidator<T1> {
-    this.config.transform = fn;
-    // @ts-expect-error
-    return this;
-  }
+  declare transform: <T1>(fn: (value: T) => T1) => UrlValidator<T1>;
 
   protected validateValue(data: Record<string, any>, key: string, superKeys: string[]): string | void {
     const value = data[key];

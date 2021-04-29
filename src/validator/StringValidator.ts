@@ -16,22 +16,11 @@ export class StringValidator<T = string> extends Validator<StringOptions<T>> {
     return this;
   }
 
-  optional(): StringValidator<T | undefined> {
-    return super.optional();
-  }
+  declare optional: () => StringValidator<T | undefined>;
 
-  default(value: NonNullable<T>): StringValidator<NonNullable<T>> {
-    return super.default(value);
-  }
+  declare default: (string: NonNullable<T>) => StringValidator<NonNullable<T>>;
 
-  /**
-   * Make sure you call it at the ending of chain.
-   */
-  transform<T1>(fn: (value: T) => T1): StringValidator<T1> {
-    this.config.transform = fn;
-    // @ts-expect-error
-    return this;
-  }
+  declare transform: <T1>(fn: (string: T) => T1) => StringValidator<T1>;
 
   protected isEmpty(value: any): boolean {
     return typeof value !== 'string' && super.isEmpty(value);

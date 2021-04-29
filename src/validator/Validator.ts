@@ -27,12 +27,20 @@ export abstract class Validator<T extends ValidatorOptions<any> = ValidatorOptio
     };
   }
 
-  public optional(): any {
+  public optional(): Validator {
     this.config.required = false;
     return this;
   }
 
-  protected default(value: any): any {
+  /**
+   * Make sure you call it at the ending of chain.
+   */
+  transform<T1>(fn: (value: any) => T1): Validator {
+    this.config.transform = fn;
+    return this;
+  }
+
+  protected default(value: any): Validator {
     this.optional();
     this.config.defaultValue = value;
     return this;

@@ -20,10 +20,6 @@ interface FileOptions<T> extends ValidatorOptions<T> {
 }
 
 export class FileValidator<T = FileNoHash> extends Validator<FileOptions<T>> {
-  public optional(): FileValidator<T | undefined> {
-    return super.optional();
-  }
-
   public hash(crypto: 'md5' | 'sha1'): FileValidator<T extends Array<any> ? FileWithHash[] : FileWithHash> {
     this.config.hash = crypto;
     // @ts-expect-error
@@ -46,14 +42,9 @@ export class FileValidator<T = FileNoHash> extends Validator<FileOptions<T>> {
     return this;
   }
 
-  /**
-   * Make sure you call it at the ending of chain.
-   */
-  transform<T1>(fn: (value: T) => T1): FileValidator<T1> {
-    this.config.transform = fn;
-    // @ts-expect-error
-    return this;
-  }
+  declare optional: () => FileValidator<T | undefined>;
+
+  declare transform: <T1>(fn: (file: T) => T1) => FileValidator<T1>;
 
   protected validateValue(obj: Record<string, any>, key: string, superKeys: string[]): string | void {
     const { hash, multiples, maxSize, mimeTypes } = this.config;

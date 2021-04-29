@@ -13,22 +13,11 @@ export class JsonValidator<T = object> extends Validator<JsonOptions<T>> {
     return this;
   }
 
-  public default(value: NonNullable<T>): JsonValidator<NonNullable<T>> {
-    return super.default(value);
-  }
+  declare default: (object: NonNullable<T>) => JsonValidator<NonNullable<T>>;
 
-  public optional(): JsonValidator<T | undefined> {
-    return super.optional();
-  }
+  declare optional: () => JsonValidator<T | undefined>;
 
-  /**
-   * Make sure you call it at the ending of chain.
-   */
-  transform<T1>(fn: (value: T) => T1): JsonValidator<T1> {
-    this.config.transform = fn;
-    // @ts-expect-error
-    return this;
-  }
+  declare transform: <T1>(fn: (object: T) => T1) => JsonValidator<T1>;
 
   protected validateValue(data: Record<string, any>, key: string, superKeys: string[]): string | void {
     const { constraint } = this.config;
