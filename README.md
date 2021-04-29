@@ -1,5 +1,5 @@
 # QOQ
-Qoq is a restful node framework with real type checking, a better way to save time and avoid syntax mistake. It's also designed to compatible with [koa2](https://github.com/koajs/koa) which is most popular basic framework, that means the existing middleware of koa2 can be easily integrated into here.
+A restful node framework for real type checking, a new way for avoiding syntax mistake and saving life. It's based on popular [koa2](https://github.com/koajs/koa), almostly the total middlewares can be integrated into here.
 
 <br>
 
@@ -14,11 +14,12 @@ Qoq is a restful node framework with real type checking, a better way to save ti
 
 # Features
 
-* web/console router
-* validate anything for router
-* cache engine
-* slot (middleware)
-* auto type checking
+* web router
+* console commander
+* validator
+* caching
+* slot/middleware
+* strong type-checking
 
 # Installation
 
