@@ -1,6 +1,6 @@
 {
   "name": "qoq",
-  "version": "0.0.36",
+  "version": "0.0.37",
   "main": "lib/index.js",
   "module": "es/index.js",
   "typings": "types/index.d.ts",
@@ -13,8 +13,7 @@
     "prepublishOnly": "sh ./prepublish.sh"
   },
   "bin": {
-    "qoq": "./lib/bin.js",
-    "qoq-es": "./es/bin/js"
+    "qoq": "./lib/bin.js"
   },
   "engines": {
     "node": "^14.15.0"
