@@ -10,6 +10,13 @@ import { queryParser } from '../parser/queryParser';
 import { bodyParser } from '../parser/bodyParser';
 import { paramParser } from '../parser/paramParser';
 
+interface Document {
+  title?: string;
+  description?: string;
+  response?: () => Record<string, Validator>;
+  headers?: () => Record<string, Validator>;
+}
+
 export class WebBuilder<
   Props = any,
   State = any,
@@ -19,6 +26,7 @@ export class WebBuilder<
   protected readonly uris: string[];
   protected readonly methods: Method[];
   protected readonly uriPatterns: ([RegExp, Key[], string | undefined])[];
+  protected readonly docs: Document = {};
 
   protected queryRules: Record<string, Validator> = {};
   protected bodyRules: Record<string, Validator> = {};
@@ -74,6 +82,11 @@ export class WebBuilder<
 
   public action<P = {}, S = {}>(fn: (ctx: WebCtx<Props & P, State & S>, payload: Payload, next: Next) => any): WebBuilder<Props & P, State & S, Param, Payload> {
     return this.useAction(fn), this;
+  }
+
+  public document(document: (() => Promise<Document>) | Document): this {
+    Object.assign(this.docs, document);
+    return this;
   }
 
   public/*protected*/ matchAndGetParams(path: string, method: Method): false | Record<string, string> {
