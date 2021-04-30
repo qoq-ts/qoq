@@ -1,7 +1,7 @@
-import { validate, validator } from '../../src';
+import { validator } from '../../src';
 
 test('validate object', async () => {
-  let data = await validate({ hello: 'world', age: 3 }, {
+  let data = await validator.validate({ hello: 'world', age: 3 }, {
     hello: validator.string,
     age: validator.string,
   });
@@ -19,7 +19,7 @@ test('validate object', async () => {
 
 test('validate function will throw error', async () => {
   try {
-    await validate({ age: 3 }, {
+    await validator.validate({ age: 3 }, {
       hello: validator.string,
       age: validator.string,
     });

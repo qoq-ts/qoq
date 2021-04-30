@@ -8,8 +8,11 @@ import { BooleanValidator } from './BooleanValidator';
 import { FileValidator } from './FileValidator';
 import { EmailValidator } from './EmailValidator';
 import { UUIDValidator } from './UUIDValidator';
+import { validate } from './validate';
 
 export class ValidatorStatic {
+  readonly validate = validate;
+
   get number(): NumberValidator {
     return new NumberValidator();
   }
