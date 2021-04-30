@@ -15,9 +15,7 @@ export const router = new ConsoleRouter({
 router
   .command('export:routers')
   .showInHelp()
-  .docs({
-    description: 'Export web routers to file and `ctx.state.routers`',
-  })
+  .description('Export web routers to file and `ctx.state.routers`')
   .options({
     input: validator.array.each(validator.string).minItemLength(1).docs({
       description: 'The folders where web routers come from',

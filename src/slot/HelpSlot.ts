@@ -6,7 +6,6 @@ import { Slot } from './Slot';
 import { ConsoleBuilder } from '../router/ConsoleBuilder';
 import { version } from '../util/version';
 import { ConsoleRouter } from '../router/ConsoleRouter';
-import { toArray } from '../util/toArray';
 
 export class HelpSlot extends Slot<Slot.Console> {
   protected builders: ConsoleBuilder[] = [];
@@ -65,9 +64,11 @@ export class HelpSlot extends Slot<Slot.Console> {
             Object.values(modules).forEach((item) => {
               if (item && item instanceof ConsoleRouter) {
                 item.getBuilders().forEach((builder) => {
-                  if (builder.isShow) {
-                    builder.commands[0] = chalk.yellow(builder.commands[0]);
-                    cli.command(builder.commands, builder.document.description);
+                  const json = builder.toJSON();
+
+                  if (json.showInHelp) {
+                    json.commands[0] = chalk.yellow(json.commands[0]);
+                    cli.command(json.commands, json.description);
                   }
                 });
               }
@@ -81,31 +82,26 @@ export class HelpSlot extends Slot<Slot.Console> {
   }
 
   protected showCustomHelp(builder: ConsoleBuilder) {
-    const { description } = builder.document;
+    const json = builder.toJSON();
 
     const cli = yargs([])
       .scriptName('qoq')
-      .usage(`qoq ${builder.commands[0]} [options]${description  ? '\n\n' + chalk.bold(description) : ''}`)
+      .usage(`qoq ${json.commands[0]} [options]${json.description  ? '\n\n' + chalk.bold(json.description) : ''}`)
       .version(false)
       .help(false);
 
-    const aliases = builder.payload.options?.getAlias();
-
-    Object.entries(builder.payload.options?.getRules() || {}).forEach(([key, validator]) => {
-      const alias = aliases?.[key];
-      const options = validator.toJSON();
-
-      cli.option(options.name || key, {
-        alias: alias === undefined ? undefined : toArray(alias),
-        description: options.description,
-        default: options.defaultValue === '' ? undefined : options.defaultValue,
+    Object.entries(json.options).forEach(([, option]) => {
+      cli.option(option.name, {
+        alias: option.alias,
+        description: option.description,
+        default: option.defaultValue === '' ? undefined : option.defaultValue,
       });
     });
 
     // Show help option last
     cli
       .alias('help', 'h')
-      .describe('help', 'Show help for command ' + builder.commands[0])
+      .describe('help', 'Show help for command ' + json.commands[0])
 
     cli.showHelp('log');
   }

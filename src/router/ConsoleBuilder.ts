@@ -6,22 +6,16 @@ import { Use } from '../slot/SlotManager';
 import { Validator, ValidatorTypes } from '../validator/Validator';
 import { Builder } from './Builder';
 
-interface Document {
-  description: string;
-}
-
 export class ConsoleBuilder<
   Props = any,
   State = any,
   Alias extends string = '',
   Payload extends { [key: string]: object } = {}
 > extends Builder<Slot.Mix | Slot.Console, Props, State, Payload> {
-  public/*protected*/ readonly commands: string[];
-  public/*protected*/ isShow: boolean = false;
+  protected readonly commands: string[];
+  protected show?: boolean;
   protected optionRules: Record<string, Validator> = {};
-  public/*protected*/ readonly document: Document = {
-    description: '',
-  };
+  protected desc?: string;
 
   public/*protected*/ declare payload: {
     options?: ReturnType<typeof optionParser>;
@@ -46,8 +40,8 @@ export class ConsoleBuilder<
     return this;
   }
 
-  public docs(document: Document): this {
-    Object.assign(this.document, document);
+  public description(desc: string): this {
+    this.desc = desc;
     return this;
   }
 
@@ -57,7 +51,7 @@ export class ConsoleBuilder<
   }
 
   public showInHelp(show: boolean = true): this {
-    this.isShow = show;
+    this.show = show;
     return this;
   }
 
@@ -67,21 +61,19 @@ export class ConsoleBuilder<
 
   public/*protected*/ toJSON() {
     const optionsData = this.payload.options?.getRules() || {};
-    const aliases = this.payload.options?.getAlias() || {};
+    const aliases = Object.entries(this.payload.options?.getAlias() || {});
 
     return {
       commands: this.commands,
-      description: this.document.description || '',
-      showInHelp: this.isShow,
+      description: this.desc || '',
+      showInHelp: this.show === true,
       options: Object.entries(optionsData).map(([key, validator]) => {
-        const alias = aliases[key];
+        const aliasList = aliases.filter(([, v]) => v === key).map(([k]) => k);
         const options = validator.toJSON();
 
         return {
-          alias: alias === undefined
-            ? undefined
-            : Array.isArray(alias) ? alias : [alias],
           ...options,
+          alias: aliasList.length ? aliasList : undefined,
           name: options.name || key,
         };
       }),
