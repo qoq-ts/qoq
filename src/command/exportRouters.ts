@@ -17,13 +17,13 @@ router
   .showInHelp()
   .description('Export web routers to file and `ctx.state.routers`')
   .options({
-    input: validator.array.each(validator.string).minItemLength(1).docs({
+    input: validator.array.each(validator.string).minItemLength(1).document({
       description: 'The folders where web routers come from',
     }),
     output: validator
       .string
       .default('./routers.json')
-      .docs({
+      .document({
         description: 'The file path JSON data will output to.',
       }),
   })

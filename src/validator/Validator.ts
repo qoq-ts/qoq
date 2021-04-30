@@ -46,7 +46,7 @@ export abstract class Validator<T extends ValidatorOptions<any> = ValidatorOptio
     return this;
   }
 
-  public docs(docs: Document): this {
+  public document(docs: Document): this {
     Object.assign(this.config, docs);
     return this;
   }
