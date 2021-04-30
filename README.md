@@ -45,7 +45,7 @@ yarn add qoq
 | [qoq-views](https://github.com/qoq-ts/qoq-views) | [![npm](https://img.shields.io/npm/v/qoq-views)](https://www.npmjs.com/package/qoq-views) | Web | template rendering |
 | [qoq-json-error](https://github.com/qoq-ts/qoq-json-error) | [![npm](https://img.shields.io/npm/v/qoq-json-error)](https://www.npmjs.com/package/qoq-json-error) | Web | JSON error handler |
 
-And more from koa community...
+**And more from koa community...**
 
 # Demos
 [Hello World](https://github.com/qoq-ts/demo-qoq-hello-world)
@@ -181,8 +181,8 @@ router
     dateTo: validator.string.optional(),
   })
   .alias({
-    dateFrom: 'f',
-    dateTo: 't',
+    f: 'dateFrom',
+    t: 'dateTo',
   })
   .action(async (ctx, payload) => {
     // TS type annotation: { dateFrom?: string; dateTo?: string }
