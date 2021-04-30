@@ -18,7 +18,7 @@ A restful node framework for real type checking, a new way for avoiding syntax m
 * console commander
 * validator
 * caching
-* slot/middleware
+* slot
 * strong type-checking
 
 # Installation
@@ -27,8 +27,8 @@ A restful node framework for real type checking, a new way for avoiding syntax m
 yarn add qoq
 ```
 
-# Related Middleware
-| Project | Version | Slot for | Description |
+# Official Related
+| Project | Version | Platform | Description |
 | ------- | ------- | ------ | ------ |
 | [qoq-sequelize](https://github.com/qoq-ts/qoq-sequelize) | [![npm](https://img.shields.io/npm/v/qoq-sequelize)](https://www.npmjs.com/package/qoq-sequelize) | Web, Console | database ORM (mysql, sqlite, ...) |
 | [qoq-redis](https://github.com/qoq-ts/qoq-redis) | [![npm](https://img.shields.io/npm/v/qoq-redis)](https://www.npmjs.com/package/qoq-redis) | Web, Console | redis command, cache extension |
@@ -45,6 +45,7 @@ yarn add qoq
 | [qoq-views](https://github.com/qoq-ts/qoq-views) | [![npm](https://img.shields.io/npm/v/qoq-views)](https://www.npmjs.com/package/qoq-views) | Web | template rendering |
 | [qoq-json-error](https://github.com/qoq-ts/qoq-json-error) | [![npm](https://img.shields.io/npm/v/qoq-json-error)](https://www.npmjs.com/package/qoq-json-error) | Web | JSON error handler |
 
+And more from koa community...
 
 # Demos
 [Hello World](https://github.com/qoq-ts/demo-qoq-hello-world)
