@@ -9,6 +9,7 @@ import { FileValidator } from './FileValidator';
 import { EmailValidator } from './EmailValidator';
 import { UUIDValidator } from './UUIDValidator';
 import { validate } from './validate';
+import { IPValidator } from './IPValidator';
 
 export class ValidatorStatic {
   readonly validate = validate;
@@ -55,6 +56,10 @@ export class ValidatorStatic {
 
   get uuid(): UUIDValidator {
     return new UUIDValidator;
+  }
+
+  get ip(): IPValidator {
+    return new IPValidator();
   }
 }
 
