@@ -1,10 +1,16 @@
 import { JsonValidator } from './JsonValidator';
-import { Validator, ValidatorOptions, ValidatorType, ValidatorTypes } from './Validator';
+import { CommonValidatorDataType, Validator, ValidatorOptions, ValidatorType, ValidatorTypes } from './Validator';
 
 interface ArrayOptions<T> extends ValidatorOptions<T> {
   itemValidator?: Validator;
   minItemLength?: number;
   maxItemLength?: number;
+}
+
+export interface ArrayDataType {
+  type: 'array',
+  validator: 'array',
+  items?: CommonValidatorDataType;
 }
 
 export class ArrayValidator<T = never[]> extends Validator<ArrayOptions<T>> {
@@ -72,5 +78,13 @@ export class ArrayValidator<T = never[]> extends Validator<ArrayOptions<T>> {
     }
 
     return;
+  }
+
+  public/*protected*/ getDataType(): ArrayDataType {
+    return {
+      type: 'array',
+      validator: 'array',
+      items: this.config.itemValidator?.toJSON(),
+    };
   }
 }

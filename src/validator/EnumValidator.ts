@@ -5,6 +5,12 @@ interface EnumOptions<T> extends ValidatorOptions<T> {
   strict?: boolean;
 }
 
+export interface EnumDataType {
+  type: 'enum';
+  validator: 'enum';
+  ranges: Array<string | number>;
+}
+
 export class EnumValidator<T = number | string> extends Validator<EnumOptions<T>> {
   constructor() {
     super();
@@ -61,5 +67,13 @@ export class EnumValidator<T = number | string> extends Validator<EnumOptions<T>
     }
 
     return `${this.getLabel(key, superKeys)} must be in range of ${JSON.stringify(ranges)}`;
+  }
+
+  public/*protected*/ getDataType(): EnumDataType {
+    return {
+      type: 'enum',
+      validator: 'enum',
+      ranges: this.config.ranges as unknown as EnumDataType['ranges'],
+    };
   }
 }

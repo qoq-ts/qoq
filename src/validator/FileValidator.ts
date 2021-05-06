@@ -19,6 +19,11 @@ interface FileOptions<T> extends ValidatorOptions<T> {
   mimeTypes?: string[];
 }
 
+export interface FileDataType {
+  type: 'file',
+  validator: 'file',
+}
+
 export class FileValidator<T = FileNoHash> extends Validator<FileOptions<T>> {
   public hash(crypto: 'md5' | 'sha1'): FileValidator<T extends Array<any> ? FileWithHash[] : FileWithHash> {
     this.config.hash = crypto;
@@ -101,5 +106,12 @@ export class FileValidator<T = FileNoHash> extends Validator<FileOptions<T>> {
     if (!multiples) {
       data[key] = value[0];
     }
+  }
+
+  public/*protected*/ getDataType(): FileDataType {
+    return {
+      type: 'file',
+      validator: 'file',
+    };
   }
 }

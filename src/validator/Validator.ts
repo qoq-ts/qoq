@@ -1,5 +1,17 @@
+import type { ArrayDataType } from './ArrayValidator';
+import type { BooleanDataType } from './BooleanValidator';
+import type { EmailDataType } from './EmailValidator';
+import type { EnumDataType } from './EnumValidator';
+import type { FileDataType } from './FileValidator';
+import type { IPDataType } from './IPValidator';
+import type { JsonDataType } from './JsonValidator';
+import type { NumberDataType } from './NumberValidator';
+import type { StringDataType } from './StringValidator';
+import type { UrlDataType } from './UrlValidator';
+import type { UUIDDataType } from './UUIDValidator';
+
 interface Document {
-  name?: string;
+  label?: string;
   description?: string;
 }
 
@@ -16,6 +28,28 @@ export type ValidatorTypes<T> = {
 export type ValidatorType<T> = T extends Validator<infer Options>
 ? Options['defaultValue']
 : never;
+
+export interface CommonValidatorDataType {
+  label: string;
+  description: string;
+  defaultValue: any;
+  required: boolean;
+};
+
+type SubValidatorDataType =
+  | ArrayDataType
+  | BooleanDataType
+  | EmailDataType
+  | EnumDataType
+  | FileDataType
+  | IPDataType
+  | JsonDataType
+  | NumberDataType
+  | StringDataType
+  | UrlDataType
+  | UUIDDataType;
+
+export type ValidatorDataType = CommonValidatorDataType & SubValidatorDataType;
 
 export abstract class Validator<T extends ValidatorOptions<any> = ValidatorOptions<any>>{
   protected readonly config: T;
@@ -85,12 +119,17 @@ export abstract class Validator<T extends ValidatorOptions<any> = ValidatorOptio
 
   protected abstract validateValue(data: Record<string, any>, key: string, superKeys: string[]): Promise<string | void>;
 
-  public/*protected*/ toJSON() {
+  public/*protected*/ abstract getDataType(): SubValidatorDataType;
+
+  public/*protected*/ toJSON(): ValidatorDataType {
+    const dataType = this.getDataType();
+
     return {
-      name: this.config.name || '',
+      label: this.config.label || '',
       description: this.config.description || '',
       defaultValue: this.config.defaultValue ?? '',
       required: this.config.required,
+      ...dataType,
     };
   }
 }

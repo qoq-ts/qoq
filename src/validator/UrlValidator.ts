@@ -5,6 +5,11 @@ interface UrlOptions<T> extends ValidatorOptions<T> {
   schemes?: string[];
 }
 
+export interface UrlDataType {
+  type: 'string',
+  validator: 'url',
+}
+
 export class UrlValidator<T = string> extends Validator<UrlOptions<T>> {
   protected protocols = ['http:', 'https:'];
 
@@ -46,5 +51,12 @@ export class UrlValidator<T = string> extends Validator<UrlOptions<T>> {
     } catch {
       return false;
     }
+  }
+
+  public/*protected*/ getDataType(): UrlDataType {
+    return {
+      type: 'string',
+      validator: 'url',
+    };
   }
 }

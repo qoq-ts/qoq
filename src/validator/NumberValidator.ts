@@ -8,6 +8,11 @@ interface NumberOptions<T> extends ValidatorOptions<T> {
   onlyInteger?: boolean;
 }
 
+export interface NumberDataType {
+  type: 'integer' | 'number',
+  validator: 'number',
+}
+
 export class NumberValidator<T = number> extends Validator<NumberOptions<T>> {
   public min(min: number, inclusive: boolean = true): this {
     this.config.min = min;
@@ -65,5 +70,12 @@ export class NumberValidator<T = number> extends Validator<NumberOptions<T>> {
     }
 
     return;
+  }
+
+  public/*protected*/ getDataType(): NumberDataType {
+    return {
+      type: this.config.onlyInteger ? 'integer' : 'number',
+      validator: 'number',
+    };
   }
 }

@@ -3,6 +3,11 @@ import { Validator, ValidatorOptions } from './Validator';
 
 interface EmailOptions<T> extends ValidatorOptions<T> {}
 
+export interface EmailDataType {
+  type: 'string',
+  validator: 'email',
+}
+
 export class EmailValidator<T = string> extends Validator<EmailOptions<T>> {
   declare optional: () => EmailValidator<T | undefined>;
 
@@ -18,5 +23,12 @@ export class EmailValidator<T = string> extends Validator<EmailOptions<T>> {
     }
 
     return `${this.getLabel(key, superKeys)} must be email`;
+  }
+
+  public/*protected*/ getDataType(): EmailDataType {
+    return {
+      type: 'string',
+      validator: 'email',
+    };
   }
 }

@@ -91,7 +91,7 @@ export class HelpSlot extends Slot<Slot.Console> {
       .help(false);
 
     Object.entries(json.options).forEach(([, option]) => {
-      cli.option(option.name, {
+      cli.option(option.label, {
         alias: option.alias,
         description: option.description,
         default: option.defaultValue === '' ? undefined : option.defaultValue,

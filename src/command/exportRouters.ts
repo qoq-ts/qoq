@@ -7,6 +7,7 @@ import { ConsoleRouter } from '../router/ConsoleRouter';
 import { ConsoleSlotManager } from '../slot/SlotManager';
 import { validator } from '../validator';
 import { WebRouter } from '../router/WebRouter';
+import { WebRouterSchema } from '../router/WebBuilder';
 
 export const router = new ConsoleRouter({
   slots: new ConsoleSlotManager(),
@@ -26,14 +27,21 @@ router
       .document({
         description: 'The file path JSON data will output to.',
       }),
+    format: validator
+      .boolean
+      .default(false)
+      .document({
+        description: 'Format the json schema to make it readdable',
+      }),
   })
   .alias({
-    d: 'input',
+    i: 'input',
     o: 'output',
+    f: 'format',
   })
   .action(async (ctx, payload) => {
-    let { input, output } = payload.options;
-    const routers: object[] = [];
+    let { input, output, format } = payload.options;
+    const routers: WebRouterSchema[] = [];
     const now = Date.now();
 
     output = path.resolve(output);
@@ -45,13 +53,16 @@ router
             const modules = await import(matchPath);
             console.log('Parsing path: ' + matchPath);
 
-            Object.values(modules).forEach((item) => {
-              if (item && item instanceof WebRouter) {
-                item.builders.forEach((builder) => {
-                  routers.push(builder.toJSON());
-                });
-              }
-            });
+            return Promise.all(
+              Object.values(modules).map(async (item) => {
+                if (item && item instanceof WebRouter) {
+                  for (let builder of item.builders) {
+                    routers.push(await builder.toJSON());
+                  }
+                }
+                return;
+              })
+            );
           })
         );
       }),
@@ -62,7 +73,7 @@ router
       mkdirp.sync(dir);
     }
 
-    fs.writeFileSync(output, JSON.stringify(routers, null, 4));
+    fs.writeFileSync(output, JSON.stringify(routers, null, format ? 4 : undefined));
     Object.assign(ctx.state, {
       routers,
     });

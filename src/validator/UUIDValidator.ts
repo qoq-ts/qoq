@@ -15,6 +15,11 @@ const patterns: {
   all: /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i,
 };
 
+export interface UUIDDataType {
+  type: 'string',
+  validator: 'uuid',
+}
+
 export class UUIDValidator<T = string> extends Validator<UUIDOptions<T>> {
   declare optional: () => UUIDValidator<T | undefined>;
 
@@ -35,6 +40,18 @@ export class UUIDValidator<T = string> extends Validator<UUIDOptions<T>> {
       return;
     }
 
-    return `${this.getLabel(key, superKeys)} must be uuid${uuidVersion === 'all' ? '' : uuidVersion}`;
+    return `${this.getLabel(key, superKeys)} must be uuid${this.getVersion()}`;
+  }
+
+  public/*protected*/ getDataType(): UUIDDataType {
+    return {
+      type: 'string',
+      validator: 'uuid',
+    };
+  }
+
+  protected getVersion() {
+    const { uuidVersion } = this.config;
+    return uuidVersion === 'all' ? '' : uuidVersion;
   }
 }

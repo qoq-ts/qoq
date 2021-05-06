@@ -5,6 +5,11 @@ interface BooleanOptions<T> extends ValidatorOptions<T> {
   falseValues?: any[];
 }
 
+export interface BooleanDataType {
+  type: 'boolean',
+  validator: 'boolean',
+}
+
 export class BooleanValidator<T = boolean> extends Validator<BooleanOptions<T>> {
   protected static trueValues: any[] = [1, '1', true, 'true'];
   protected static falseValues: any[] = [0, '0', false, 'false'];
@@ -39,5 +44,12 @@ export class BooleanValidator<T = boolean> extends Validator<BooleanOptions<T>> 
     } else {
       return `${this.getLabel(key, superKeys)} must be boolean`;
     }
+  }
+
+  public/*protected*/ getDataType(): BooleanDataType {
+    return {
+      type: 'boolean',
+      validator: 'boolean',
+    };
   }
 }

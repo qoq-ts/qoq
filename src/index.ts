@@ -1,5 +1,6 @@
 // Basic
 export { WebRouter } from './router/WebRouter';
+export type { WebRouterSchema, WebRouterDocument } from './router/WebBuilder';
 export { ConsoleRouter } from './router/ConsoleRouter';
 export { WebSlotManager, ConsoleSlotManager } from './slot/SlotManager';
 export { Slot } from './slot/Slot';
@@ -24,3 +25,4 @@ export { HttpError } from 'http-errors';
 export { BaseCache, BaseCacheOptions } from './caching/BaseCache';
 export { testMiddleware } from './util/testMiddleware';
 export { PARSED_BODY } from './parser/bodyParser';
+export { Method } from './util/Method';

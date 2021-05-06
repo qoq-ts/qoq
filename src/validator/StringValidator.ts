@@ -8,6 +8,11 @@ interface StringOptions<T> extends ValidatorOptions<T> {
   trim?: boolean;
 }
 
+export interface StringDataType {
+  type: 'string',
+  validator: 'string',
+}
+
 export class StringValidator<T = string> extends Validator<StringOptions<T>> {
   minLength(min: number): this {
     this.config.minLength = min;
@@ -103,5 +108,12 @@ export class StringValidator<T = string> extends Validator<StringOptions<T>> {
     }
 
     return;
+  }
+
+  public/*protected*/ getDataType(): StringDataType {
+    return {
+      type: 'string',
+      validator: 'string',
+    };
   }
 }

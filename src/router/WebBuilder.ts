@@ -9,13 +9,18 @@ import { WebCtx } from '../core/WebContext';
 import { queryParser } from '../parser/queryParser';
 import { bodyParser } from '../parser/bodyParser';
 import { paramParser } from '../parser/paramParser';
+import { validator } from '../validator';
 
-interface Document {
+export interface WebRouterDocument {
+  category?: string;
   title?: string;
   description?: string;
-  response?: () => Record<string, Validator>;
-  headers?: () => Record<string, Validator>;
+  response?: Validator | Record<string, Validator>;
+  headers?: Record<string, Validator>;
+  additional?: Record<string, any>;
 }
+
+export type WebRouterSchema = ReturnType<WebBuilder['toJSON']> extends Promise<infer R> ? R : never;
 
 export class WebBuilder<
   Props = any,
@@ -26,11 +31,11 @@ export class WebBuilder<
   protected readonly uris: string[];
   protected readonly methods: Method[];
   protected readonly uriPatterns: ([RegExp, Key[], string | undefined])[];
-  protected readonly docs: Document = {};
+  protected docs?: (() => Promise<WebRouterDocument>) | WebRouterDocument;
 
-  protected queryRules: Record<string, Validator> = {};
-  protected bodyRules: Record<string, Validator> = {};
-  protected paramRules: Record<string, Validator> = {};
+  protected queryRules?: Record<string, Validator>;
+  protected bodyRules?: Record<string, Validator>;
+  protected paramRules?: Record<string, Validator>;
 
   protected declare payload: {
     query?: ReturnType<typeof queryParser>;
@@ -84,8 +89,23 @@ export class WebBuilder<
     return this.useAction(fn), this;
   }
 
-  public document(document: (() => Promise<Document>) | Document): this {
-    Object.assign(this.docs, document);
+  /**
+   * Describe router schema.
+   *
+   * Feel free to load schema from other file by lazy import.
+   * ```javascript
+   * router
+   *  .get('/')
+   *  .document(async () => {
+   *     // Assuming you create a file `router.doc.ts` with content: .
+   *     const document = await import('./router.doc');
+   *     return document.default;
+   *  });
+   * ```
+   * @see WebRouterDocument
+   */
+  public document(document: (() => Promise<WebRouterDocument>) | WebRouterDocument): this {
+    this.docs = document;
     return this;
   }
 
@@ -134,7 +154,46 @@ export class WebBuilder<
     }
   }
 
-  public/*protected*/ toJSON() {
-    return {};
+  public/*protected*/ async toJSON() {
+    type TransformData = { [key: string]: ReturnType<Validator['toJSON']> };
+
+    const docs = typeof this.docs === 'function'
+      ? await this.docs()
+      : this.docs || {};
+    const headers: TransformData = {};
+    const query: TransformData = {};
+    const body: TransformData = {};
+    const params: TransformData = {};
+    let response: ReturnType<Validator['toJSON']> | TransformData | undefined;
+
+    if (docs.response instanceof Validator) {
+      response = docs.response.toJSON();
+    } else if (docs.response) {
+      response = validator.json.constraint(docs.response).toJSON();
+    }
+
+    ([
+      [docs.headers, headers],
+      [this.queryRules, query],
+      [this.bodyRules, body],
+      [this.paramRules, params]
+    ] as const).map((item) => {
+      Object.entries(item[0] ?? {}).map(([key, validator]) => {
+        item[1][key] = validator.toJSON();
+      });
+    });
+
+    return {
+      uris: this.uris,
+      method: this.methods[0]!,
+      title: docs.title || '',
+      description: docs.description || '',
+      response,
+      headers,
+      query,
+      body,
+      params,
+      additional: docs.additional || {},
+    };
   }
 }

@@ -74,7 +74,7 @@ export class ConsoleBuilder<
         return {
           ...options,
           alias: aliasList.length ? aliasList : undefined,
-          name: options.name || key,
+          label: options.label || key,
         };
       }),
     };

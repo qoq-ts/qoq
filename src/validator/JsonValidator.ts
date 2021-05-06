@@ -1,9 +1,15 @@
-import { Validator, ValidatorOptions, ValidatorType } from './Validator';
+import { CommonValidatorDataType, Validator, ValidatorOptions, ValidatorType } from './Validator';
 
 type Constraint = Record<string, Validator>;
 
 interface JsonOptions<T> extends ValidatorOptions<T> {
   constraint?: Constraint;
+}
+
+export interface JsonDataType {
+  type: 'object',
+  validator: 'json',
+  properties: Record<string, CommonValidatorDataType>,
 }
 
 export class JsonValidator<T = object> extends Validator<JsonOptions<T>> {
@@ -52,5 +58,19 @@ export class JsonValidator<T = object> extends Validator<JsonOptions<T>> {
     }
 
     return;
+  }
+
+  public/*protected*/ getDataType(): JsonDataType {
+    const properties: JsonDataType['properties'] = {};
+
+    Object.entries(this.config.constraint || {}).forEach(([key, validator]) => {
+      properties[key] = validator.toJSON();
+    });
+
+    return {
+      type: 'object',
+      validator: 'json',
+      properties,
+    };
   }
 }
