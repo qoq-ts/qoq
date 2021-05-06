@@ -2,7 +2,7 @@ import { pathToRegexp, Key } from 'path-to-regexp';
 import { Slot } from '../slot/Slot';
 import { Use } from '../slot/SlotManager';
 import { Method } from '../util/Method';
-import { Validator, ValidatorTypes } from '../validator/Validator';
+import { Validator, ValidatorDataType, ValidatorTypes } from '../validator/Validator';
 import { Builder } from './Builder';
 import { Next } from 'koa';
 import { WebCtx } from '../core/WebContext';
@@ -158,7 +158,7 @@ export class WebBuilder<
   }
 
   public/*protected*/ async toJSON() {
-    type TransformData = { [key: string]: ReturnType<Validator['toJSON']> };
+    type TransformData = { [key: string]: ValidatorDataType };
 
     const docs = typeof this.docs === 'function'
       ? await this.docs()
@@ -167,7 +167,7 @@ export class WebBuilder<
     const query: TransformData = {};
     const body: TransformData = {};
     const params: TransformData = {};
-    let response: ReturnType<Validator['toJSON']> | TransformData | undefined;
+    let response: ValidatorDataType | undefined;
 
     if (docs.response instanceof Validator) {
       response = docs.response.toJSON();
@@ -186,17 +186,22 @@ export class WebBuilder<
       });
     });
 
+    const getNotPlainObject = (obj: object) => {
+      for (let _ in obj) return obj;
+      return;
+    };
+
     return {
       uris: this.uris,
       method: this.methods[0]!,
-      title: docs.title || '',
-      description: docs.description || '',
-      response,
-      headers,
-      query,
-      body,
-      params,
-      additional: docs.additional || {},
+      title: docs.title,
+      description: docs.description,
+      response: response,
+      headers: getNotPlainObject(headers),
+      query: getNotPlainObject(query),
+      body: getNotPlainObject(body),
+      params: getNotPlainObject(params),
+      additional: docs.additional,
     };
   }
 }

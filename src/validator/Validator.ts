@@ -30,9 +30,9 @@ export type ValidatorType<T> = T extends Validator<infer Options>
 : never;
 
 export interface CommonValidatorDataType {
-  label: string;
-  description: string;
-  defaultValue: any;
+  label?: string;
+  description?: string;
+  defaultValue: unknown;
   required: boolean;
 };
 
@@ -125,9 +125,9 @@ export abstract class Validator<T extends ValidatorOptions<any> = ValidatorOptio
     const dataType = this.getDataType();
 
     return {
-      label: this.config.label || '',
-      description: this.config.description || '',
-      defaultValue: this.config.defaultValue ?? '',
+      label: this.config.label,
+      description: this.config.description,
+      defaultValue: this.config.defaultValue,
       required: this.config.required,
       ...dataType,
     };

@@ -7,48 +7,31 @@
         "title": "Get Projects",
         "description": "It is a desc test",
         "response": {
-            "label": "",
-            "description": "",
-            "defaultValue": "",
             "required": true,
             "type": "object",
             "validator": "json",
             "properties": {
                 "page": {
-                    "label": "",
                     "description": "Current Page",
-                    "defaultValue": "",
                     "required": true,
                     "type": "integer",
                     "validator": "number"
                 },
                 "result": {
-                    "label": "",
-                    "description": "",
-                    "defaultValue": "",
                     "required": true,
                     "type": "array",
                     "validator": "array",
                     "items": {
-                        "label": "",
-                        "description": "",
-                        "defaultValue": "",
                         "required": true,
                         "type": "object",
                         "validator": "json",
                         "properties": {
                             "id": {
-                                "label": "",
-                                "description": "",
-                                "defaultValue": "",
                                 "required": true,
                                 "type": "integer",
                                 "validator": "number"
                             },
                             "name": {
-                                "label": "",
-                                "description": "",
-                                "defaultValue": "",
                                 "required": true,
                                 "type": "string",
                                 "validator": "string"
@@ -57,9 +40,7 @@
                     }
                 },
                 "total": {
-                    "label": "",
                     "description": "Total records amount",
-                    "defaultValue": "",
                     "required": true,
                     "type": "integer",
                     "validator": "number"
@@ -68,17 +49,11 @@
         },
         "headers": {
             "x-date": {
-                "label": "",
-                "description": "",
-                "defaultValue": "",
                 "required": true,
                 "type": "string",
                 "validator": "string"
             },
             "y-schema": {
-                "label": "",
-                "description": "",
-                "defaultValue": "",
                 "required": false,
                 "type": "number",
                 "validator": "number"
@@ -86,25 +61,17 @@
         },
         "query": {
             "page": {
-                "label": "",
-                "description": "",
-                "defaultValue": "",
                 "required": true,
                 "type": "integer",
                 "validator": "number"
             },
             "pageSize": {
-                "label": "",
-                "description": "",
                 "defaultValue": 10,
                 "required": false,
                 "type": "integer",
                 "validator": "number"
             },
             "projectId": {
-                "label": "",
-                "description": "",
-                "defaultValue": "",
                 "required": true,
                 "type": "integer",
                 "validator": "number"
@@ -112,15 +79,11 @@
             "name": {
                 "label": "Project Name",
                 "description": "You can filter the project name",
-                "defaultValue": "",
                 "required": false,
                 "type": "string",
                 "validator": "string"
             }
-        },
-        "body": {},
-        "params": {},
-        "additional": {}
+        }
     },
     {
         "uris": [
@@ -130,35 +93,23 @@
         "title": "Get Users",
         "description": "Get all users from db",
         "response": {
-            "label": "",
-            "description": "",
-            "defaultValue": "",
             "required": true,
             "type": "string",
             "validator": "url"
         },
-        "headers": {},
         "query": {
             "projectId": {
-                "label": "",
-                "description": "",
-                "defaultValue": "",
                 "required": true,
                 "type": "integer",
                 "validator": "number"
             },
             "name": {
                 "label": "You can filter the project name",
-                "description": "",
-                "defaultValue": "",
                 "required": false,
                 "type": "string",
                 "validator": "string"
             }
-        },
-        "body": {},
-        "params": {},
-        "additional": {}
+        }
     },
     {
         "uris": [
@@ -168,90 +119,58 @@
         "title": "Create a project",
         "description": "Create a project description",
         "response": {
-            "label": "",
-            "description": "",
-            "defaultValue": "",
             "required": true,
             "type": "object",
             "validator": "json",
             "properties": {
                 "id": {
-                    "label": "",
-                    "description": "",
-                    "defaultValue": "",
                     "required": true,
                     "type": "integer",
                     "validator": "number"
                 }
             }
         },
-        "headers": {},
         "query": {
             "projectId": {
-                "label": "",
-                "description": "",
-                "defaultValue": "",
                 "required": true,
                 "type": "integer",
                 "validator": "number"
             },
             "name": {
                 "label": "Project search name",
-                "description": "",
-                "defaultValue": "",
                 "required": true,
                 "type": "string",
                 "validator": "string"
             },
             "description": {
-                "label": "",
-                "description": "",
-                "defaultValue": "",
                 "required": false,
                 "type": "string",
                 "validator": "string"
             }
-        },
-        "body": {},
-        "params": {},
-        "additional": {}
+        }
     },
     {
         "uris": [
             "/p/projects"
         ],
         "method": "POST",
-        "title": "",
-        "description": "",
-        "headers": {},
         "query": {
             "projectId": {
-                "label": "",
-                "description": "",
-                "defaultValue": "",
                 "required": true,
                 "type": "integer",
                 "validator": "number"
             },
             "name": {
                 "label": "Project search name",
-                "description": "",
-                "defaultValue": "",
                 "required": true,
                 "type": "string",
                 "validator": "string"
             },
             "description": {
-                "label": "",
-                "description": "",
-                "defaultValue": "",
                 "required": false,
                 "type": "string",
                 "validator": "string"
             }
-        },
-        "body": {},
-        "params": {},
-        "additional": {}
+        }
     }
 ]
