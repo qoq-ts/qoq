@@ -15,8 +15,13 @@ export interface WebRouterDocument {
   category?: string;
   title?: string;
   description?: string;
-  response?: Validator | Record<string, Validator>;
-  headers?: Record<string, Validator>;
+  response?: Array<{
+    statusCode: number;
+    contentType?: string;
+    content?: Validator | Record<string, Validator>;
+    headers?: Record<string, Validator>;
+    description?: string;
+  }>;
   additional?: Record<string, any>;
 }
 
@@ -160,23 +165,39 @@ export class WebBuilder<
   public/*protected*/ async toJSON() {
     type TransformData = { [key: string]: ValidatorDataType };
 
+    const getNotPlainObject = (obj: object) => {
+      for (let _ in obj) return obj;
+      return;
+    };
+
     const docs = typeof this.docs === 'function'
       ? await this.docs()
       : this.docs || {};
-    const headers: TransformData = {};
     const query: TransformData = {};
     const body: TransformData = {};
     const params: TransformData = {};
-    let response: ValidatorDataType | undefined;
+    const response = (docs.response || []).map(({ content, headers, ...rest }) => {
+      const responseHeaders: TransformData = {};
+      let responseContent: ValidatorDataType | undefined;
 
-    if (docs.response instanceof Validator) {
-      response = docs.response.toJSON();
-    } else if (docs.response) {
-      response = validator.json.constraint(docs.response).toJSON();
-    }
+      if (content instanceof Validator) {
+        responseContent = content.toJSON();
+      } else if (content) {
+        responseContent = validator.json.constraint(content).toJSON();
+      }
+
+      Object.entries(headers ?? {}).map(([key, validator]) => {
+        responseHeaders[key] = validator.toJSON();
+      });
+
+      return {
+        ...rest,
+        content: responseContent,
+        headers: getNotPlainObject(responseHeaders),
+      };
+    });
 
     ([
-      [docs.headers, headers],
       [this.queryRules, query],
       [this.bodyRules, body],
       [this.paramRules, params]
@@ -186,21 +207,15 @@ export class WebBuilder<
       });
     });
 
-    const getNotPlainObject = (obj: object) => {
-      for (let _ in obj) return obj;
-      return;
-    };
-
     return {
       uris: this.uris,
       method: this.methods[0]!,
       title: docs.title,
       description: docs.description,
-      response: response,
-      headers: getNotPlainObject(headers),
       query: getNotPlainObject(query),
       body: getNotPlainObject(body),
       params: getNotPlainObject(params),
+      response,
       additional: docs.additional,
     };
   }

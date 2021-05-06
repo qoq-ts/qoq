@@ -9,7 +9,9 @@ const app = new ConsoleApplication({
 const input = './test/fixture/router-schema';
 
 it ('generate snapshot', async () => {
-  unlinkSync(input + '/snapshot-formatted.json');
+  try {
+    unlinkSync(input + '/snapshot-formatted.json');
+  } catch {}
   expect(existsSync(input + '/snapshot-formatted.json')).toBeFalsy();
 
   await app.execute(

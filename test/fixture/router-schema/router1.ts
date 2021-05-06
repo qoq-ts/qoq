@@ -32,9 +32,15 @@ router
   .document({
     title: 'Create a project',
     description: 'Create a project description',
-    response: {
-      id: validator.integer,
-    },
+    response: [
+      {
+        statusCode: 201,
+        contentType: 'application/json',
+        content: {
+          id: validator.integer,
+        },
+      }
+    ],
   })
   .action((ctx) => {
     ctx.body = {

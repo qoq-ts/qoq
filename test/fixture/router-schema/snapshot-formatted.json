@@ -6,59 +6,6 @@
         "method": "GET",
         "title": "Get Projects",
         "description": "It is a desc test",
-        "response": {
-            "required": true,
-            "type": "object",
-            "validator": "json",
-            "properties": {
-                "page": {
-                    "description": "Current Page",
-                    "required": true,
-                    "type": "integer",
-                    "validator": "number"
-                },
-                "result": {
-                    "required": true,
-                    "type": "array",
-                    "validator": "array",
-                    "items": {
-                        "required": true,
-                        "type": "object",
-                        "validator": "json",
-                        "properties": {
-                            "id": {
-                                "required": true,
-                                "type": "integer",
-                                "validator": "number"
-                            },
-                            "name": {
-                                "required": true,
-                                "type": "string",
-                                "validator": "string"
-                            }
-                        }
-                    }
-                },
-                "total": {
-                    "description": "Total records amount",
-                    "required": true,
-                    "type": "integer",
-                    "validator": "number"
-                }
-            }
-        },
-        "headers": {
-            "x-date": {
-                "required": true,
-                "type": "string",
-                "validator": "string"
-            },
-            "y-schema": {
-                "required": false,
-                "type": "number",
-                "validator": "number"
-            }
-        },
         "query": {
             "page": {
                 "required": true,
@@ -83,7 +30,65 @@
                 "type": "string",
                 "validator": "string"
             }
-        }
+        },
+        "response": [
+            {
+                "statusCode": 200,
+                "content": {
+                    "required": true,
+                    "type": "object",
+                    "validator": "json",
+                    "properties": {
+                        "page": {
+                            "description": "Current Page",
+                            "required": true,
+                            "type": "integer",
+                            "validator": "number"
+                        },
+                        "result": {
+                            "required": true,
+                            "type": "array",
+                            "validator": "array",
+                            "items": {
+                                "required": true,
+                                "type": "object",
+                                "validator": "json",
+                                "properties": {
+                                    "id": {
+                                        "required": true,
+                                        "type": "integer",
+                                        "validator": "number"
+                                    },
+                                    "name": {
+                                        "required": true,
+                                        "type": "string",
+                                        "validator": "string"
+                                    }
+                                }
+                            }
+                        },
+                        "total": {
+                            "description": "Total records amount",
+                            "required": true,
+                            "type": "integer",
+                            "validator": "number"
+                        }
+                    }
+                },
+                "headers": {
+                    "x-date": {
+                        "required": true,
+                        "type": "string",
+                        "validator": "string"
+                    },
+                    "y-schema": {
+                        "required": false,
+                        "type": "number",
+                        "validator": "number"
+                    }
+                }
+            }
+        ]
     },
     {
         "uris": [
@@ -92,11 +97,6 @@
         "method": "GET",
         "title": "Get Users",
         "description": "Get all users from db",
-        "response": {
-            "required": true,
-            "type": "string",
-            "validator": "url"
-        },
         "query": {
             "projectId": {
                 "required": true,
@@ -109,7 +109,17 @@
                 "type": "string",
                 "validator": "string"
             }
-        }
+        },
+        "response": [
+            {
+                "statusCode": 200,
+                "content": {
+                    "required": true,
+                    "type": "string",
+                    "validator": "url"
+                }
+            }
+        ]
     },
     {
         "uris": [
@@ -118,18 +128,6 @@
         "method": "POST",
         "title": "Create a project",
         "description": "Create a project description",
-        "response": {
-            "required": true,
-            "type": "object",
-            "validator": "json",
-            "properties": {
-                "id": {
-                    "required": true,
-                    "type": "integer",
-                    "validator": "number"
-                }
-            }
-        },
         "query": {
             "projectId": {
                 "required": true,
@@ -147,7 +145,25 @@
                 "type": "string",
                 "validator": "string"
             }
-        }
+        },
+        "response": [
+            {
+                "statusCode": 201,
+                "contentType": "application/json",
+                "content": {
+                    "required": true,
+                    "type": "object",
+                    "validator": "json",
+                    "properties": {
+                        "id": {
+                            "required": true,
+                            "type": "integer",
+                            "validator": "number"
+                        }
+                    }
+                }
+            }
+        ]
     },
     {
         "uris": [
@@ -171,6 +187,7 @@
                 "type": "string",
                 "validator": "string"
             }
-        }
+        },
+        "response": []
     }
 ]
