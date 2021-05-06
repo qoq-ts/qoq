@@ -1,4 +1,4 @@
-import { readFileSync } from 'fs';
+import { existsSync, readFileSync, unlinkSync } from 'fs';
 import { tmpdir } from 'os';
 import { ConsoleApplication } from '../../src';
 
@@ -8,12 +8,9 @@ const app = new ConsoleApplication({
 
 const input = './test/fixture/router-schema';
 
-it.skip ('generate snapshot', async () => {
-  await app.execute(
-    'export:routers',
-    '-i', input,
-    '-o', input + '/snapshot.json',
-  );
+it ('generate snapshot', async () => {
+  unlinkSync(input + '/snapshot-formatted.json');
+  expect(existsSync(input + '/snapshot-formatted.json')).toBeFalsy();
 
   await app.execute(
     'export:routers',
@@ -21,6 +18,8 @@ it.skip ('generate snapshot', async () => {
     '-o', input + '/snapshot-formatted.json',
     '-f'
   );
+
+  expect(existsSync(input + '/snapshot-formatted.json')).toBeTruthy();
 });
 
 it ('can export web routers to file', async () => {
@@ -32,7 +31,7 @@ it ('can export web routers to file', async () => {
     '-o', output,
   );
 
-  expect(readFileSync(output).toString()).toBe(readFileSync(input + '/snapshot.json').toString());
+  expect(readFileSync(output).toString()).toMatchSnapshot();
 });
 
 
@@ -47,7 +46,7 @@ it ('can export web routers to context', async () => {
 
   // @ts-expect-error
   const data = JSON.stringify(ctx.state.routers);
-  expect(data).toBe(readFileSync(input + '/snapshot.json').toString());
+  expect(data).toMatchSnapshot();
 });
 
 it ('can format output json', async () => {
@@ -60,5 +59,5 @@ it ('can format output json', async () => {
     '-f'
   );
 
-  expect(readFileSync(output).toString()).toBe(readFileSync(input + '/snapshot-formatted.json').toString());
+  expect(readFileSync(output).toString()).toMatchSnapshot();
 });
