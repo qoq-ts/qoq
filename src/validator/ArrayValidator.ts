@@ -80,7 +80,7 @@ export class ArrayValidator<T = never[]> extends Validator<ArrayOptions<T>> {
     return;
   }
 
-  public/*protected*/ getDataType(): ArrayDataType {
+  protected getDataType(): ArrayDataType {
     return {
       type: 'array',
       validator: 'array',

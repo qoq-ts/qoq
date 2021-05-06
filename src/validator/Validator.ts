@@ -119,7 +119,7 @@ export abstract class Validator<T extends ValidatorOptions<any> = ValidatorOptio
 
   protected abstract validateValue(data: Record<string, any>, key: string, superKeys: string[]): Promise<string | void>;
 
-  public/*protected*/ abstract getDataType(): SubValidatorDataType;
+  protected abstract getDataType(): SubValidatorDataType;
 
   public/*protected*/ toJSON(): ValidatorDataType {
     const dataType = this.getDataType();

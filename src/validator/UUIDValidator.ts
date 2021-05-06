@@ -43,7 +43,7 @@ export class UUIDValidator<T = string> extends Validator<UUIDOptions<T>> {
     return `${this.getLabel(key, superKeys)} must be uuid${this.getVersion()}`;
   }
 
-  public/*protected*/ getDataType(): UUIDDataType {
+  protected getDataType(): UUIDDataType {
     return {
       type: 'string',
       validator: 'uuid',

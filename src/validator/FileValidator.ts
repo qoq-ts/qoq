@@ -108,7 +108,7 @@ export class FileValidator<T = FileNoHash> extends Validator<FileOptions<T>> {
     }
   }
 
-  public/*protected*/ getDataType(): FileDataType {
+  protected getDataType(): FileDataType {
     return {
       type: 'file',
       validator: 'file',

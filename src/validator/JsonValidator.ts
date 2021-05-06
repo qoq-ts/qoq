@@ -60,7 +60,7 @@ export class JsonValidator<T = object> extends Validator<JsonOptions<T>> {
     return;
   }
 
-  public/*protected*/ getDataType(): JsonDataType {
+  protected getDataType(): JsonDataType {
     const properties: JsonDataType['properties'] = {};
 
     Object.entries(this.config.constraint || {}).forEach(([key, validator]) => {

@@ -72,7 +72,7 @@ export class NumberValidator<T = number> extends Validator<NumberOptions<T>> {
     return;
   }
 
-  public/*protected*/ getDataType(): NumberDataType {
+  protected getDataType(): NumberDataType {
     return {
       type: this.config.onlyInteger ? 'integer' : 'number',
       validator: 'number',

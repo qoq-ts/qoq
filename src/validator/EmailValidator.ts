@@ -25,7 +25,7 @@ export class EmailValidator<T = string> extends Validator<EmailOptions<T>> {
     return `${this.getLabel(key, superKeys)} must be email`;
   }
 
-  public/*protected*/ getDataType(): EmailDataType {
+  protected getDataType(): EmailDataType {
     return {
       type: 'string',
       validator: 'email',

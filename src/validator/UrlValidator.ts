@@ -53,7 +53,7 @@ export class UrlValidator<T = string> extends Validator<UrlOptions<T>> {
     }
   }
 
-  public/*protected*/ getDataType(): UrlDataType {
+  protected getDataType(): UrlDataType {
     return {
       type: 'string',
       validator: 'url',

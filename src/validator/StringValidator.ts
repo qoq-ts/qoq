@@ -110,7 +110,7 @@ export class StringValidator<T = string> extends Validator<StringOptions<T>> {
     return;
   }
 
-  public/*protected*/ getDataType(): StringDataType {
+  protected getDataType(): StringDataType {
     return {
       type: 'string',
       validator: 'string',

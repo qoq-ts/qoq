@@ -69,7 +69,7 @@ export class EnumValidator<T = number | string> extends Validator<EnumOptions<T>
     return `${this.getLabel(key, superKeys)} must be in range of ${JSON.stringify(ranges)}`;
   }
 
-  public/*protected*/ getDataType(): EnumDataType {
+  protected getDataType(): EnumDataType {
     return {
       type: 'enum',
       validator: 'enum',

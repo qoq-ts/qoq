@@ -44,7 +44,7 @@ export class IPValidator<T = string> extends Validator<IPOptions<T>> {
     return `${this.getLabel(key, superKeys)} must be ip${ipVersion === 'all' ? '' : ipVersion}`;
   }
 
-  public/*protected*/ getDataType(): IPDataType {
+  protected getDataType(): IPDataType {
     return {
       type: 'string',
       validator: 'ip',

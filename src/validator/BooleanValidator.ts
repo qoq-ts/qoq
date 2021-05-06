@@ -46,7 +46,7 @@ export class BooleanValidator<T = boolean> extends Validator<BooleanOptions<T>> 
     }
   }
 
-  public/*protected*/ getDataType(): BooleanDataType {
+  protected getDataType(): BooleanDataType {
     return {
       type: 'boolean',
       validator: 'boolean',
