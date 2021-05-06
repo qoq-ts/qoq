@@ -112,7 +112,7 @@ export class ConsoleApplication extends EventEmitter {
       } else if (this.listenerCount('error')) {
         this.emit('error', err, ctx);
       } else {
-        throw err;
+        this.onerror(err);
       }
     } finally {
       --this.executingCount;
