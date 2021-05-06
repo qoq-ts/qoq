@@ -3,7 +3,7 @@ import path from 'path';
 import { readFileSync } from 'fs';
 import { WebApplication, validator, WebRouter, WebSlotManager } from '../../src';
 import { createHash } from 'crypto';
-import { Server } from 'node:http';
+import { Server } from 'http';
 
 describe('File validator', () => {
   const app = new WebApplication();
