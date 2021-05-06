@@ -22,6 +22,8 @@ export interface WebRouterDocument {
 
 export type WebRouterSchema = ReturnType<WebBuilder['toJSON']> extends Promise<infer R> ? R : never;
 
+const purePathPattern = /^[\/a-z0-9-_]+$/i;
+
 export class WebBuilder<
   Props = any,
   State = any,
@@ -47,17 +49,18 @@ export class WebBuilder<
     super();
 
     this.methods = methods;
-    this.uris = uris;
+    this.uris = [];
     this.uriPatterns = [];
 
     for (let i = 0; i < uris.length; ++i) {
       const uri = (prefix + (uris[i] === '/' ? '' : uris[i])) || '/';
-
       const keysRef: Key[] = [];
+
+      this.uris[i] = uri;
       this.uriPatterns.push([
         pathToRegexp(uri, keysRef),
         keysRef,
-        /^[\/a-z0-9-_]+$/i.test(uri) ? uri : undefined,
+        purePathPattern.test(uri) ? uri : undefined,
       ]);
     }
   }
