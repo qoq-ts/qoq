@@ -13,10 +13,15 @@ interface Options {
    * @default ./src/commands
    */
   commandsDir?: string | string[];
+  /**
+   * @default qoq
+   */
+  scriptName?: string;
 }
 
 export class ConsoleApplication extends EventEmitter {
   protected readonly routerParser: ConsoleRouterParser;
+  public/*protected*/ readonly scriptName: string;
   protected executingCount: number = 0;
 
   constructor(options: Options = {}) {
@@ -24,6 +29,7 @@ export class ConsoleApplication extends EventEmitter {
     const internalDir = path.join(__dirname, '..', 'command');
     const commandsDir = options.commandsDir ?? './src/commands';
     this.routerParser = new ConsoleRouterParser([internalDir].concat(commandsDir));
+    this.scriptName = options.scriptName || 'qoq';
     setInspector(this);
   }
 

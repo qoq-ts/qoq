@@ -19,7 +19,7 @@ export class HelpSlot extends Slot<Slot.Console> {
         if (ctx.options['version'] || ctx.options['v']) {
           console.log(version);
         } else {
-          return this.showAllHelp(ctx.app.getPaths());
+          return this.showAllHelp(ctx.app.getPaths(), ctx.app.scriptName);
         }
 
         return;
@@ -29,7 +29,7 @@ export class HelpSlot extends Slot<Slot.Console> {
         for (let i = 0; i < this.builders.length; ++i) {
           const builder = this.builders[i]!;
           if (builder.match(ctx.command)) {
-            this.showCustomHelp(builder);
+            this.showCustomHelp(builder, ctx.app.scriptName);
             ctx.commandMatched = true;
             return;
           }
@@ -45,9 +45,7 @@ export class HelpSlot extends Slot<Slot.Console> {
     return this;
   }
 
-  protected async showAllHelp(commandsPath: string[]) {
-    const scriptName = 'qoq';
-
+  protected async showAllHelp(commandsPath: string[], scriptName: string) {
     const cli = yargs([])
       .scriptName(scriptName)
       .usage(`${scriptName} [command] [options] [--help|-h]`)
@@ -81,12 +79,12 @@ export class HelpSlot extends Slot<Slot.Console> {
     cli.showHelp('log');
   }
 
-  protected showCustomHelp(builder: ConsoleBuilder) {
+  protected showCustomHelp(builder: ConsoleBuilder, scriptName: string) {
     const json = builder.toJSON();
 
     const cli = yargs([])
-      .scriptName('qoq')
-      .usage(`qoq ${json.commands[0]} [options]${json.description  ? '\n\n' + chalk.bold(json.description) : ''}`)
+      .scriptName(scriptName)
+      .usage(`${scriptName} ${json.commands[0]} [options]${json.description  ? '\n\n' + chalk.bold(json.description) : ''}`)
       .version(false)
       .help(false);
 
