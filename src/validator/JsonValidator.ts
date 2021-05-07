@@ -47,12 +47,13 @@ export class JsonValidator<T = object> extends Validator<JsonOptions<T>> {
     if (constraint) {
       const tempObj: Record<string, any> = {};
       const keys = Object.keys(constraint);
+      const newSuperKeys = superKeys.concat(key);
 
       for (let i = 0; i < keys.length; ++i) {
         const subKey = keys[i]!;
         tempObj[subKey] = value[subKey];
 
-        const result = await constraint[subKey]!.validate(tempObj, subKey, superKeys.concat(key));
+        const result = await constraint[subKey]!.validate(tempObj, subKey, newSuperKeys);
         if (result) {
           return result;
         }

@@ -69,8 +69,10 @@ export class ArrayValidator<T = never[]> extends Validator<ArrayOptions<T>> {
     }
 
     if (itemValidator) {
-      for (let index = 0, length = value.length; index < length; ++index) {
-        const result = await itemValidator.validate(value, index.toString(), superKeys.concat(key));
+      const newSuperKeys = superKeys.concat(key);
+
+      for (let index = 0; index < value.length; ++index) {
+        const result = await itemValidator.validate(value, index.toString(), newSuperKeys);
         if (result) {
           return result;
         }
