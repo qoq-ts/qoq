@@ -48,7 +48,8 @@ export class EnumValidator<T = number | string> extends Validator<EnumOptions<T>
       return `${this.getLabel(key, superKeys)} must be in range of ${JSON.stringify(ranges)}`;
     }
 
-    for (const range of ranges) {
+    for (let i = 0; i < ranges.length; ++i) {
+      const range = ranges[i]!;
       if (typeof range === 'string' && typeof value === 'number') {
         const tempValue = value.toString();
 
