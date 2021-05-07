@@ -39,7 +39,7 @@
     "email-validator": "^2.0.4",
     "filesize": "^6.3.0",
     "formidable": "^1.2.2",
-    "glob": "^7.1.6",
+    "glob": "^7.1.7",
     "ip-regex": "^4.3.0",
     "koa": "2.13.1",
     "lru-cache": "^6.0.0",
