@@ -37,7 +37,7 @@ describe('Url validator', () => {
   it ('should has default value', async () => {
     const newlyData: Record<string, any> = {};
 
-    validator.url.default(data.https).validate(newlyData, 'hello');
+    await validator.url.default(data.https).validate(newlyData, 'hello');
     expect(newlyData['hello']).toEqual(data.https);
   });
 

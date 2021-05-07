@@ -27,7 +27,7 @@ describe('String validator', () => {
   it ('should has default value', async () => {
     const newlyData: Record<string, any> = {};
 
-    validator.string.default('world').validate(newlyData, 'hello');
+    await validator.string.default('world').validate(newlyData, 'hello');
     expect(newlyData['hello']).toEqual('world');
   });
 

@@ -29,7 +29,7 @@ describe('Number validator', () => {
   it ('should has default value', async () => {
     const newlyData: Record<string, any> = {};
 
-    validator.number.default(15).validate(newlyData, 'id2');
+    await validator.number.default(15).validate(newlyData, 'id2');
     expect(newlyData['id2']).toEqual(15);
   });
 
