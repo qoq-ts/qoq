@@ -3358,10 +3358,10 @@ psl@^1.1.28, psl@^1.1.33:
   resolved "https://registry.npmjs.org/psl/-/psl-1.8.0.tgz#9326f8bcfb013adcc005fdff056acce020e51c24"
   integrity sha512-RIdOzyoavK+hA18OGGWDqUTsCLhtA7IcZ/6NCs4fFJaHBDab+pDDmDIByWFRQJq2Cd7r1OoQxBGKOaztq+hjIQ==
 
-public-refactor@^0.6.1:
-  version "0.6.1"
-  resolved "https://registry.npmjs.org/public-refactor/-/public-refactor-0.6.1.tgz#ee1c7f322a6c3d4d9b9ab07f5bc3442305b69182"
-  integrity sha512-o5GD0HQMqDZNyxoQo8RppbYpMdSR6DuCYVYG8XrOCugKhhfo9lsh/OthLgCIHlHsPDXgu3CsnOmA8fBOn+fnaA==
+public-refactor@^0.7.1:
+  version "0.7.1"
+  resolved "https://registry.npmjs.org/public-refactor/-/public-refactor-0.7.1.tgz#4c5ce7b2a0a120499be55cf113d7f184533c1c9a"
+  integrity sha512-ySBBiFPGlGCn20LJ3VRFxeQeP0uhdkilHniPmilD+6aKRn0wRmTCYFp3zsSAx02hcR+E7VYhFOPFUP3FJWL1zA==
   dependencies:
     chalk "^4.1.1"
     glob "^7.1.6"
