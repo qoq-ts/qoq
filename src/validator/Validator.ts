@@ -7,6 +7,7 @@ import type { IPDataType } from './IPValidator';
 import type { JsonDataType } from './JsonValidator';
 import type { NumberDataType } from './NumberValidator';
 import type { StringDataType } from './StringValidator';
+import type { TimestampDataType } from './TimestampValidator';
 import type { UrlDataType } from './UrlValidator';
 import type { UUIDDataType } from './UUIDValidator';
 
@@ -46,6 +47,7 @@ type SubValidatorDataType =
   | JsonDataType
   | NumberDataType
   | StringDataType
+  | TimestampDataType
   | UrlDataType
   | UUIDDataType;
 
@@ -90,7 +92,7 @@ export abstract class Validator<T extends ValidatorOptions<any> = ValidatorOptio
     let value = data[key];
 
     if (this.isEmpty(value)) {
-      data[key] = value = defaultValue;
+      data[key] = value = this.transformDefaultValue(defaultValue);
 
       if (value === undefined) {
         if (required) {
@@ -107,6 +109,10 @@ export abstract class Validator<T extends ValidatorOptions<any> = ValidatorOptio
     }
 
     return msg;
+  }
+
+  protected transformDefaultValue(value: any) {
+    return value;
   }
 
   protected getLabel(key: string, superKeys: string[]): string {

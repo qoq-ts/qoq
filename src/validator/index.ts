@@ -10,6 +10,7 @@ import { EmailValidator } from './EmailValidator';
 import { UUIDValidator } from './UUIDValidator';
 import { validate } from './validate';
 import { IPValidator } from './IPValidator';
+import { TimestampValidator } from './TimestampValidator';
 
 export class ValidatorStatic {
   readonly validate = validate;
@@ -60,6 +61,10 @@ export class ValidatorStatic {
 
   get ip(): IPValidator {
     return new IPValidator();
+  }
+
+  get timestamp(): TimestampValidator {
+    return new TimestampValidator();
   }
 }
 
