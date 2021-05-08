@@ -1,6 +1,5 @@
 import path from 'path';
 import fs from 'fs';
-import glob from 'glob';
 import mkdirp from 'mkdirp';
 import chalk from 'chalk';
 import { ConsoleRouter } from '../router/ConsoleRouter';
@@ -8,6 +7,7 @@ import { ConsoleSlotManager } from '../slot/SlotManager';
 import { validator } from '../validator';
 import { WebRouter } from '../router/WebRouter';
 import { WebRouterSchema } from '../router/WebBuilder';
+import { finder } from '../util/finder';
 
 export const router = new ConsoleRouter({
   slots: new ConsoleSlotManager(),
@@ -21,9 +21,15 @@ router
     input: validator.array
       .item(validator.string)
       .minItemLength(1)
-      .default(['./src/routers'])
+      .default([finder.resolve('./src/routers/')])
       .document({
         description: 'The folders where web routers come from',
+      }),
+    ignore: validator.array
+      .item(validator.string)
+      .default([])
+      .document({
+        description: 'ignore router files',
       }),
     output: validator
       .string
@@ -42,36 +48,37 @@ router
     i: 'input',
     o: 'output',
     f: 'format',
+    n: 'ignore',
   })
   .action(async (ctx, payload) => {
-    let { input, output, format } = payload.options;
+    let { input, ignore, output, format } = payload.options;
     const routers: WebRouterSchema[] = [];
     const now = Date.now();
 
-    output = path.resolve(output);
+    const matches = await finder({
+      pattern: input,
+      ignore,
+    });
 
     await Promise.all(
-      input.map((dir) => {
-        return Promise.all(
-          glob.sync(path.resolve(dir, '**/!(*.d).{ts,js}')).map(async (matchPath) => {
-            const modules = await import(matchPath);
-            console.log('Parsing path: ' + matchPath);
+      matches.map(async (matchPath) => {
+        const modules = await import(matchPath);
+        console.log('Parsing path: ' + matchPath);
 
-            return Promise.all(
-              Object.values(modules).map(async (item) => {
-                if (item && item instanceof WebRouter) {
-                  for (let builder of item.builders) {
-                    routers.push(await builder.toJSON());
-                  }
-                }
-                return;
-              })
-            );
+        return Promise.all(
+          Object.values(modules).map(async (item) => {
+            if (item && item instanceof WebRouter) {
+              for (let builder of item.builders) {
+                routers.push(await builder.toJSON());
+              }
+            }
+            return;
           })
         );
-      }),
+      })
     );
 
+    output = path.resolve(output);
     const dir = path.dirname(output);
     if (!fs.existsSync(dir)) {
       mkdirp.sync(dir);

@@ -2,12 +2,13 @@ import Koa from 'koa';
 import cookies from 'cookies';
 import { WebRouter } from '../router/WebRouter';
 import { WebRouterParser } from './WebRouterParser';
+import { finder } from '../util/finder';
 
 interface Options {
   /**
-   * Default `./src/routers`
+   * Default to `finder.resolve('./src/routers')`
    */
-  routersDir?: string | string[];
+  routersPath?: string | string[] | finder.Options;
   /**
    * Trust proxy headers. Default `false`
    */
@@ -37,8 +38,12 @@ export class WebApplication extends Koa {
   constructor(options: Options = {}) {
     // @ts-expect-error why @types/koa doesn't accept arguments?
     super(options);
-    this.routerParser = new WebRouterParser(options.routersDir ?? ['./src/routers']);
+    this.routerParser = new WebRouterParser(options.routersPath ?? finder.resolve('./src/routers'));
     this.middleware = [this.routerParser.compose];
+  }
+
+  async ready() {
+    return this.routerParser.waitToReady();
   }
 
   /**
@@ -53,7 +58,7 @@ export class WebApplication extends Koa {
    * Mount router from path
    */
   async mountRouterPath(router: string | string[]): Promise<this> {
-    this.routerParser.mountRouterPath(router);
+    await this.routerParser.mountRouterPath(router);
     return this;
   }
 

@@ -1,11 +1,10 @@
 import chalk from 'chalk';
-import path from 'path';
-import glob from 'glob';
 import yargs from 'yargs/yargs';
 import { Slot } from './Slot';
 import { ConsoleBuilder } from '../router/ConsoleBuilder';
 import { version } from '../util/version';
 import { ConsoleRouter } from '../router/ConsoleRouter';
+import { finder } from '../util/finder';
 
 export class HelpSlot extends Slot<Slot.Console> {
   protected builders: ConsoleBuilder[] = [];
@@ -19,7 +18,7 @@ export class HelpSlot extends Slot<Slot.Console> {
         if (ctx.options['version'] || ctx.options['v']) {
           console.log(version);
         } else {
-          return this.showAllHelp(ctx.app.getPaths(), ctx.app.scriptName);
+          return this.showAllHelp(ctx.app.getPathPattern(), ctx.app.scriptName);
         }
 
         return;
@@ -45,7 +44,7 @@ export class HelpSlot extends Slot<Slot.Console> {
     return this;
   }
 
-  protected async showAllHelp(commandsPath: string[], scriptName: string) {
+  protected async showAllHelp(commandsPath: finder.Options, scriptName: string) {
     const cli = yargs([])
       .scriptName(scriptName)
       .usage(`${scriptName} [command] [options] [--help|-h]`)
@@ -53,27 +52,25 @@ export class HelpSlot extends Slot<Slot.Console> {
       .alias('v', 'version')
       .alias('h', 'help');
 
+    const matches = await finder(commandsPath);
+
     await Promise.all(
-      commandsPath.map((dir) => {
-        return Promise.all(
-          glob.sync(path.resolve(dir, '**/!(*.d).{ts,js}')).map(async (file) => {
-            const modules = await import(file);
+      matches.map(async (file) => {
+        const modules = await import(file);
 
-            Object.values(modules).forEach((item) => {
-              if (item && item instanceof ConsoleRouter) {
-                item.getBuilders().forEach((builder) => {
-                  const json = builder.toJSON();
+        Object.values(modules).forEach((item) => {
+          if (item && item instanceof ConsoleRouter) {
+            item.getBuilders().forEach((builder) => {
+              const json = builder.toJSON();
 
-                  if (json.showInHelp) {
-                    json.commands[0] = chalk.yellow(json.commands[0]);
-                    cli.command(json.commands, json.description);
-                  }
-                });
+              if (json.showInHelp) {
+                json.commands[0] = chalk.yellow(json.commands[0]);
+                cli.command(json.commands, json.description);
               }
             });
-          }),
-        );
-      })
+          }
+        });
+      }),
     );
 
     cli.showHelp('log');

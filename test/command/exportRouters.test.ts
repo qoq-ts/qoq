@@ -1,27 +1,28 @@
 import { existsSync, readFileSync, unlinkSync } from 'fs';
 import { tmpdir } from 'os';
-import { ConsoleApplication } from '../../src';
+import { ConsoleApplication, finder } from '../../src';
 
 const app = new ConsoleApplication({
-  commandsDir: './src/command',
+  commandsPath: finder.resolve('./src/command'),
 });
 
-const input = './test/fixture/router-schema';
+const input = './test/fixture/router-schema/';
+const pattern = finder.resolve(input);
 
 it ('generate snapshot', async () => {
   try {
-    unlinkSync(input + '/snapshot-formatted.json');
+    unlinkSync(input + 'snapshot-formatted.json');
   } catch {}
-  expect(existsSync(input + '/snapshot-formatted.json')).toBeFalsy();
+  expect(existsSync(input + 'snapshot-formatted.json')).toBeFalsy();
 
   await app.execute(
     'export:routers',
-    '-i', input,
-    '-o', input + '/snapshot-formatted.json',
+    '-i', pattern,
+    '-o', input + 'snapshot-formatted.json',
     '-f'
   );
 
-  expect(existsSync(input + '/snapshot-formatted.json')).toBeTruthy();
+  expect(existsSync(input + 'snapshot-formatted.json')).toBeTruthy();
 });
 
 it ('can export web routers to file', async () => {
@@ -29,7 +30,7 @@ it ('can export web routers to file', async () => {
 
   await app.execute(
     'export:routers',
-    '-i', input,
+    '-i', pattern,
     '-o', output,
   );
 
@@ -42,7 +43,7 @@ it ('can export web routers to context', async () => {
 
   const ctx = await app.execute(
     'export:routers',
-    '-i', input,
+    '-i', pattern,
     '-o', output,
   );
 
@@ -56,7 +57,7 @@ it ('can format output json', async () => {
 
   await app.execute(
     'export:routers',
-    '-i', input,
+    '-i', pattern,
     '-o', output,
     '-f'
   );

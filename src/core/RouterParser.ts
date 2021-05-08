@@ -1,14 +1,13 @@
-import glob from 'glob';
-import path from 'path';
 import { Router } from '../router/Router';
 import { SlotManager } from '../slot/SlotManager';
 import compose, { Middleware, ComposedMiddleware } from 'koa-compose';
 import { toArray } from '../util/toArray';
 import { Topic } from 'topic';
+import { finder } from '../util/finder';
 
 export abstract class RouterParser<R extends Router<any, any>> {
   public readonly compose: ComposedMiddleware<any>;
-  public readonly paths: string[];
+  public readonly pathPattern: finder.Options;
 
   protected ready: boolean = false;
   protected topic = new Topic<{ ready: () => void }>();
@@ -18,12 +17,12 @@ export abstract class RouterParser<R extends Router<any, any>> {
 
   private shouldTrunkRefresh: boolean = true;
 
-  constructor(paths: string | string[]) {
+  constructor(pattern: string | string[] | finder.Options) {
     this.topic.keep('ready', () => this.ready === true);
-    this.paths = toArray(paths);
+    this.pathPattern = finder.normalize(pattern);
     this.tree = [compose(this.treeBranch), compose(this.treeTrunk)];
     this.compose = compose(this.tree);
-    this.searchRouters(this.paths).then(() => {
+    this.searchRouters(this.pathPattern).then(() => {
       this.onReady();
     });
   }
@@ -56,23 +55,21 @@ export abstract class RouterParser<R extends Router<any, any>> {
 
     if (paths.length) {
       this.ready = false;
-      this.paths.push(...paths);
-      await this.searchRouters(paths);
+      this.pathPattern.pattern.push(...paths);
+      await this.searchRouters(finder.normalize(paths));
       this.onReady();
     }
   }
 
-  protected async searchRouters(routesPath: string[]): Promise<void> {
+  protected async searchRouters(pattern: finder.Options): Promise<void> {
+    const matches = await finder(pattern);
+
     await Promise.all(
-      routesPath.map((routePath) => {
-        return Promise.all(
-          glob.sync(path.resolve(routePath, '**/!(*.d).{ts,js}')).map((file) => {
-            return import(file).then((modules) => {
-              this.parseRouters(modules);
-            });
-          }),
-        );
-      }),
+      matches.map((file) => {
+        return import(file).then((modules) => {
+          this.parseRouters(modules);
+        });
+      })
     );
 
     this.refreshTreeTrunk();

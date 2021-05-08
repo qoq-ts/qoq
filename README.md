@@ -56,10 +56,7 @@ yarn add qoq
 // src/index.ts
 import { WebApplication } from 'qoq';
 
-const app = new WebApplication({
-  // mount routers automatically
-  routersDir: './src/routers',
-});
+const app = new WebApplication();
 
 app.listen(3000, () => {
   console.log('Server started!');
@@ -150,10 +147,7 @@ router
 // src/index.ts
 import { ConsoleApplication } from 'qoq';
 
-const app = new ConsoleApplication({
-  // mount routers automatically
-  commandsDir: './src/commands',
-});
+const app = new ConsoleApplication();
 
 app.execute().then(() => {
   // Optional invoke here.

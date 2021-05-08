@@ -1,9 +1,9 @@
-import { dirname } from 'path';
-import { ConsoleApplication } from '../../src';
+import path, { dirname } from 'path';
+import { ConsoleApplication, finder } from '../../src';
 
 it ('can execute command', async () => {
   const app = new ConsoleApplication({
-    commandsDir: dirname(__dirname) + '/fixture',
+    commandsPath: finder.resolve(path.join(dirname(__dirname), 'fixture')),
   });
 
   const ctx = await app.execute('/test3');
@@ -25,7 +25,7 @@ it ('can mount commands', async () => {
   expect(message).not.toContain('test3');
 
   message = '';
-  await app.mountCommandPath(dirname(__dirname) + '/fixture');
+  await app.mountCommandPath(finder.resolve(path.join(dirname(__dirname), 'fixture')));
   await app.execute('-h');
   expect(message).toContain('test3');
 

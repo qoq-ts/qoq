@@ -7,12 +7,13 @@ import { setInspector } from '../util/setInspector';
 import { ConsoleRouterParser } from './ConsoleRouterParser';
 import { ConsoleContext } from './ConsoleContext';
 import { ConsoleRouter } from '../router/ConsoleRouter';
+import { finder } from '../util/finder';
 
 interface Options {
   /**
-   * @default ./src/commands
+   * Default to `finder.resolve('./src/commands')`
    */
-  commandsDir?: string | string[];
+  commandsPath?: string | string[] | finder.Options;
   /**
    * @default qoq
    */
@@ -26,15 +27,17 @@ export class ConsoleApplication extends EventEmitter {
 
   constructor(options: Options = {}) {
     super();
-    const internalDir = path.join(__dirname, '..', 'command');
-    const commandsDir = options.commandsDir ?? './src/commands';
-    this.routerParser = new ConsoleRouterParser([internalDir].concat(commandsDir));
+    const internalPath = finder.resolve(path.join(__dirname, '..', 'command'));
+    const pattern = finder.normalize(options.commandsPath ?? finder.resolve('./src/commands'));
+
+    pattern.pattern.unshift(internalPath);
+    this.routerParser = new ConsoleRouterParser(pattern);
     this.scriptName = options.scriptName || 'qoq';
     setInspector(this);
   }
 
-  public getPaths() {
-    return this.routerParser.paths;
+  public getPathPattern() {
+    return this.routerParser.pathPattern;
   }
 
   /**
@@ -133,7 +136,7 @@ export class ConsoleApplication extends EventEmitter {
 
   protected toJSON() {
     return {
-      paths: this.getPaths(),
+      paths: this.getPathPattern(),
       executingCount: this.executingCount,
     };
   }
