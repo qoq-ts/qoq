@@ -35,9 +35,14 @@ type Param<T extends string> = {
   }
 }
 
+const prefixPattern = /\/+$/;
+
 export class WebRouter<Props = {}, State = {}> extends Router<Slot.Web | Slot.Mix, WebBuilder<any, any>> {
   constructor(options: WebRouterOptions<Props, State>) {
-    super((options.prefix || '').replace(/\/+$/, ''), options.slots || WebSlotManager.use(null));
+    super(
+      options.prefix ? options.prefix.replace(prefixPattern, '') : '',
+      options.slots || WebSlotManager.use(null)
+    );
   }
 
   public get<T extends string>(uri: T | T[]): WebBuilder<Props & Param<T>, State, GetParam<T>> {
