@@ -19,7 +19,7 @@ router
   .description('Export web routers to file and `ctx.state.routers`')
   .options({
     input: validator.array
-      .each(validator.string)
+      .item(validator.string)
       .minItemLength(1)
       .default(['./src/routers'])
       .document({

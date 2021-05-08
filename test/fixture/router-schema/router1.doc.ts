@@ -10,7 +10,7 @@ export const getProjectsResponse: WebRouterDocument = {
         page: validator.integer.document({
           description: 'Current Page',
         }),
-        result: validator.array.each({
+        result: validator.array.item({
           id: validator.integer,
           name: validator.string,
         }),

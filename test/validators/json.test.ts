@@ -53,7 +53,7 @@ describe('Json validator', () => {
       hi: validator.json.constraint({
         man: validator.number,
         woman: validator.number,
-        list: validator.array.each(validator.string),
+        list: validator.array.item(validator.string),
       }),
     }).validate(data, 'objData')).toEqual(undefined);
   });
