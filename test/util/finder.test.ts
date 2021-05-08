@@ -2,7 +2,7 @@ import { resolve } from 'path';
 import { finder } from '../../src/util/finder';
 
 const normalizePath = (file: string) => {
-  return resolve('test', 'fixture', 'glob', file);
+  return resolve('test', 'fixture', 'glob', file).replace(/\\/g, '/');
 };
 
 it ('can find .js and .ts files except .d.ts', async () => {
