@@ -3,7 +3,7 @@ import { ConsoleApplication } from '../../src';
 
 it ('can execute command', async () => {
   const app = new ConsoleApplication({
-    commandsPath: path.join(dirname(__dirname), 'fixture'),
+    commandsDir: path.join(dirname(__dirname), 'fixture'),
   });
 
   const ctx = await app.execute('/test3');

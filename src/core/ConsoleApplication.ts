@@ -13,7 +13,7 @@ interface Options {
   /**
    * Default to `./src/commands`
    */
-  commandsPath?: finder.Paths;
+  commandsDir?: finder.Paths;
   /**
    * @default qoq
    */
@@ -28,7 +28,7 @@ export class ConsoleApplication extends EventEmitter {
   constructor(options: Options = {}) {
     super();
     const internalPath = path.join(__dirname, '..', 'command');
-    const pattern = finder.normalize(options.commandsPath ?? './src/commands');
+    const pattern = finder.normalize(options.commandsDir ?? './src/commands');
 
     pattern.unshift({
       pattern: [internalPath],

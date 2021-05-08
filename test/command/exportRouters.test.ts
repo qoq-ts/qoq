@@ -3,7 +3,7 @@ import { tmpdir } from 'os';
 import { ConsoleApplication } from '../../src';
 
 const app = new ConsoleApplication({
-  commandsPath: './src/command',
+  commandsDir: './src/command',
 });
 
 const input = './test/fixture/router-schema/';

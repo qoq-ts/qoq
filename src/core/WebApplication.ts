@@ -8,7 +8,7 @@ interface Options {
   /**
    * Default to `./src/routers`
    */
-  routersPath?: finder.Paths;
+  routersDir?: finder.Paths;
   /**
    * Trust proxy headers. Default `false`
    */
@@ -38,7 +38,7 @@ export class WebApplication extends Koa {
   constructor(options: Options = {}) {
     // @ts-expect-error why @types/koa doesn't accept arguments?
     super(options);
-    this.routerParser = new WebRouterParser(options.routersPath ?? './src/routers');
+    this.routerParser = new WebRouterParser(options.routersDir ?? './src/routers');
     this.middleware = [this.routerParser.compose];
   }
 
