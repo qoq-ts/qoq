@@ -21,7 +21,7 @@ router
     input: validator.array
       .item(validator.string)
       .minItemLength(1)
-      .default([finder.resolve('./src/routers/')])
+      .default(['./src/routers'])
       .document({
         description: 'The folders where web routers come from',
       }),
@@ -55,10 +55,10 @@ router
     const routers: WebRouterSchema[] = [];
     const now = Date.now();
 
-    const matches = await finder({
+    const matches = await finder([{
       pattern: input,
       ignore,
-    });
+    }]);
 
     await Promise.all(
       matches.map(async (matchPath) => {

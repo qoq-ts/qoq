@@ -1,5 +1,5 @@
 import glob from 'glob';
-import { resolve } from 'path';
+import path from 'path';
 
 export namespace finder {
   export interface Options {
@@ -7,50 +7,85 @@ export namespace finder {
     ignore?: string[];
     dot?: boolean;
   }
+
+  export type Paths = string | string[] | finder.Options | finder.Options[];
 }
 
-export const finder = async (opts: finder.Options): Promise<string[]> => {
-  const options: glob.IOptions = opts;
+const isString = (data: string[] | finder.Options[]): data is string[] => {
+  return typeof data[0] === 'string';
+}
 
+const flat = (matches: string[][]): string[] => {
+  switch (matches.length) {
+    case 0:
+      return [];
+    case 1:
+      return matches[0]!;
+    default:
+      return [...new Set(matches.flat())];
+  }
+};
+
+export const finder = async (opts: finder.Options[]): Promise<string[]> => {
   const matches = await Promise.all(
-    opts.pattern.map((pattern) => {
-      return new Promise<string[]>((resolve, reject) => {
-        const ignore = opts.ignore || [];
+    opts.map(async (opt) => {
+      const options: glob.IOptions = opt;
 
-        ignore.push('**/*.d.ts');
-        options.ignore = ignore;
-        options.nodir = true;
+      const matches = await Promise.all(
+        opt.pattern.map((pattern) => {
+          return new Promise<string[]>((resolve, reject) => {
+            const ignore = opt.ignore || [];
 
-        glob(pattern, options, (err, matches) => {
-          if (err === null) {
-            resolve(matches);
-          } else {
-            reject(err);
-          }
-        });
-      });
+            if (!glob.hasMagic(pattern)) {
+              pattern = path.resolve(pattern, './**/*.{ts,js}');
+            }
+
+            ignore.push('**/*.d.ts');
+            options.ignore = ignore;
+            options.nodir = true;
+
+            glob(pattern, options, (err, matches) => {
+              if (err === null) {
+                resolve(matches);
+              } else {
+                reject(err);
+              }
+            });
+          });
+        })
+      );
+
+      return flat(matches);
     })
   );
 
-  return matches.length > 1 ? [...new Set(matches.flat())] : matches.flat();
+  return flat(matches);
 };
 
-finder.normalize = (path: string | string[] | finder.Options): finder.Options => {
-  if (typeof path === 'string') {
-    return {
-      pattern: [path],
-    };
+finder.normalize = (pattern: finder.Paths): finder.Options[] => {
+  if (typeof pattern === 'string') {
+    return [
+      {
+        pattern: [pattern],
+      }
+    ];
   }
 
-  if (Array.isArray(path)) {
-    return {
-      pattern: path,
-    };
+  if (Array.isArray(pattern)) {
+    if (!pattern.length) {
+      return [];
+    }
+
+    if (isString(pattern)) {
+      return [
+        {
+          pattern: pattern,
+        }
+      ];
+    }
+
+    return pattern;
   }
 
-  return path;
-};
-
-finder.resolve = (path: string) => {
-  return resolve(path, './**/*.{ts,js}');
+  return [pattern];
 };

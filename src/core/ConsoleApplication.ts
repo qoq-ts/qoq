@@ -11,9 +11,9 @@ import { finder } from '../util/finder';
 
 interface Options {
   /**
-   * Default to `finder.resolve('./src/commands')`
+   * Default to `./src/commands`
    */
-  commandsPath?: string | string[] | finder.Options;
+  commandsPath?: finder.Paths;
   /**
    * @default qoq
    */
@@ -27,10 +27,12 @@ export class ConsoleApplication extends EventEmitter {
 
   constructor(options: Options = {}) {
     super();
-    const internalPath = finder.resolve(path.join(__dirname, '..', 'command'));
-    const pattern = finder.normalize(options.commandsPath ?? finder.resolve('./src/commands'));
+    const internalPath = path.join(__dirname, '..', 'command');
+    const pattern = finder.normalize(options.commandsPath ?? './src/commands');
 
-    pattern.pattern.unshift(internalPath);
+    pattern.unshift({
+      pattern: [internalPath],
+    });
     this.routerParser = new ConsoleRouterParser(pattern);
     this.scriptName = options.scriptName || 'qoq';
     setInspector(this);
@@ -51,7 +53,7 @@ export class ConsoleApplication extends EventEmitter {
   /**
    * Mount router from path
    */
-  async mountCommandPath(paths: string | string[]): Promise<this> {
+  async mountCommandPath(paths: finder.Paths): Promise<this> {
     await this.routerParser.mountRouterPath(paths);
     return this;
   }

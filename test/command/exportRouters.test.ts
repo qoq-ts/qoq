@@ -1,13 +1,13 @@
 import { existsSync, readFileSync, unlinkSync } from 'fs';
 import { tmpdir } from 'os';
-import { ConsoleApplication, finder } from '../../src';
+import { ConsoleApplication } from '../../src';
 
 const app = new ConsoleApplication({
-  commandsPath: finder.resolve('./src/command'),
+  commandsPath: './src/command',
 });
 
 const input = './test/fixture/router-schema/';
-const pattern = finder.resolve(input);
+const pattern = input;
 
 it ('generate snapshot', async () => {
   try {

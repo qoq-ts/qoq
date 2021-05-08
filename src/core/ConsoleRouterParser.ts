@@ -9,7 +9,7 @@ export class ConsoleRouterParser extends RouterParser<ConsoleRouter> {
   // It should initialize from super constructor
   protected helper!: HelpSlot;
 
-  constructor(paths: string | string[] | finder.Options) {
+  constructor(paths: finder.Paths) {
     super(paths);
     this.tree.unshift(...this.getHelper().collect());
   }

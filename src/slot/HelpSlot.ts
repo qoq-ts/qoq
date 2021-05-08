@@ -44,7 +44,7 @@ export class HelpSlot extends Slot<Slot.Console> {
     return this;
   }
 
-  protected async showAllHelp(commandsPath: finder.Options, scriptName: string) {
+  protected async showAllHelp(commandsPath: finder.Options[], scriptName: string) {
     const cli = yargs([])
       .scriptName(scriptName)
       .usage(`${scriptName} [command] [options] [--help|-h]`)

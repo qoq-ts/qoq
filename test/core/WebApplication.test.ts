@@ -1,10 +1,10 @@
 import path, { dirname } from 'path';
-import { finder, WebApplication, WebRouter, WebSlotManager } from '../../src';
+import { WebApplication, WebRouter, WebSlotManager } from '../../src';
 import request from 'supertest';
 
 it ('can search routers', async () => {
   const app = new WebApplication({
-    routersPath: finder.resolve(path.join(dirname(__dirname), 'fixture')),
+    routersPath: path.join(dirname(__dirname), 'fixture'),
   });
   const listener = app.listen();
 
@@ -17,7 +17,7 @@ it ('can search routers', async () => {
 
 it ('can mount router from memory', async () => {
   const app = new WebApplication({
-    routersPath: finder.resolve(path.join(dirname(__dirname), 'fixture')),
+    routersPath: path.join(dirname(__dirname), 'fixture'),
   });
   const router = new WebRouter({
     slots: new WebSlotManager(),
@@ -43,7 +43,7 @@ it ('can mount router path after app is created', async () => {
   await app.ready();
   await request(listener).get('/test1').expect(404);
 
-  await app.mountRouterPath(finder.resolve(path.join(dirname(__dirname), 'fixture')));
+  await app.mountRouterPath(path.join(dirname(__dirname), 'fixture'));
   await request(listener).get('/test1').expect('Hello router1');
 
   listener.close();
@@ -51,7 +51,7 @@ it ('can mount router path after app is created', async () => {
 
 it ('only search WebRouter', async () => {
   const app = new WebApplication({
-    routersPath: finder.resolve(path.join(dirname(__dirname), 'fixture')),
+    routersPath: path.join(dirname(__dirname), 'fixture'),
   });
   const listener = app.listen();
   await request(listener).get('/test3').expect(404);
@@ -60,7 +60,7 @@ it ('only search WebRouter', async () => {
 
 it ('router can use `export default`', async () => {
   const app = new WebApplication({
-    routersPath: finder.resolve(path.join(dirname(__dirname), 'fixture')),
+    routersPath: path.join(dirname(__dirname), 'fixture'),
   });
   const listener = app.listen();
 

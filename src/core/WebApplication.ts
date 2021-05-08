@@ -6,9 +6,9 @@ import { finder } from '../util/finder';
 
 interface Options {
   /**
-   * Default to `finder.resolve('./src/routers')`
+   * Default to `./src/routers`
    */
-  routersPath?: string | string[] | finder.Options;
+  routersPath?: finder.Paths;
   /**
    * Trust proxy headers. Default `false`
    */
@@ -38,7 +38,7 @@ export class WebApplication extends Koa {
   constructor(options: Options = {}) {
     // @ts-expect-error why @types/koa doesn't accept arguments?
     super(options);
-    this.routerParser = new WebRouterParser(options.routersPath ?? finder.resolve('./src/routers'));
+    this.routerParser = new WebRouterParser(options.routersPath ?? './src/routers');
     this.middleware = [this.routerParser.compose];
   }
 
@@ -57,7 +57,7 @@ export class WebApplication extends Koa {
   /**
    * Mount router from path
    */
-  async mountRouterPath(router: string | string[]): Promise<this> {
+  async mountRouterPath(router: finder.Paths): Promise<this> {
     await this.routerParser.mountRouterPath(router);
     return this;
   }

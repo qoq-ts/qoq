@@ -7,7 +7,7 @@ import { finder } from '../util/finder';
 
 export abstract class RouterParser<R extends Router<any, any>> {
   public readonly compose: ComposedMiddleware<any>;
-  public readonly pathPattern: finder.Options;
+  public readonly pathPattern: finder.Options[];
 
   protected ready: boolean = false;
   protected topic = new Topic<{ ready: () => void }>();
@@ -17,7 +17,7 @@ export abstract class RouterParser<R extends Router<any, any>> {
 
   private shouldTrunkRefresh: boolean = true;
 
-  constructor(pattern: string | string[] | finder.Options) {
+  constructor(pattern: finder.Paths) {
     this.topic.keep('ready', () => this.ready === true);
     this.pathPattern = finder.normalize(pattern);
     this.tree = [compose(this.treeBranch), compose(this.treeTrunk)];
@@ -50,18 +50,18 @@ export abstract class RouterParser<R extends Router<any, any>> {
   /**
    * Mount router from path
    */
-  public async mountRouterPath(path: string | string[]): Promise<void> {
-    const paths = toArray(path);
+  public async mountRouterPath(path: finder.Paths): Promise<void> {
+    const pattern = finder.normalize(path);
 
-    if (paths.length) {
+    if (pattern.length) {
       this.ready = false;
-      this.pathPattern.pattern.push(...paths);
-      await this.searchRouters(finder.normalize(paths));
+      this.pathPattern.push(...pattern);
+      await this.searchRouters(pattern);
       this.onReady();
     }
   }
 
-  protected async searchRouters(pattern: finder.Options): Promise<void> {
+  protected async searchRouters(pattern: finder.Options[]): Promise<void> {
     const matches = await finder(pattern);
 
     await Promise.all(
