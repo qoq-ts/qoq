@@ -27,7 +27,7 @@ describe('Json validator', () => {
   });
 
   it ('may be undefined', async () => {
-    expect(await validator.json.constraint(data.objPlain).validate(data, 'objPlain')).toEqual(undefined);
+    expect(await validator.json.property(data.objPlain).validate(data, 'objPlain')).toEqual(undefined);
     expect(await validator.json.optional().validate(data, 'notfound')).toEqual(undefined);
     expect(await validator.json.validate(data, 'notfound')).toContain('is required');
   });
@@ -40,17 +40,17 @@ describe('Json validator', () => {
   });
 
   it ('should hit constraint', async () => {
-    expect(await validator.json.constraint({
+    expect(await validator.json.property({
       hello: validator.string,
-      hi: validator.json.constraint({
+      hi: validator.json.property({
         man: validator.number,
         woman: validator.number,
       }),
     }).validate(data, 'objPlain')).toContain('is required');
 
-    expect(await validator.json.constraint({
+    expect(await validator.json.property({
       hello: validator.string,
-      hi: validator.json.constraint({
+      hi: validator.json.property({
         man: validator.number,
         woman: validator.number,
         list: validator.array.item(validator.string),
@@ -59,26 +59,26 @@ describe('Json validator', () => {
   });
 
   it ('json string can be convert to json object', async () => {
-    expect(await validator.json.constraint({
+    expect(await validator.json.property({
       hello: validator.string,
     }).validate(data, 'objDataStr')).toEqual(undefined);
 
-    expect(await validator.json.constraint({
+    expect(await validator.json.property({
       hello: validator.string,
     }).validate(data, 'id2')).toContain('must be json');
 
-    expect(await validator.json.constraint({
+    expect(await validator.json.property({
       hello: validator.string,
     }).validate(data, 'invalidStr')).toContain('must be json');
 
-    expect(await validator.json.constraint({
+    expect(await validator.json.property({
       hello: validator.string,
     }).validate(data, 'arrayStr')).toContain('must be json');
   });
 
   it ('should support nested keys', async () => {
-    expect(await validator.json.constraint({
-      hi: validator.json.constraint({
+    expect(await validator.json.property({
+      hi: validator.json.property({
         foo: validator.number,
       }),
     }).validate(data, 'objData')).toContain('hi.foo');
@@ -87,7 +87,7 @@ describe('Json validator', () => {
   it ('can transform data by user', async () => {
     await validator
       .json
-      .constraint({
+      .property({
         hello: validator.string,
       })
       .transform(Object.values)

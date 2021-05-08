@@ -1,9 +1,9 @@
 import { CommonValidatorDataType, Validator, ValidatorOptions, ValidatorType } from './Validator';
 
-type Constraint = Record<string, Validator>;
+type Property = Record<string, Validator>;
 
 interface JsonOptions<T> extends ValidatorOptions<T> {
-  constraint?: Constraint;
+  properties?: Property;
 }
 
 export interface JsonDataType {
@@ -13,8 +13,8 @@ export interface JsonDataType {
 }
 
 export class JsonValidator<T = object> extends Validator<JsonOptions<T>> {
-  public constraint<V extends Constraint>(constraint: V): JsonValidator<{ [key in keyof V]: ValidatorType<V[key]> }> {
-    this.config.constraint = constraint;
+  public property<V extends Property>(properties: V): JsonValidator<{ [key in keyof V]: ValidatorType<V[key]> }> {
+    this.config.properties = properties;
     // @ts-expect-error
     return this;
   }
@@ -26,7 +26,7 @@ export class JsonValidator<T = object> extends Validator<JsonOptions<T>> {
   declare transform: <T1>(fn: (object: T) => Promise<T1> | T1) => JsonValidator<T1>;
 
   protected async validateValue(data: Record<string, any>, key: string, superKeys: string[]): Promise<string | void> {
-    const { constraint } = this.config;
+    const { properties } = this.config;
     let value = data[key];
 
     if (Object.prototype.toString.call(value) !== '[object Object]') {
@@ -44,16 +44,16 @@ export class JsonValidator<T = object> extends Validator<JsonOptions<T>> {
       }
     }
 
-    if (constraint) {
+    if (properties) {
       const tempObj: Record<string, any> = {};
-      const keys = Object.keys(constraint);
+      const keys = Object.keys(properties);
       const newSuperKeys = superKeys.concat(key);
 
       for (let i = 0; i < keys.length; ++i) {
         const subKey = keys[i]!;
         tempObj[subKey] = value[subKey];
 
-        const result = await constraint[subKey]!.validate(tempObj, subKey, newSuperKeys);
+        const result = await properties[subKey]!.validate(tempObj, subKey, newSuperKeys);
         if (result) {
           return result;
         }
@@ -67,7 +67,7 @@ export class JsonValidator<T = object> extends Validator<JsonOptions<T>> {
   protected getDataType(): JsonDataType {
     const properties: JsonDataType['properties'] = {};
 
-    Object.entries(this.config.constraint || {}).forEach(([key, validator]) => {
+    Object.entries(this.config.properties || {}).forEach(([key, validator]) => {
       properties[key] = validator.toJSON();
     });
 
