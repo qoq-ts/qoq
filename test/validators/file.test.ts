@@ -1,7 +1,7 @@
 import request from 'supertest';
 import path from 'path';
 import { readFileSync } from 'fs';
-import { WebApplication, validator, WebRouter, WebSlotManager } from '../../src';
+import { WebApplication, validator, WebRouter } from '../../src';
 import { createHash } from 'crypto';
 import { Server } from 'http';
 
@@ -10,7 +10,7 @@ describe('File validator', () => {
   let listen: Server;
 
   const router = new WebRouter({
-    slots: WebSlotManager.use(null),
+    slots: null,
   });
 
   beforeEach(() => {
@@ -81,7 +81,7 @@ describe('File validator', () => {
 
   it ('can upload multiple file', async () => {
     const router = new WebRouter({
-      slots: WebSlotManager.use(null),
+      slots: null,
     });
 
     router

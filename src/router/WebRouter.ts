@@ -1,7 +1,7 @@
 import compose, { Middleware } from 'koa-compose';
 import { WebCtx } from '../core/WebContext';
 import { Slot, WebSlotCtx } from '../slot/Slot';
-import { SlotManager } from '../slot/SlotManager';
+import { SlotManager, WebSlotManager } from '../slot/SlotManager';
 import { Method } from '../util/Method';
 import { toArray } from '../util/toArray';
 import { Router } from './Router';
@@ -9,7 +9,7 @@ import { WebBuilder } from './WebBuilder';
 
 interface WebRouterOptions<Props, State> {
   prefix?: string;
-  slots: SlotManager<Slot.Web | Slot.Mix, Props, State>,
+  slots: SlotManager<Slot.Web | Slot.Mix, Props, State> | null,
 }
 
 // _ is valid variable letter
@@ -37,7 +37,7 @@ type Param<T extends string> = {
 
 export class WebRouter<Props = {}, State = {}> extends Router<Slot.Web | Slot.Mix, WebBuilder<any, any>> {
   constructor(options: WebRouterOptions<Props, State>) {
-    super((options.prefix || '').replace(/\/+$/, ''), options.slots);
+    super((options.prefix || '').replace(/\/+$/, ''), options.slots || WebSlotManager.use(null));
   }
 
   public get<T extends string>(uri: T | T[]): WebBuilder<Props & Param<T>, State, GetParam<T>> {

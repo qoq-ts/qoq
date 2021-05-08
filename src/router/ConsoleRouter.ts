@@ -1,19 +1,19 @@
 import compose, { Middleware } from 'koa-compose';
 import { ConsoleCtx } from '../core/ConsoleContext';
 import { Slot, ConsoleSlotCtx } from '../slot/Slot';
-import { SlotManager } from '../slot/SlotManager';
+import { ConsoleSlotManager, SlotManager } from '../slot/SlotManager';
 import { toArray } from '../util/toArray';
 import { ConsoleBuilder } from './ConsoleBuilder';
 import { Router } from './Router';
 
 interface ConsoleRouterOptions<Props, State> {
   prefix?: string;
-  slots: SlotManager<Slot.Console | Slot.Mix, Props, State>,
+  slots: SlotManager<Slot.Console | Slot.Mix, Props, State> | null,
 }
 
 export class ConsoleRouter<Props = any, State = any> extends Router<Slot.Console | Slot.Mix, ConsoleBuilder<any, any>> {
   constructor(options: ConsoleRouterOptions<Props, State>) {
-    super(options.prefix || '', options.slots);
+    super(options.prefix || '', options.slots || ConsoleSlotManager.use(null));
   }
 
   public command(command: string | string[]): ConsoleBuilder<Props, State> {

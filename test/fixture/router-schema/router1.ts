@@ -1,7 +1,7 @@
-import { validator, WebRouter, WebSlotManager } from '../../../src';
+import { validator, WebRouter } from '../../../src';
 
 export const router = new WebRouter({
-  slots: WebSlotManager.use(null),
+  slots: null,
 });
 
 router
