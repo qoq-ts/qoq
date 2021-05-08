@@ -1,4 +1,4 @@
-import { CommonValidatorDataType, Validator, ValidatorOptions, ValidatorType } from './Validator';
+import { Validator, ValidatorDataType, ValidatorOptions, ValidatorType } from './Validator';
 
 type Property = Record<string, Validator>;
 
@@ -9,7 +9,7 @@ interface JsonOptions<T> extends ValidatorOptions<T> {
 export interface JsonDataType {
   type: 'object',
   validator: 'json',
-  properties: Record<string, CommonValidatorDataType>,
+  properties: Record<string, ValidatorDataType>,
 }
 
 export class JsonValidator<T = object> extends Validator<JsonOptions<T>> {

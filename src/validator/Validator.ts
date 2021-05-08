@@ -30,7 +30,7 @@ export type ValidatorType<T> = T extends Validator<infer Options>
 ? Options['defaultValue']
 : never;
 
-export interface CommonValidatorDataType {
+interface CommonValidatorDataType {
   label?: string;
   description?: string;
   defaultValue: unknown;

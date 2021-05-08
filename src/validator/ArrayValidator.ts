@@ -1,5 +1,5 @@
 import { JsonValidator } from './JsonValidator';
-import { CommonValidatorDataType, Validator, ValidatorOptions, ValidatorType, ValidatorTypes } from './Validator';
+import { Validator, ValidatorDataType, ValidatorOptions, ValidatorType, ValidatorTypes } from './Validator';
 
 interface ArrayOptions<T> extends ValidatorOptions<T> {
   itemValidator?: Validator;
@@ -10,7 +10,7 @@ interface ArrayOptions<T> extends ValidatorOptions<T> {
 export interface ArrayDataType {
   type: 'array',
   validator: 'array',
-  items?: CommonValidatorDataType;
+  items?: ValidatorDataType;
 }
 
 export class ArrayValidator<T = never[]> extends Validator<ArrayOptions<T>> {
