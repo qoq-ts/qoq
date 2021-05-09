@@ -1,7 +1,6 @@
 import chalk from 'chalk';
 import EventEmitter from 'events';
 import { EOL } from 'os';
-import path from 'path';
 import util from 'util';
 import { setInspector } from '../util/setInspector';
 import { ConsoleRouterParser } from './ConsoleRouterParser';
@@ -27,12 +26,8 @@ export class ConsoleApplication extends EventEmitter {
 
   constructor(options: Options = {}) {
     super();
-    const internalPath = path.join(__dirname, '..', 'command');
     const pattern = finder.normalize(options.commandsDir ?? './src/commands');
 
-    pattern.unshift({
-      pattern: [internalPath],
-    });
     this.routerParser = new ConsoleRouterParser(pattern);
     this.scriptName = options.scriptName || 'qoq';
     setInspector(this);

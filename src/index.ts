@@ -27,3 +27,4 @@ export { testMiddleware } from './util/testMiddleware';
 export { PARSED_BODY } from './parser/bodyParser';
 export { Method } from './util/Method';
 export { finder } from './util/finder';
+export { generateRouterSchemas } from './router/exportRouters';
