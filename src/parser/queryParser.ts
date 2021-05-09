@@ -23,5 +23,3 @@ export const queryParser = (rules: { [key: string]: Validator }) => {
 
   return respond;
 };
-
-queryParser.usePromise = false;

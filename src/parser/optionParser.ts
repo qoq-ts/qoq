@@ -35,7 +35,6 @@ export const optionParser = (rules: { [key: string]: Validator }) => {
   respond.setAlias = (alias: Record<string, string>) => aliases = alias;
   respond.getAlias = () => aliases;
   respond.getRules = () => rules;
-  respond.usePromise = false;
 
   return respond;
 }
