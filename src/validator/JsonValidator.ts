@@ -13,7 +13,7 @@ export interface JsonDataType {
 }
 
 export class JsonValidator<T = object> extends Validator<JsonOptions<T>> {
-  public property<V extends Property>(properties: V): JsonValidator<{ [key in keyof V]: ValidatorType<V[key]> }> {
+  public properties<V extends Property>(properties: V): JsonValidator<{ [key in keyof V]: ValidatorType<V[key]> }> {
     this.config.properties = properties;
     // @ts-expect-error
     return this;

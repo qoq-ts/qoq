@@ -183,7 +183,7 @@ export class WebBuilder<
       if (content instanceof Validator) {
         responseContent = content.toJSON();
       } else if (content) {
-        responseContent = validator.json.property(content).toJSON();
+        responseContent = validator.json.properties(content).toJSON();
       }
 
       Object.entries(headers ?? {}).map(([key, validator]) => {

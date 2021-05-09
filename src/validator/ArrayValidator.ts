@@ -20,7 +20,7 @@ export class ArrayValidator<T = never[]> extends Validator<ArrayOptions<T>> {
     if (values instanceof Validator) {
       this.config.itemValidator = values;
     } else {
-      this.config.itemValidator = new JsonValidator().property(values);
+      this.config.itemValidator = new JsonValidator().properties(values);
     }
 
     return this;
