@@ -14,9 +14,9 @@ export interface ArrayDataType {
 }
 
 export class ArrayValidator<T = never[]> extends Validator<ArrayOptions<T>> {
-  public item<V extends Validator>(values: V): ArrayValidator<ValidatorType<V>[]>;
-  public item<V extends { [key: string]: Validator }>(values: V): ArrayValidator<ValidatorTypes<V>[]>;
-  public item(values: Validator | { [key: string]: Validator }): ArrayValidator<any> {
+  public items<V extends Validator>(values: V): ArrayValidator<ValidatorType<V>[]>;
+  public items<V extends { [key: string]: Validator }>(values: V): ArrayValidator<ValidatorTypes<V>[]>;
+  public items(values: Validator | { [key: string]: Validator }): ArrayValidator<any> {
     if (values instanceof Validator) {
       this.config.itemValidator = values;
     } else {

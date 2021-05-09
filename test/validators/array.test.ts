@@ -22,14 +22,14 @@ describe('Array validator', () => {
   });
 
   it ('may be undefined', async () => {
-    expect(await validator.array.item(validator.number).validate(data, 'numberArray')).toEqual(undefined);
+    expect(await validator.array.items(validator.number).validate(data, 'numberArray')).toEqual(undefined);
     expect(await validator.array.optional().validate(data, 'notfound')).toEqual(undefined);
   });
 
   it ('should has default value', async () => {
     const newlyData: Record<string, any> = {};
 
-    expect(await validator.array.item(validator.number).default([15]).validate(newlyData, 'no-data')).toEqual(undefined);
+    expect(await validator.array.items(validator.number).default([15]).validate(newlyData, 'no-data')).toEqual(undefined);
     expect(newlyData['no-data']).toContain(15);
   });
 
@@ -56,24 +56,24 @@ describe('Array validator', () => {
   });
 
   it ('string item can convert to number', async () => {
-    expect(await validator.array.item(validator.number).validate(data, 'strArray')).toEqual(undefined);
+    expect(await validator.array.items(validator.number).validate(data, 'strArray')).toEqual(undefined);
     (data.strArray as string[]).forEach((item) => {
       expect(typeof item).toEqual('number');
     });
 
-    expect(await validator.array.item(validator.number).validate(data, 'mixArray')).toEqual(undefined);
+    expect(await validator.array.items(validator.number).validate(data, 'mixArray')).toEqual(undefined);
     (data.mixArray as any[]).forEach((item) => {
       expect(typeof item).toEqual('number');
     });
   });
 
   it ('number item can convert to string', async () => {
-    expect(await validator.array.item(validator.string).validate(data, 'numberArray')).toEqual(undefined);
+    expect(await validator.array.items(validator.string).validate(data, 'numberArray')).toEqual(undefined);
     (data.numberArray).forEach((item) => {
       expect(typeof item).toEqual('string');
     });
 
-    expect(await validator.array.item(validator.string).validate(data, 'mixArray')).toEqual(undefined);
+    expect(await validator.array.items(validator.string).validate(data, 'mixArray')).toEqual(undefined);
     (data.mixArray as any[]).forEach((item) => {
       expect(typeof item).toEqual('string');
     });
@@ -82,7 +82,7 @@ describe('Array validator', () => {
   it ('should support nested keys', async () => {
     // @ts-expect-error
     data.mixArray.push({});
-    const result = await validator.array.item(validator.number).validate(data, 'mixArray');
+    const result = await validator.array.items(validator.number).validate(data, 'mixArray');
     expect(typeof result).toEqual('string');
     expect(result).toContain('mixArray.3');
   });
@@ -90,7 +90,7 @@ describe('Array validator', () => {
   it ('can transform data by user', async () => {
     await validator
       .array
-      .item(validator.number)
+      .items(validator.number)
       .transform((values) => values.map((value) => value + 1))
       .validate(data, 'numberArray');
 
@@ -100,7 +100,7 @@ describe('Array validator', () => {
   it ('can accept object validators', async () => {
     const msg = await validator
       .array
-      .item({
+      .items({
         hello: validator.number,
       })
       .validate(data, 'objectArray');
