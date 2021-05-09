@@ -9,7 +9,7 @@ export abstract class RouterParser<R extends Router<any, any>> {
   public readonly compose: ComposedMiddleware<any>;
   public readonly pathPattern: finder.Options[];
 
-  protected ready: boolean = false;
+  protected loadingCounter: number = 1;
   protected topic = new Topic<{ ready: () => void }>();
   protected treeTrunk: Middleware<any>[] = [];
   protected readonly tree: Middleware<any>[];
@@ -18,7 +18,7 @@ export abstract class RouterParser<R extends Router<any, any>> {
   private shouldTrunkRefresh: boolean = true;
 
   constructor(pattern: finder.Paths) {
-    this.topic.keep('ready', () => this.ready === true);
+    this.topic.keep('ready', () => this.loadingCounter === 0);
     this.pathPattern = finder.normalize(pattern);
     this.tree = [compose(this.treeBranch), compose(this.treeTrunk)];
     this.compose = compose(this.tree);
@@ -54,7 +54,7 @@ export abstract class RouterParser<R extends Router<any, any>> {
     const pattern = finder.normalize(path);
 
     if (pattern.length) {
-      this.ready = false;
+      this.loadingCounter += 1;
       this.pathPattern.push(...pattern);
       await this.searchRouters(pattern);
       this.onReady();
@@ -106,8 +106,10 @@ export abstract class RouterParser<R extends Router<any, any>> {
   }
 
   protected onReady() {
-    this.topic.publish('ready');
-    this.ready = true;
+    this.loadingCounter -= 1;
+    if (this.loadingCounter === 0) {
+      this.topic.publish('ready');
+    }
   }
 
   protected abstract getTrunkNode(): SlotManager<any, any, any>;

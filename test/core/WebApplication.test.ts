@@ -49,6 +49,19 @@ it ('can mount router path after app is created', async () => {
   listener.close();
 });
 
+it ('mount router path before ready() is allowed', async () => {
+  const app = new WebApplication({
+    routersDir: './not-exists',
+  });
+  const listener = app.listen();
+  app.mountRouterPath(path.join(dirname(__dirname), 'fixture'));
+
+  await app.ready();
+  await request(listener).get('/test1').expect('Hello router1');
+
+  listener.close();
+});
+
 it ('only search WebRouter', async () => {
   const app = new WebApplication({
     routersDir: path.join(dirname(__dirname), 'fixture'),
