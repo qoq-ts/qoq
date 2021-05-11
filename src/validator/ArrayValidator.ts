@@ -27,12 +27,12 @@ export class ArrayValidator<T = never[]> extends Validator<ArrayOptions<T>> {
     return this;
   }
 
-  public minItems(itemsLength: number): this {
+  public minLength(itemsLength: number): this {
     this.config.minItemLength = itemsLength;
     return this;
   }
 
-  public maxItems(itemsLength: number): this {
+  public maxLength(itemsLength: number): this {
     this.config.maxItemLength = itemsLength;
     return this;
   }

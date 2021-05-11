@@ -40,20 +40,20 @@ describe('Array validator', () => {
   });
 
   it ('more than minimum item length', async () => {
-    expect(await validator.array.minItems(10).validate(data, 'strArray')).toContain('more than 10');
-    expect(await validator.array.minItems(5).validate(data, 'strArray')).toEqual(undefined);
-    expect(await validator.array.minItems(3).validate(data, 'strArray')).toEqual(undefined);
+    expect(await validator.array.minLength(10).validate(data, 'strArray')).toContain('more than 10');
+    expect(await validator.array.minLength(5).validate(data, 'strArray')).toEqual(undefined);
+    expect(await validator.array.minLength(3).validate(data, 'strArray')).toEqual(undefined);
   });
 
   it ('less than maximum item length', async () => {
-    expect(await validator.array.maxItems(3).validate(data, 'strArray')).toContain('less than 3');
-    expect(await validator.array.maxItems(5).validate(data, 'strArray')).toEqual(undefined);
-    expect(await validator.array.maxItems(7).validate(data, 'strArray')).toEqual(undefined);
+    expect(await validator.array.maxLength(3).validate(data, 'strArray')).toContain('less than 3');
+    expect(await validator.array.maxLength(5).validate(data, 'strArray')).toEqual(undefined);
+    expect(await validator.array.maxLength(7).validate(data, 'strArray')).toEqual(undefined);
   });
 
   it ('should between minimum and maximum item length', async () => {
-    expect(await validator.array.minItems(1).maxItems(4).validate(data, 'strArray')).toContain('between');
-    expect(await validator.array.minItems(1).maxItems(7).validate(data, 'strArray')).toEqual(undefined);
+    expect(await validator.array.minLength(1).maxLength(4).validate(data, 'strArray')).toContain('between');
+    expect(await validator.array.minLength(1).maxLength(7).validate(data, 'strArray')).toEqual(undefined);
   });
 
   it ('string item can convert to number', async () => {
@@ -111,11 +111,11 @@ describe('Array validator', () => {
 
   it ('can distinct array items', async () => {
     const msg = await validator
-    .array
-    .items(validator.number)
-    .minItems(data.repeatArray.length)
-    .distinct()
-    .validate(data, 'repeatArray');
+      .array
+      .items(validator.number)
+      .minLength(data.repeatArray.length)
+      .distinct()
+      .validate(data, 'repeatArray');
 
     expect(msg).toContain('more than');
   });
