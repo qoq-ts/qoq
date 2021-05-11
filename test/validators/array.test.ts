@@ -11,7 +11,8 @@ const defaultData = {
     {
       hello: 'world',
     }
-  ]
+  ],
+  repeatArray: [1, 2, 2, 2, 3],
 };
 
 describe('Array validator', () => {
@@ -106,5 +107,16 @@ describe('Array validator', () => {
       .validate(data, 'objectArray');
 
     expect(msg).toContain('objectArray.0.hello');
+  });
+
+  it ('can distinct array items', async () => {
+    const msg = await validator
+    .array
+    .items(validator.number)
+    .minItems(data.repeatArray.length)
+    .distinct()
+    .validate(data, 'repeatArray');
+
+    expect(msg).toContain('more than');
   });
 });
