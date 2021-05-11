@@ -26,13 +26,13 @@ export class ArrayValidator<T = never[]> extends Validator<ArrayOptions<T>> {
     return this;
   }
 
-  public minItemLength(itemLength: number): this {
-    this.config.minItemLength = itemLength;
+  public minItems(itemsLength: number): this {
+    this.config.minItemLength = itemsLength;
     return this;
   }
 
-  public maxItemLength(itemLength: number): this {
-    this.config.maxItemLength = itemLength;
+  public maxItems(itemsLength: number): this {
+    this.config.maxItemLength = itemsLength;
     return this;
   }
 
