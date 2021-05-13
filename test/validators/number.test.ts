@@ -78,7 +78,7 @@ describe('Number validator', () => {
     expect(data['age20']).toEqual('20');
   });
 
-  it ('can valiate or fix presision', async () => {
+  it ('can valiate or fix precision', async () => {
     expect(await validator.number.precision(5).validate(data, 'float3')).toBeUndefined();
     expect(await validator.number.precision(3).validate(data, 'float3')).toBeUndefined();
     expect(await validator.number.precision(2).validate(data, 'float3')).toContain('no more than');
