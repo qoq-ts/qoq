@@ -14,7 +14,7 @@ export interface ArrayDataType {
   items?: ValidatorDataType;
 }
 
-export class ArrayValidator<T = never[]> extends Validator<ArrayOptions<T>> {
+export class ArrayValidator<T = unknown[]> extends Validator<ArrayOptions<T>> {
   public items<V extends Validator>(values: V): ArrayValidator<ValidatorType<V>[]>;
   public items<V extends { [key: string]: Validator }>(values: V): ArrayValidator<ValidatorTypes<V>[]>;
   public items(values: Validator | { [key: string]: Validator }): ArrayValidator<any> {
