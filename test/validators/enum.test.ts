@@ -6,6 +6,8 @@ const defaultData = {
   id2str: '2',
   age10: 10,
   age20str: '20',
+  boolTrue: true,
+  boolFalse: false,
 };
 
 describe('Enum validator', () => {
@@ -17,8 +19,8 @@ describe('Enum validator', () => {
 
   it ('may be undefined', async () => {
     expect(await validator.enum.range([2, 3, '4']).validate(data, 'id2')).toEqual(undefined);
-    expect(await validator.enum.optional().validate(data, 'notfound')).toEqual(undefined);
-    expect(await validator.enum.validate(data, 'notfound')).toContain('is required');
+    expect(await validator.enum.range([2, 3, '4']).optional().validate(data, 'notfound')).toEqual(undefined);
+    expect(await validator.enum.range([2, 3, '4']).validate(data, 'notfound')).toContain('is required');
   });
 
   it ('should has default value', async () => {
@@ -28,21 +30,17 @@ describe('Enum validator', () => {
     expect(newlyData['id2']).toEqual(15);
   });
 
-  it ('should be not strict by default', async () => {
-    expect(await validator.enum.range(['2', 3, '4']).validate(data, 'id2')).toEqual(undefined);
-    expect(data['id2']).toEqual('2');
-
-    expect(await validator.enum.range([2, 3, '4']).validate(data, 'id2str')).toEqual(undefined);
-    expect(data['id2str']).toEqual(2);
-  });
-
-  it ('can set strict mode', async () => {
-    expect(await validator.enum.strict().range(['2', 3, '4']).validate(data, 'id2')).toContain('["2",3,"4"]');
-    expect(await validator.enum.strict().range([2, 3, '4']).validate(data, 'id2str')).toContain('[2,3,"4"]');
-  });
-
   it ('should not hint range data', async () => {
     expect(await validator.enum.range(['2', 3, '4']).validate(data, 'age10')).toContain('["2",3,"4"]');
+  });
+
+  it ('can mixin string, number and boolean types', async () => {
+    expect(await validator.enum.range(['2', 3, '4', true, false]).validate(data, 'id2str')).toBeUndefined();
+    expect(await validator.enum.range(['2', 3, '4', true, false]).validate(data, 'id2')).toContain('["2",3,"4",true,false]');
+
+    expect(await validator.enum.range(['2', 3, '4', true, false]).validate(data, 'boolTrue')).toBeUndefined();
+    expect(await validator.enum.range(['2', 3, '4', true, false]).validate(data, 'boolFalse')).toBeUndefined();
+    expect(await validator.enum.range(['2', 3, '4', true]).validate(data, 'boolFalse')).toContain('["2",3,"4",true]');
   });
 
   it ('can transform data by user', async () => {

@@ -2,32 +2,24 @@ import { Validator, ValidatorOptions } from './Validator';
 
 interface EnumOptions<T> extends ValidatorOptions<T> {
   ranges: T[];
-  strict?: boolean;
 }
+
+type AllowedRangeType = string | number | boolean;
 
 export interface EnumDataType {
   type: 'enum';
   validator: 'enum';
-  ranges: Array<string | number>;
+  ranges: Array<AllowedRangeType>;
 }
 
-export class EnumValidator<T = number | string> extends Validator<EnumOptions<T>> {
-  constructor() {
+export const enumRange = <T extends AllowedRangeType>(values: T[]): EnumValidator<T> => {
+  return new EnumValidator(values);
+};
+
+export class EnumValidator<T = AllowedRangeType> extends Validator<EnumOptions<T>> {
+  constructor(ranges: T[]) {
     super();
-    this.config.ranges = [];
-    this.config.strict = false;
-  }
-
-  public range<Types extends number | string>(values: Types[]): EnumValidator<Types> {
-    // @ts-expect-error
-    this.config.ranges = values;
-    // @ts-expect-error
-    return this;
-  }
-
-  public strict(is: boolean = true): this {
-    this.config.strict = is;
-    return this;
+    this.config.ranges = ranges;
   }
 
   declare default: (value: NonNullable<T>) => EnumValidator<NonNullable<T>>;
@@ -37,37 +29,12 @@ export class EnumValidator<T = number | string> extends Validator<EnumOptions<T>
   declare transform: <T1>(fn: (value: T) => Promise<T1> | T1) => EnumValidator<T1>;
 
   protected async validateValue(data: Record<string, any>, key: string, superKeys: string[]): Promise<string | void> {
-    const { ranges, strict } = this.config;
+    const { ranges } = this.config;
     let value = data[key];
 
-    if (ranges.includes(value)) {
-      return;
-    }
-
-    if (strict) {
+    if (!ranges.includes(value)) {
       return `${this.getLabel(key, superKeys)} must be in range of ${JSON.stringify(ranges)}`;
     }
-
-    for (let i = 0; i < ranges.length; ++i) {
-      const range = ranges[i]!;
-      if (typeof range === 'string' && typeof value === 'number') {
-        const tempValue = value.toString();
-
-        if (tempValue === range) {
-          data[key] = tempValue;
-          return;
-        }
-      } else if (typeof range === 'number' && typeof value === 'string') {
-        const tempValue = Number(value);
-
-        if (tempValue === range) {
-          data[key] = tempValue;
-          return;
-        }
-      }
-    }
-
-    return `${this.getLabel(key, superKeys)} must be in range of ${JSON.stringify(ranges)}`;
   }
 
   protected getDataType(): EnumDataType {

@@ -1,6 +1,6 @@
 import { NumberValidator } from './NumberValidator';
 import { StringValidator } from './StringValidator';
-import { EnumValidator } from './EnumValidator';
+import { enumRange } from './EnumValidator';
 import { UrlValidator } from './UrlValidator';
 import { ArrayValidator } from './ArrayValidator';
 import { JsonValidator } from './JsonValidator';
@@ -23,8 +23,8 @@ export class ValidatorStatic {
     return new NumberValidator().onlyInteger(true);
   }
 
-  get enum(): EnumValidator {
-    return new EnumValidator();
+  get enum(): { range: typeof enumRange } {
+    return { range: enumRange };
   }
 
   get string(): StringValidator {
