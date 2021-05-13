@@ -11,6 +11,9 @@ const defaultData = {
   age20str: '20',
   age20_1: 20.1,
   nan: '2hello',
+  float3: 20.333,
+  float10: 2e-10,
+  float12: 2.15e-10,
 };
 
 describe('Number validator', () => {
@@ -73,5 +76,19 @@ describe('Number validator', () => {
       .validate(data, 'age20');
 
     expect(data['age20']).toEqual('20');
+  });
+
+  it ('can valiate or fix presision', async () => {
+    expect(await validator.number.precision(5).validate(data, 'float3')).toBeUndefined();
+    expect(await validator.number.precision(3).validate(data, 'float3')).toBeUndefined();
+    expect(await validator.number.precision(2).validate(data, 'float3')).toContain('no more than');
+    expect(await validator.number.precision(2, true).validate(data, 'float3')).toBeUndefined();
+    expect(data.float3).toBe(20.33);
+
+    expect(await validator.number.precision(10).validate(data, 'float10')).toBeUndefined();
+    expect(await validator.number.precision(12).validate(data, 'float12')).toBeUndefined();
+    expect(await validator.number.precision(11).validate(data, 'float12')).toContain('no more than');
+    expect(await validator.number.precision(11, true).validate(data, 'float12')).toBeUndefined();
+    expect(data.float12).toBe(2.2e-10);
   });
 });
