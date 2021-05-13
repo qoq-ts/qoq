@@ -669,6 +669,13 @@
   dependencies:
     "@types/koa" "*"
 
+"@types/koa-qs@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.npmjs.org/@types/koa-qs/-/koa-qs-2.0.0.tgz#4c60206169c1e978ac36dc9a8b395ad5546ef5cf"
+  integrity sha512-cBfbUvW70JsU2FCgUCFOoretdvayGzRJ2vEyNQbnZ7vb2pZ/QA+gcNzE6nVxxCcrcnRtGB7tXIRHqHPXS51utA==
+  dependencies:
+    "@types/koa" "*"
+
 "@types/koa@*", "@types/koa@2.13.1":
   version "2.13.1"
   resolved "https://registry.npmjs.org/@types/koa/-/koa-2.13.1.tgz#e29877a6b5ad3744ab1024f6ec75b8cbf6ec45db"
@@ -2838,6 +2845,14 @@ koa-convert@^1.2.0:
     co "^4.6.0"
     koa-compose "^3.0.0"
 
+koa-qs@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npmjs.org/koa-qs/-/koa-qs-3.0.0.tgz#390b0b5e9be0658b0f863ceb121da9a414b78d78"
+  integrity sha512-05IB5KirwMs3heWW26iTz46HuMAtrlrRMus/aNH1BRDocLyF/099EtCB0MIfQpRuT0TISvaTsWwSy2gctIWiGA==
+  dependencies:
+    merge-descriptors "^1.0.1"
+    qs "^6.9.4"
+
 koa@2.13.1:
   version "2.13.1"
   resolved "https://registry.npmjs.org/koa/-/koa-2.13.1.tgz#6275172875b27bcfe1d454356a5b6b9f5a9b1051"
@@ -2939,6 +2954,11 @@ media-typer@0.3.0:
   version "0.3.0"
   resolved "https://registry.npmjs.org/media-typer/-/media-typer-0.3.0.tgz#8710d7af0aa626f8fffa1ce00168545263255748"
   integrity sha1-hxDXrwqmJvj/+hzgAWhUUmMlV0g=
+
+merge-descriptors@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/merge-descriptors/-/merge-descriptors-1.0.1.tgz#b00aaa556dd8b44568150ec9d1b953f3f90cbb61"
+  integrity sha1-sAqqVW3YtEVoFQ7J0blT8/kMu2E=
 
 merge-stream@^2.0.0:
   version "2.0.0"

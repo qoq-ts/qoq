@@ -1,5 +1,6 @@
 import Koa from 'koa';
 import cookies from 'cookies';
+import overrideQuery from 'koa-qs';
 import { WebRouter } from '../router/WebRouter';
 import { WebRouterParser } from './WebRouterParser';
 import { finder } from '../util/finder';
@@ -38,6 +39,7 @@ export class WebApplication extends Koa {
   constructor(options: Options = {}) {
     // @ts-expect-error why @types/koa doesn't accept arguments?
     super(options);
+    overrideQuery(this);
     this.routerParser = new WebRouterParser(options.routersDir ?? './src/routers');
     this.middleware = [this.routerParser.compose];
   }
