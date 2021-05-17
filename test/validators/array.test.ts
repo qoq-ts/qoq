@@ -27,10 +27,10 @@ describe('Array validator', () => {
       await validator.array
         .items(validator.number)
         .validate(data, 'numberArray'),
-    ).toEqual(undefined);
-    expect(await validator.array.optional().validate(data, 'notfound')).toEqual(
-      undefined,
-    );
+    ).toBeUndefined();
+    expect(
+      await validator.array.optional().validate(data, 'notfound'),
+    ).toBeUndefined();
   });
 
   it('should has default value', async () => {
@@ -41,13 +41,13 @@ describe('Array validator', () => {
         .items(validator.number)
         .default([15])
         .validate(newlyData, 'no-data'),
-    ).toEqual(undefined);
+    ).toBeUndefined();
     expect(newlyData['no-data']).toContain(15);
   });
 
   it('should convert to array type automatically', async () => {
-    expect(await validator.array.validate(data, 'age10')).toEqual(undefined);
-    expect(await validator.array.validate(data, 'age20str')).toEqual(undefined);
+    expect(await validator.array.validate(data, 'age10')).toBeUndefined();
+    expect(await validator.array.validate(data, 'age20str')).toBeUndefined();
   });
 
   it('more than minimum item length', async () => {
@@ -56,10 +56,10 @@ describe('Array validator', () => {
     ).toContain('more than 10');
     expect(
       await validator.array.minLength(5).validate(data, 'strArray'),
-    ).toEqual(undefined);
+    ).toBeUndefined();
     expect(
       await validator.array.minLength(3).validate(data, 'strArray'),
-    ).toEqual(undefined);
+    ).toBeUndefined();
   });
 
   it('less than maximum item length', async () => {
@@ -68,10 +68,10 @@ describe('Array validator', () => {
     ).toContain('less than 3');
     expect(
       await validator.array.maxLength(5).validate(data, 'strArray'),
-    ).toEqual(undefined);
+    ).toBeUndefined();
     expect(
       await validator.array.maxLength(7).validate(data, 'strArray'),
-    ).toEqual(undefined);
+    ).toBeUndefined();
   });
 
   it('should between minimum and maximum item length', async () => {
@@ -86,20 +86,20 @@ describe('Array validator', () => {
         .minLength(1)
         .maxLength(7)
         .validate(data, 'strArray'),
-    ).toEqual(undefined);
+    ).toBeUndefined();
   });
 
   it('string item can convert to number', async () => {
     expect(
       await validator.array.items(validator.number).validate(data, 'strArray'),
-    ).toEqual(undefined);
+    ).toBeUndefined();
     (data.strArray as string[]).forEach((item) => {
       expect(typeof item).toEqual('number');
     });
 
     expect(
       await validator.array.items(validator.number).validate(data, 'mixArray'),
-    ).toEqual(undefined);
+    ).toBeUndefined();
     (data.mixArray as any[]).forEach((item) => {
       expect(typeof item).toEqual('number');
     });
@@ -110,14 +110,14 @@ describe('Array validator', () => {
       await validator.array
         .items(validator.string)
         .validate(data, 'numberArray'),
-    ).toEqual(undefined);
+    ).toBeUndefined();
     data.numberArray.forEach((item) => {
       expect(typeof item).toEqual('string');
     });
 
     expect(
       await validator.array.items(validator.string).validate(data, 'mixArray'),
-    ).toEqual(undefined);
+    ).toBeUndefined();
     (data.mixArray as any[]).forEach((item) => {
       expect(typeof item).toEqual('string');
     });

@@ -28,10 +28,10 @@ describe('Json validator', () => {
   it('may be undefined', async () => {
     expect(
       await validator.json.properties(data.objPlain).validate(data, 'objPlain'),
-    ).toEqual(undefined);
-    expect(await validator.json.optional().validate(data, 'notfound')).toEqual(
-      undefined,
-    );
+    ).toBeUndefined();
+    expect(
+      await validator.json.optional().validate(data, 'notfound'),
+    ).toBeUndefined();
     expect(await validator.json.validate(data, 'notfound')).toContain(
       'is required',
     );
@@ -44,7 +44,7 @@ describe('Json validator', () => {
       await validator.json
         .default({ hello: 'world' })
         .validate(newlyData, 'id2'),
-    ).toEqual(undefined);
+    ).toBeUndefined();
     expect(newlyData['id2']).toMatchObject({ hello: 'world' });
   });
 
@@ -72,7 +72,7 @@ describe('Json validator', () => {
           }),
         })
         .validate(data, 'objData'),
-    ).toEqual(undefined);
+    ).toBeUndefined();
   });
 
   it('json string can be convert to json object', async () => {
@@ -82,7 +82,7 @@ describe('Json validator', () => {
           hello: validator.string,
         })
         .validate(data, 'objDataStr'),
-    ).toEqual(undefined);
+    ).toBeUndefined();
 
     expect(
       await validator.json

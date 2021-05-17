@@ -23,10 +23,10 @@ describe('Number validator', () => {
   });
 
   it('may be undefined', async () => {
-    expect(await validator.number.validate(data, 'id2')).toEqual(undefined);
+    expect(await validator.number.validate(data, 'id2')).toBeUndefined();
     expect(
       await validator.number.optional().validate(data, 'notfound'),
-    ).toEqual(undefined);
+    ).toBeUndefined();
     expect(await validator.number.validate(data, 'notfound')).toContain(
       'is required',
     );
@@ -49,8 +49,8 @@ describe('Number validator', () => {
 
     expect(
       await validator.number.onlyInteger().validate(data, 'age20'),
-    ).toEqual(undefined);
-    expect(await validator.integer.validate(data, 'age20')).toEqual(undefined);
+    ).toBeUndefined();
+    expect(await validator.integer.validate(data, 'age20')).toBeUndefined();
   });
 
   it('larger than minimum value', async () => {
@@ -60,9 +60,7 @@ describe('Number validator', () => {
     expect(
       await validator.number.min(2, false).validate(data, 'id2'),
     ).toContain('larger than 2');
-    expect(await validator.number.min(2).validate(data, 'id2')).toEqual(
-      undefined,
-    );
+    expect(await validator.number.min(2).validate(data, 'id2')).toBeUndefined();
   });
 
   it('smaller than maximum value', async () => {
@@ -72,9 +70,9 @@ describe('Number validator', () => {
     expect(
       await validator.number.max(10, false).validate(data, 'age10'),
     ).toContain('smaller than 10');
-    expect(await validator.number.max(10).validate(data, 'age10')).toEqual(
-      undefined,
-    );
+    expect(
+      await validator.number.max(10).validate(data, 'age10'),
+    ).toBeUndefined();
   });
 
   it('should between minimum and maximum value', async () => {
@@ -90,12 +88,12 @@ describe('Number validator', () => {
     expect(
       await validator.number.min(-1).max(2, false).validate(data, 'id2'),
     ).toContain('between -1 and 2');
-    expect(await validator.number.min(-1).max(5).validate(data, 'id2')).toEqual(
-      undefined,
-    );
+    expect(
+      await validator.number.min(-1).max(5).validate(data, 'id2'),
+    ).toBeUndefined();
     expect(
       await validator.number.min(-1, false).max(5, false).validate(data, 'id2'),
-    ).toEqual(undefined);
+    ).toBeUndefined();
   });
 
   it('should reject NAN', async () => {

@@ -54,7 +54,7 @@ it('can recognize different uuid versions', async () => {
       const data = { ['uuid' + uuid]: uuid };
       expect(
         await validator.uuid.version(num).validate(data, 'uuid' + uuid),
-      ).toEqual(undefined);
+      ).toBeUndefined();
     }
 
     for (let invalidUUID of defaultData.invalid!) {

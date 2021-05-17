@@ -9,8 +9,8 @@ test('the valid emails', async () => {
   expect(await validator.email.optional().validate(data, 'notfound')).toEqual(
     undefined,
   );
-  expect(await validator.email.validate(data, 'email1')).toEqual(undefined);
-  expect(await validator.email.validate(data, 'email2')).toEqual(undefined);
+  expect(await validator.email.validate(data, 'email1')).toBeUndefined();
+  expect(await validator.email.validate(data, 'email2')).toBeUndefined();
 });
 
 test('the invalid emails', async () => {

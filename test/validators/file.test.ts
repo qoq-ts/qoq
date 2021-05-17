@@ -54,9 +54,7 @@ describe('File validator', () => {
   app.mountRouter(router);
 
   it('may be undefined', async () => {
-    expect(await validator.file.optional().validate({}, 'any')).toEqual(
-      undefined,
-    );
+    expect(await validator.file.optional().validate({}, 'any')).toBeUndefined();
   });
 
   it('can upload single file', async () => {

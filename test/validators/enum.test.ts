@@ -20,13 +20,13 @@ describe('Enum validator', () => {
   it('may be undefined', async () => {
     expect(
       await validator.enum.range([2, 3, '4']).validate(data, 'id2'),
-    ).toEqual(undefined);
+    ).toBeUndefined();
     expect(
       await validator.enum
         .range([2, 3, '4'])
         .optional()
         .validate(data, 'notfound'),
-    ).toEqual(undefined);
+    ).toBeUndefined();
     expect(
       await validator.enum.range([2, 3, '4']).validate(data, 'notfound'),
     ).toContain('is required');
@@ -40,7 +40,7 @@ describe('Enum validator', () => {
         .range([15, 20])
         .default(15)
         .validate(newlyData, 'id2'),
-    ).toEqual(undefined);
+    ).toBeUndefined();
     expect(newlyData['id2']).toEqual(15);
   });
 

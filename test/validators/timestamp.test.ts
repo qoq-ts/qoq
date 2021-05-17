@@ -17,7 +17,7 @@ it('may be undefined', async () => {
   );
   expect(
     await validator.timestamp.optional().validate(data, 'notfound'),
-  ).toEqual(undefined);
+  ).toBeUndefined();
   expect(await validator.timestamp.validate(data, 'notfound')).toContain(
     'is required',
   );
@@ -54,7 +54,7 @@ it('default is micro time', async () => {
 it('can be treated as unix time', async () => {
   expect(
     await validator.timestamp.unixTime().validate(data, 'unixTime'),
-  ).toEqual(undefined);
+  ).toBeUndefined();
   expect(
     await validator.timestamp.unixTime().validate(data, 'microTime'),
   ).toContain('timestamp');
@@ -63,7 +63,7 @@ it('can be treated as unix time', async () => {
 it('can be treated as micro time', async () => {
   expect(
     await validator.timestamp.milliTime().validate(data, 'microTime'),
-  ).toEqual(undefined);
+  ).toBeUndefined();
   expect(
     await validator.timestamp.milliTime().validate(data, 'unixTime'),
   ).toContain('timestamp');
@@ -85,7 +85,7 @@ it('can limit the minimum timestamp', async () => {
     await validator.timestamp
       .min(new Date(data.microTime - 100))
       .validate(data, 'microTime'),
-  ).toEqual(undefined);
+  ).toBeUndefined();
   expect(
     await validator.timestamp
       .min(new Date(data.microTime + 100))
@@ -97,7 +97,7 @@ it('can limit the minimum timestamp', async () => {
       .unixTime()
       .min(new Date(data.unixTime * 1000 - 100))
       .validate(data, 'unixTime'),
-  ).toEqual(undefined);
+  ).toBeUndefined();
   expect(
     await validator.timestamp
       .unixTime()
@@ -111,7 +111,7 @@ it('can limit the maximum timestamp', async () => {
     await validator.timestamp
       .max(new Date(data.microTime + 100))
       .validate(data, 'microTime'),
-  ).toEqual(undefined);
+  ).toBeUndefined();
   expect(
     await validator.timestamp
       .max(new Date(data.microTime - 100))
@@ -123,7 +123,7 @@ it('can limit the maximum timestamp', async () => {
       .unixTime()
       .max(new Date(data.unixTime * 1000 + 100))
       .validate(data, 'unixTime'),
-  ).toEqual(undefined);
+  ).toBeUndefined();
   expect(
     await validator.timestamp
       .unixTime()

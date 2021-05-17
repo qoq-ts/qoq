@@ -18,10 +18,10 @@ describe('String validator', () => {
   });
 
   it('may be undefined', async () => {
-    expect(await validator.string.validate(data, 'hello')).toEqual(undefined);
+    expect(await validator.string.validate(data, 'hello')).toBeUndefined();
     expect(
       await validator.string.optional().validate(data, 'notfound'),
-    ).toEqual(undefined);
+    ).toBeUndefined();
     expect(await validator.string.validate(data, 'notfound')).toContain(
       'is required',
     );
@@ -38,24 +38,24 @@ describe('String validator', () => {
     expect(
       await validator.string.minLength(10).validate(data, 'hello'),
     ).toContain('more than 10');
-    expect(await validator.string.minLength(5).validate(data, 'hello')).toEqual(
-      undefined,
-    );
-    expect(await validator.string.minLength(3).validate(data, 'hello')).toEqual(
-      undefined,
-    );
+    expect(
+      await validator.string.minLength(5).validate(data, 'hello'),
+    ).toBeUndefined();
+    expect(
+      await validator.string.minLength(3).validate(data, 'hello'),
+    ).toBeUndefined();
   });
 
   it('less than maximum length', async () => {
     expect(
       await validator.string.maxLength(3).validate(data, 'hello'),
     ).toContain('less than 3');
-    expect(await validator.string.maxLength(5).validate(data, 'hello')).toEqual(
-      undefined,
-    );
-    expect(await validator.string.maxLength(7).validate(data, 'hello')).toEqual(
-      undefined,
-    );
+    expect(
+      await validator.string.maxLength(5).validate(data, 'hello'),
+    ).toBeUndefined();
+    expect(
+      await validator.string.maxLength(7).validate(data, 'hello'),
+    ).toBeUndefined();
   });
 
   it('should between minimum and maximum length', async () => {
@@ -67,11 +67,11 @@ describe('String validator', () => {
     ).toContain('between 6 and 10');
     expect(
       await validator.string.minLength(1).maxLength(7).validate(data, 'hello'),
-    ).toEqual(undefined);
+    ).toBeUndefined();
   });
 
   it('should only convert number to string', async () => {
-    expect(await validator.string.validate(data, 'id2')).toEqual(undefined);
+    expect(await validator.string.validate(data, 'id2')).toBeUndefined();
     expect(data.id2).toEqual('2');
 
     expect(await validator.string.validate(data, 'nan')).toContain(
@@ -93,26 +93,26 @@ describe('String validator', () => {
   it('can make string lower case', async () => {
     expect(
       await validator.string.toLowerCase().validate(data, 'HELLO'),
-    ).toEqual(undefined);
+    ).toBeUndefined();
     expect(data.HELLO).toEqual('hello');
   });
 
   it('can make string upper case', async () => {
     expect(
       await validator.string.toUpperCase().validate(data, 'hello'),
-    ).toEqual(undefined);
+    ).toBeUndefined();
     expect(data.hello).toEqual('HELLO');
   });
 
   it('can make string title case', async () => {
     expect(
       await validator.string.toTitleCase().validate(data, 'hello'),
-    ).toEqual(undefined);
+    ).toBeUndefined();
     expect(data.hello).toEqual('Hello');
 
     expect(
       await validator.string.toTitleCase().validate(data, 'HELLO'),
-    ).toEqual(undefined);
+    ).toBeUndefined();
     expect(data.HELLO).toEqual('Hello');
   });
 
@@ -122,13 +122,13 @@ describe('String validator', () => {
     ).toContain("doesn't match");
     expect(
       await validator.string.match(/^Hello$/i).validate(data, 'hello'),
-    ).toEqual(undefined);
+    ).toBeUndefined();
   });
 
   it('can use trim option', async () => {
     expect(
       await validator.string.trim().validate(data, 'whiteSpaceHello'),
-    ).toEqual(undefined);
+    ).toBeUndefined();
     expect(data.whiteSpaceHello).toEqual('hello');
   });
 });

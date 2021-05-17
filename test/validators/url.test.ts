@@ -19,11 +19,11 @@ describe('Url validator', () => {
   });
 
   it('should support many kinds', async () => {
-    expect(await validator.url.validate(data, 'http')).toEqual(undefined);
-    expect(await validator.url.validate(data, 'https')).toEqual(undefined);
-    expect(await validator.url.validate(data, 'port')).toEqual(undefined);
-    expect(await validator.url.validate(data, 'path')).toEqual(undefined);
-    expect(await validator.url.validate(data, 'portPath')).toEqual(undefined);
+    expect(await validator.url.validate(data, 'http')).toBeUndefined();
+    expect(await validator.url.validate(data, 'https')).toBeUndefined();
+    expect(await validator.url.validate(data, 'port')).toBeUndefined();
+    expect(await validator.url.validate(data, 'path')).toBeUndefined();
+    expect(await validator.url.validate(data, 'portPath')).toBeUndefined();
 
     expect(await validator.url.validate(data, 'invalid')).toContain(
       'must be url',
@@ -31,9 +31,9 @@ describe('Url validator', () => {
   });
 
   it('may be undefined', async () => {
-    expect(await validator.url.optional().validate(data, 'notfound')).toEqual(
-      undefined,
-    );
+    expect(
+      await validator.url.optional().validate(data, 'notfound'),
+    ).toBeUndefined();
     expect(await validator.url.validate(data, 'notfound')).toContain(
       'is required',
     );
@@ -52,7 +52,7 @@ describe('Url validator', () => {
       await validator.url
         .schemes(['ftp', 'http', 'https'])
         .validate(data, 'ftp'),
-    ).toEqual(undefined);
+    ).toBeUndefined();
   });
 
   it('can transform data by user', async () => {
