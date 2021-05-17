@@ -62,7 +62,7 @@ export class FileValidator<T = FileNoHash> extends Validator<FileOptions<T>> {
         return `${this.getLabel(key, superKeys)} is required`;
       }
 
-      value.length > 1 && value.splice(1);
+      value.length = 1;
     }
 
     for (let i = 0, len = value.length; i < len; ++i) {

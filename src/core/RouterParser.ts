@@ -69,7 +69,7 @@ export abstract class RouterParser<R extends Router<any, any>> {
         return import(file).then((modules) => {
           this.parseRouters(modules);
         });
-      })
+      }),
     );
 
     this.refreshTreeTrunk();
@@ -98,10 +98,14 @@ export abstract class RouterParser<R extends Router<any, any>> {
 
   protected refreshTreeTrunk(): void {
     if (this.shouldTrunkRefresh) {
+      const middleware = this.getTrunkNode().getTrunkMiddlewareAndRouters();
+
+      this.treeTrunk.length = middleware.length;
+      for (let i = 0; i < middleware.length; ++i) {
+        this.treeTrunk[i] = middleware[i]!;
+      }
+
       this.shouldTrunkRefresh = false;
-      this.treeTrunk.splice(0, this.treeTrunk.length,
-        ...this.getTrunkNode().getTrunkMiddlewareAndRouters(),
-      );
     }
   }
 
