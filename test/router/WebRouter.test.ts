@@ -1,4 +1,10 @@
-import { Tree, validator, WebApplication, WebRouter, WebSlotManager } from '../../src';
+import {
+  Tree,
+  validator,
+  WebApplication,
+  WebRouter,
+  WebSlotManager,
+} from '../../src';
 import request from 'supertest';
 import { SlotDemo1 } from '../fixture/SlotDemo1';
 import { resolve } from 'path';
@@ -23,11 +29,11 @@ afterEach(() => {
   listen.close();
 });
 
-it ('should respond 404 without router', async () => {
+it('should respond 404 without router', async () => {
   await server.get('/').expect(404);
 });
 
-it ('can create router with method get + query', async () => {
+it('can create router with method get + query', async () => {
   router
     .get('/')
     .query({
@@ -42,7 +48,7 @@ it ('can create router with method get + query', async () => {
   await server.get('/?name=Google').expect('Hello Google').expect(200);
 });
 
-it ('can create router with method post + payload', async () => {
+it('can create router with method post + payload', async () => {
   router
     .post('/user')
     .body({
@@ -52,8 +58,8 @@ it ('can create router with method post + payload', async () => {
     .action(async (ctx, payload) => {
       ctx.body = {
         name: payload.body.name,
-        age: payload.body.age
-      }
+        age: payload.body.age,
+      };
       ctx.status = 201;
     });
 
@@ -72,7 +78,7 @@ it ('can create router with method post + payload', async () => {
   await server.post('/user').send({}).expect(400);
 });
 
-it ('can upload file', async () => {
+it('can upload file', async () => {
   router
     .post('/avatar')
     .body({
@@ -96,7 +102,7 @@ it ('can upload file', async () => {
     });
 });
 
-it ('can create router with method put', async () => {
+it('can create router with method put', async () => {
   router
     .put('/user/:id')
     .params({
@@ -111,7 +117,7 @@ it ('can create router with method put', async () => {
         id: payload.params.id,
         name: payload.body.name,
         age: payload.body.age,
-      }
+      };
 
       ctx.status = 202;
     });
@@ -130,7 +136,7 @@ it ('can create router with method put', async () => {
     });
 });
 
-it ('can create router with method patch', async () => {
+it('can create router with method patch', async () => {
   router
     .patch('/user/:id')
     .params({
@@ -161,8 +167,9 @@ it ('can create router with method patch', async () => {
     });
 });
 
-it ('can create router with method delete', async () => {
-  router.delete('/user/:id')
+it('can create router with method delete', async () => {
+  router
+    .delete('/user/:id')
     .params({
       id: validator.number,
     })
@@ -173,12 +180,10 @@ it ('can create router with method delete', async () => {
   await server.delete('/user/1').expect(204);
 });
 
-it ('can create router with all methods', async () => {
-  router
-    .all('/hello')
-    .action(async (ctx) => {
-      ctx.body = 'Hello World';
-    });
+it('can create router with all methods', async () => {
+  router.all('/hello').action(async (ctx) => {
+    ctx.body = 'Hello World';
+  });
 
   await server.head('/hello').expect(200);
   await server.get('/hello').expect('Hello World').expect(200);
@@ -188,33 +193,27 @@ it ('can create router with all methods', async () => {
   await server.delete('/hello').expect('Hello World').expect(200);
 });
 
-it ('will respond 404 when method not matched', async () => {
-  router
-    .get('/')
-    .action(async (ctx) => {
-      ctx.body = 'Hello';
-    });
+it('will respond 404 when method not matched', async () => {
+  router.get('/').action(async (ctx) => {
+    ctx.body = 'Hello';
+  });
 
   await server.post('/').expect(404);
   await server.put('/').expect(404);
 });
 
-it ('will respond 404 when url not matched', async () => {
-  router
-    .get('/')
-    .action(async (ctx) => {
-      ctx.body = 'Hello';
-    });
+it('will respond 404 when url not matched', async () => {
+  router.get('/').action(async (ctx) => {
+    ctx.body = 'Hello';
+  });
 
   await server.get('/hello').expect(404);
 });
 
-it ('can parse complex params', async () => {
-  router
-    .get(['/(admin|a)', '/adm', '/ada'])
-    .action(async (ctx) => {
-      ctx.body = 'Hello: Admin';
-    });
+it('can parse complex params', async () => {
+  router.get(['/(admin|a)', '/adm', '/ada']).action(async (ctx) => {
+    ctx.body = 'Hello: Admin';
+  });
 
   await server.get('/admin').expect('Hello: Admin');
   await server.get('/a').expect('Hello: Admin');
@@ -244,7 +243,7 @@ it ('can parse complex params', async () => {
   await server.get('/users-bob').expect('Hi: bob');
 });
 
-it ('can use group slots', async () => {
+it('can use group slots', async () => {
   const globalSlots = WebSlotManager.use(new SlotDemo1('567'));
 
   Tree.trunk(globalSlots);
@@ -257,18 +256,16 @@ it ('can use group slots', async () => {
   app.mountRouter(router);
   server = request(listen);
 
-  router
-    .get('/')
-    .action((ctx) => {
-      ctx.body = ctx.testData;
-    });
+  router.get('/').action((ctx) => {
+    ctx.body = ctx.testData;
+  });
 
   await server.get('/').expect(200).expect('123');
 
   listen.close();
 });
 
-it ('can use action slots', async () => {
+it('can use action slots', async () => {
   router
     .get('/')
     .use(new SlotDemo1('456'))
@@ -279,7 +276,7 @@ it ('can use action slots', async () => {
   await server.get('/').expect('456');
 });
 
-it ('can use router prefix', async () => {
+it('can use router prefix', async () => {
   router = new WebRouter({
     prefix: '/',
     slots: new WebSlotManager(),
@@ -316,7 +313,7 @@ it ('can use router prefix', async () => {
   await server.get('/users/ping/').expect(200);
 });
 
-it ('should respond 404 when path with params is invalid', async () => {
+it('should respond 404 when path with params is invalid', async () => {
   router
     .get('/test/:id')
     .params({
@@ -342,7 +339,7 @@ it ('should respond 404 when path with params is invalid', async () => {
   await server.get('/test2/20').expect(200);
 });
 
-it ('can receive array parameter in querystring', async () => {
+it('can receive array parameter in querystring', async () => {
   const app = new WebApplication();
   const router = new WebRouter({
     slots: null,

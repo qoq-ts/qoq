@@ -5,19 +5,19 @@ import { SlotDemo3 } from '../fixture/SlotDemo3';
 import { SlotDemo4 } from '../fixture/SlotDemo4';
 
 describe('Slot manager', () => {
-  it ('can collect branch slots', () => {
-    const slots = WebSlotManager
-      .use(new SlotDemo1('a'))
-      .use(new SlotDemo2('b'));
+  it('can collect branch slots', () => {
+    const slots = WebSlotManager.use(new SlotDemo1('a')).use(
+      new SlotDemo2('b'),
+    );
 
     expect(slots.getBranchMiddleware()).toHaveLength(2);
     expect(slots.getTrunkNode()).toBeNull();
   });
 
-  it ('can collect trunk slots', () => {
-    const slots = WebSlotManager
-      .use(new SlotDemo1('a'))
-      .use(new SlotDemo2('b'));
+  it('can collect trunk slots', () => {
+    const slots = WebSlotManager.use(new SlotDemo1('a')).use(
+      new SlotDemo2('b'),
+    );
 
     slots.setTrunk();
 
@@ -26,10 +26,10 @@ describe('Slot manager', () => {
     expect(slots.getTrunkMiddlewareAndRouters()).toHaveLength(2);
   });
 
-  it ('trunk and branch can write together', () => {
-    const slots = WebSlotManager
-      .use(new SlotDemo1('a'))
-      .use(new SlotDemo2('b'));
+  it('trunk and branch can write together', () => {
+    const slots = WebSlotManager.use(new SlotDemo1('a')).use(
+      new SlotDemo2('b'),
+    );
     slots.setTrunk();
 
     const nextSlots = slots
@@ -43,7 +43,7 @@ describe('Slot manager', () => {
     expect(nextSlots.getTrunkMiddlewareAndRouters()).toHaveLength(2);
   });
 
-  it ('can mount router', () => {
+  it('can mount router', () => {
     const slots = new WebSlotManager();
     slots.setTrunk();
 
@@ -57,7 +57,7 @@ describe('Slot manager', () => {
     expect(slots.getTrunkMiddlewareAndRouters()[0]).toEqual(router);
   });
 
-  it ('only tree trunk can mount router', () => {
+  it('only tree trunk can mount router', () => {
     const slots = new WebSlotManager();
     const router = new WebRouter({
       slots: slots.use(new SlotDemo1('a')),
@@ -66,21 +66,23 @@ describe('Slot manager', () => {
     expect(() => slots.mountRouter(router)).toThrowError();
   });
 
-  it ('can use slot manager in use()', () => {
+  it('can use slot manager in use()', () => {
     const demo = new SlotDemo1('a');
-    const slots = WebSlotManager.use(WebSlotManager.use(WebSlotManager.use(demo)));
+    const slots = WebSlotManager.use(
+      WebSlotManager.use(WebSlotManager.use(demo)),
+    );
 
     expect(slots.getBranchMiddleware()[0]).toEqual(demo.collect()[0]);
   });
 
-  it ('can set null to skip slot', () => {
+  it('can set null to skip slot', () => {
     const slots = WebSlotManager.use(new SlotDemo1('a'));
     const slots2 = slots.use(null).use(null);
 
     expect(slots2).toEqual(slots);
   });
 
-  it ('can use function in use()', () => {
+  it('can use function in use()', () => {
     const slots = WebSlotManager.use(async (ctx, next) => {
       ctx.request;
       await next();

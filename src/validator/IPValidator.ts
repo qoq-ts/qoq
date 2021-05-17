@@ -2,7 +2,7 @@ import ipRegexp from 'ip-regex';
 import { Validator, ValidatorOptions } from './Validator';
 
 interface IPOptions<T> extends ValidatorOptions<T> {
-  ipVersion: '4' | '6' | 'all',
+  ipVersion: '4' | '6' | 'all';
 }
 
 const patterns: {
@@ -14,8 +14,8 @@ const patterns: {
 };
 
 export interface IPDataType {
-  type: 'string',
-  validator: 'ip',
+  type: 'string';
+  validator: 'ip';
 }
 
 export class IPValidator<T = string> extends Validator<IPOptions<T>> {
@@ -33,7 +33,11 @@ export class IPValidator<T = string> extends Validator<IPOptions<T>> {
 
   declare transform: <T1>(fn: (ip: T) => Promise<T1> | T1) => IPValidator<T1>;
 
-  protected async validateValue(data: Record<string, any>, key: string, superKeys: string[]): Promise<string | void> {
+  protected async validateValue(
+    data: Record<string, any>,
+    key: string,
+    superKeys: string[],
+  ): Promise<string | void> {
     const { ipVersion = 'all' } = this.config;
     const ip = data[key];
 
@@ -41,7 +45,9 @@ export class IPValidator<T = string> extends Validator<IPOptions<T>> {
       return;
     }
 
-    return `${this.getLabel(key, superKeys)} must be ip${ipVersion === 'all' ? '' : ipVersion}`;
+    return `${this.getLabel(key, superKeys)} must be ip${
+      ipVersion === 'all' ? '' : ipVersion
+    }`;
   }
 
   protected getDataType(): IPDataType {

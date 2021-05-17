@@ -4,7 +4,9 @@ export class MakeTree {
   protected webTrunk: WebSlotManager<any, any> | null = null;
   protected consoleTrunk: ConsoleSlotManager<any, any> | null = null;
 
-  public trunk(manager: WebSlotManager<any, any> | ConsoleSlotManager<any, any>): void {
+  public trunk(
+    manager: WebSlotManager<any, any> | ConsoleSlotManager<any, any>,
+  ): void {
     if (manager instanceof WebSlotManager) {
       this.webTrunk && MakeTree.throw('web');
       this.webTrunk = manager;
@@ -18,11 +20,11 @@ export class MakeTree {
     manager.setTrunk();
   }
 
-  public/*protected*/ getWebTrunk(): WebSlotManager<any, any> {
+  public /*protected*/ getWebTrunk(): WebSlotManager<any, any> {
     return this.webTrunk || new WebSlotManager();
   }
 
-  public/*protected*/ getConsoleTrunk(): ConsoleSlotManager<any, any> {
+  public /*protected*/ getConsoleTrunk(): ConsoleSlotManager<any, any> {
     return this.consoleTrunk || new ConsoleSlotManager();
   }
 

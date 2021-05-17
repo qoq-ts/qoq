@@ -8,10 +8,13 @@ import { Router } from './Router';
 
 interface ConsoleRouterOptions<Props, State> {
   prefix?: string;
-  slots: SlotManager<Slot.Console | Slot.Mix, Props, State> | null,
+  slots: SlotManager<Slot.Console | Slot.Mix, Props, State> | null;
 }
 
-export class ConsoleRouter<Props = any, State = any> extends Router<Slot.Console | Slot.Mix, ConsoleBuilder<any, any>> {
+export class ConsoleRouter<Props = any, State = any> extends Router<
+  Slot.Console | Slot.Mix,
+  ConsoleBuilder<any, any>
+> {
   constructor(options: ConsoleRouterOptions<Props, State>) {
     super(options.prefix || '', options.slots || ConsoleSlotManager.use(null));
   }
@@ -22,7 +25,7 @@ export class ConsoleRouter<Props = any, State = any> extends Router<Slot.Console
     return builder;
   }
 
-  public/*protected*/ createMiddleware(): ConsoleSlotCtx {
+  public /*protected*/ createMiddleware(): ConsoleSlotCtx {
     const builders = this.builders;
     const groupSlots = this.globalSlots.getBranchMiddleware();
     const groupCompose = groupSlots.length > 0 && compose(groupSlots);
@@ -38,8 +41,8 @@ export class ConsoleRouter<Props = any, State = any> extends Router<Slot.Console
         if (builder.match(command)) {
           matched = matched || true;
           middleware.push(
-            (_ctx, _next) => (_ctx.commandMatched = true, _next()),
-            ...builder.getMiddleware()
+            (_ctx, _next) => ((_ctx.commandMatched = true), _next()),
+            ...builder.getMiddleware(),
           );
         }
       }

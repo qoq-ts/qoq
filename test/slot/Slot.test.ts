@@ -2,14 +2,14 @@ import { Slot, testMiddleware } from '../../src';
 import { SlotDemo1 } from '../fixture/SlotDemo1';
 import { SlotDemo2 } from '../fixture/SlotDemo2';
 
-it ('can run custom slot', async () => {
+it('can run custom slot', async () => {
   const random = Math.random().toString();
   const ctx = await testMiddleware(new SlotDemo1(random))({});
 
   expect(ctx.testData).toBe(random);
 });
 
-it ('can assume other slots have been registered', async () => {
+it('can assume other slots have been registered', async () => {
   class Custom extends Slot<Slot.Web, { hello: string }> {
     constructor() {
       super();

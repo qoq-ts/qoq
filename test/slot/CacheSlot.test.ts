@@ -1,7 +1,15 @@
 import { existsSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
-import { defineConfig, FileCacheOptions, MemoryCacheOptions, CacheSlot, FileCache, MemoryCache, testMiddleware } from '../../src';
+import {
+  defineConfig,
+  FileCacheOptions,
+  MemoryCacheOptions,
+  CacheSlot,
+  FileCache,
+  MemoryCache,
+  testMiddleware,
+} from '../../src';
 import CustomCache, { CustomCacheOptions } from '../fixture/CustomCache';
 
 describe('Cache Slot', () => {
@@ -30,7 +38,7 @@ describe('Cache Slot', () => {
     expect(slot.cache).toBeInstanceOf(MemoryCache);
   });
 
-  it ('can import cache engin from other module', () => {
+  it('can import cache engin from other module', () => {
     const options = defineConfig<CustomCacheOptions>({
       engine: CustomCache,
       test: true,
@@ -41,7 +49,7 @@ describe('Cache Slot', () => {
     expect(slot.cache).toBeInstanceOf(CustomCache);
   });
 
-  it ('can inject ctx.cache to context', async () => {
+  it('can inject ctx.cache to context', async () => {
     const cache = new CacheSlot<MemoryCacheOptions>({
       engine: MemoryCache,
     });

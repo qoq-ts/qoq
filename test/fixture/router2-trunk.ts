@@ -12,6 +12,6 @@ export const router = new WebRouter({
   slots: slots,
 });
 
-router.get('/test2').action<{}, { data :string }>((ctx) => {
+router.get('/test2').action<{}, { data: string }>((ctx) => {
   ctx.body = 'Hello ' + ctx.state.data;
 });

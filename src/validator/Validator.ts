@@ -27,15 +27,15 @@ export type ValidatorTypes<T> = {
 };
 
 export type ValidatorType<T> = T extends Validator<infer Options>
-? Options['defaultValue']
-: never;
+  ? Options['defaultValue']
+  : never;
 
 interface CommonValidatorDataType {
   label?: string;
   description?: string;
   defaultValue: unknown;
   required: boolean;
-};
+}
 
 type SubValidatorDataType =
   | ArrayDataType
@@ -53,7 +53,9 @@ type SubValidatorDataType =
 
 export type ValidatorDataType = CommonValidatorDataType & SubValidatorDataType;
 
-export abstract class Validator<T extends ValidatorOptions<any> = ValidatorOptions<any>>{
+export abstract class Validator<
+  T extends ValidatorOptions<any> = ValidatorOptions<any>,
+> {
   protected readonly config: T;
 
   constructor() {
@@ -87,7 +89,11 @@ export abstract class Validator<T extends ValidatorOptions<any> = ValidatorOptio
     return this;
   }
 
-  public/*protected*/ async validate(data: Record<string, any>, key: string, superKeys: string[] = []): Promise<string | void> {
+  public async /*protected*/ validate(
+    data: Record<string, any>,
+    key: string,
+    superKeys: string[] = [],
+  ): Promise<string | void> {
     const { defaultValue, required } = this.config;
     let value = data[key];
 
@@ -123,11 +129,15 @@ export abstract class Validator<T extends ValidatorOptions<any> = ValidatorOptio
     return value === undefined || value === null || value === '';
   }
 
-  protected abstract validateValue(data: Record<string, any>, key: string, superKeys: string[]): Promise<string | void>;
+  protected abstract validateValue(
+    data: Record<string, any>,
+    key: string,
+    superKeys: string[],
+  ): Promise<string | void>;
 
   protected abstract getDataType(): SubValidatorDataType;
 
-  public/*protected*/ toJSON(): ValidatorDataType {
+  public /*protected*/ toJSON(): ValidatorDataType {
     const dataType = this.getDataType();
 
     return {

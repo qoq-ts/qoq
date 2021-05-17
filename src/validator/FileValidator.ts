@@ -20,12 +20,14 @@ interface FileOptions<T> extends ValidatorOptions<T> {
 }
 
 export interface FileDataType {
-  type: 'file',
-  validator: 'file',
+  type: 'file';
+  validator: 'file';
 }
 
 export class FileValidator<T = FileNoHash> extends Validator<FileOptions<T>> {
-  public hash(crypto: 'md5' | 'sha1'): FileValidator<T extends Array<any> ? FileWithHash[] : FileWithHash> {
+  public hash(
+    crypto: 'md5' | 'sha1',
+  ): FileValidator<T extends Array<any> ? FileWithHash[] : FileWithHash> {
     this.config.hash = crypto;
     // @ts-expect-error
     return this;
@@ -49,9 +51,15 @@ export class FileValidator<T = FileNoHash> extends Validator<FileOptions<T>> {
 
   declare optional: () => FileValidator<T | undefined>;
 
-  declare transform: <T1>(fn: (file: T) => Promise<T1> | T1) => FileValidator<T1>;
+  declare transform: <T1>(
+    fn: (file: T) => Promise<T1> | T1,
+  ) => FileValidator<T1>;
 
-  protected async validateValue(data: Record<string, any>, key: string, superKeys: string[]): Promise<string | void> {
+  protected async validateValue(
+    data: Record<string, any>,
+    key: string,
+    superKeys: string[],
+  ): Promise<string | void> {
     const { hash, multiples, maxSize, mimeTypes } = this.config;
     let value: formidable.File[] = data[key];
 

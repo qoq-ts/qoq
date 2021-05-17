@@ -56,7 +56,7 @@ export class ValidatorStatic {
   }
 
   get uuid(): UUIDValidator {
-    return new UUIDValidator;
+    return new UUIDValidator();
   }
 
   get ip(): IPValidator {

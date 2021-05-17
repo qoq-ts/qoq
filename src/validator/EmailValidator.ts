@@ -4,8 +4,8 @@ import { Validator, ValidatorOptions } from './Validator';
 interface EmailOptions<T> extends ValidatorOptions<T> {}
 
 export interface EmailDataType {
-  type: 'string',
-  validator: 'email',
+  type: 'string';
+  validator: 'email';
 }
 
 export class EmailValidator<T = string> extends Validator<EmailOptions<T>> {
@@ -13,9 +13,15 @@ export class EmailValidator<T = string> extends Validator<EmailOptions<T>> {
 
   declare default: (email: NonNullable<T>) => EmailValidator<NonNullable<T>>;
 
-  declare transform: <T1>(fn: (email: T) => Promise<T1> | T1) => EmailValidator<T1>;
+  declare transform: <T1>(
+    fn: (email: T) => Promise<T1> | T1,
+  ) => EmailValidator<T1>;
 
-  protected async validateValue(data: Record<string, any>, key: string, superKeys: string[]): Promise<string | void> {
+  protected async validateValue(
+    data: Record<string, any>,
+    key: string,
+    superKeys: string[],
+  ): Promise<string | void> {
     const value = data[key];
 
     if (typeof value === 'string' && email.validate(value)) {

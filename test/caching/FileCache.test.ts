@@ -20,7 +20,7 @@ describe('File Cache', () => {
     await cache.deleteAll();
   });
 
-  it ('can set anything (string, number, object)', async () => {
+  it('can set anything (string, number, object)', async () => {
     await cache.set('hello', 'world');
     expect(await cache.get('hello')).toEqual('world');
 
@@ -31,7 +31,7 @@ describe('File Cache', () => {
     expect(await cache.get('test')).toEqual(1001);
   });
 
-  it ('can use ttl', async () => {
+  it('can use ttl', async () => {
     await cache.set('hello', 'world', 500);
     expect(await cache.get('hello')).toEqual('world');
 
@@ -42,13 +42,13 @@ describe('File Cache', () => {
     expect(await cache.get('hello')).toBeNull();
   });
 
-  it ('can use exists', async () => {
+  it('can use exists', async () => {
     expect(await cache.exists('hello')).toBeFalsy();
     await cache.set('hello', 'world');
     expect(await cache.exists('hello')).toBeTruthy();
   });
 
-  it ('can add value only once', async () => {
+  it('can add value only once', async () => {
     expect(await cache.add('hello', 'world')).toBeTruthy();
     expect(await cache.get('hello')).toEqual('world');
 
@@ -56,7 +56,7 @@ describe('File Cache', () => {
     expect(await cache.get('hello')).toEqual('world');
   });
 
-  it ('can add value many times with ttl', async () => {
+  it('can add value many times with ttl', async () => {
     expect(await cache.add('hello', 'world', 500)).toBeTruthy();
     expect(await cache.add('hello', 'next data', 500)).toBeFalsy();
     expect(await cache.get('hello')).toEqual('world');
@@ -65,7 +65,7 @@ describe('File Cache', () => {
     expect(await cache.get('hello')).toEqual('next data');
   });
 
-  it ('can delete value', async () => {
+  it('can delete value', async () => {
     await cache.add('hello', 'world');
     expect(await cache.get('hello')).toEqual('world');
 
@@ -73,7 +73,7 @@ describe('File Cache', () => {
     expect(await cache.get('hello')).toBeNull();
   });
 
-  it ('can delete all caches', async () => {
+  it('can delete all caches', async () => {
     await cache.set('hello', 'world');
     await cache.set('test', 'data');
     expect(await cache.get('hello')).toEqual('world');
@@ -84,7 +84,7 @@ describe('File Cache', () => {
     expect(await cache.get('test')).toBeNull();
   });
 
-  it ('can set key prefix', async () => {
+  it('can set key prefix', async () => {
     expect(cache.buildKey('hello')).toEqual('hello');
 
     cache = new FileCache({
@@ -96,25 +96,33 @@ describe('File Cache', () => {
     expect(cache.buildKey('hello')).toEqual('cache-hello');
   });
 
-  it ('max key length should less than 32', () => {
+  it('max key length should less than 32', () => {
     const key = 'x'.repeat(33);
 
-    expect(cache.buildKey('x'.repeat(33))).toEqual(createHash('md5').update(key).digest('hex'))
+    expect(cache.buildKey('x'.repeat(33))).toEqual(
+      createHash('md5').update(key).digest('hex'),
+    );
   });
 
-  it ('can set value when value doesn\'t exist', async () => {
+  it("can set value when value doesn't exist", async () => {
     expect(await cache.get('hello')).toBeNull();
     expect(await cache.getOrSet('hello', () => 'world')).toEqual('world');
     expect(await cache.get('hello')).toEqual('world');
     expect(await cache.getOrSet('hello', () => 'test data')).toEqual('world');
 
-    expect(await cache.getOrSet('test1', () => 'test data', 500)).toEqual('test data');
-    expect(await cache.getOrSet('test1', () => 'new test data', 500)).toEqual('test data');
+    expect(await cache.getOrSet('test1', () => 'test data', 500)).toEqual(
+      'test data',
+    );
+    expect(await cache.getOrSet('test1', () => 'new test data', 500)).toEqual(
+      'test data',
+    );
     await sleep(502);
-    expect(await cache.getOrSet('test1', () => 'new test data', 500)).toEqual('new test data');
+    expect(await cache.getOrSet('test1', () => 'new test data', 500)).toEqual(
+      'new test data',
+    );
   });
 
-  it ('can use default value', async () => {
+  it('can use default value', async () => {
     expect(await cache.get('hello')).toBeNull();
     expect(await cache.get('hello', 'world')).toEqual('world');
 

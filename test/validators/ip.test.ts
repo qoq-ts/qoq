@@ -1,12 +1,7 @@
 import { validator } from '../../src';
 
 const defaultData = {
-  ip4: [
-    '127.0.0.1',
-    '196.128.1.4',
-    '255.255.255.255',
-    '154.26.96.246',
-  ],
+  ip4: ['127.0.0.1', '196.128.1.4', '255.255.255.255', '154.26.96.246'],
   invalidIp4: [
     '256.255.255.255',
     '973.0.0.1',
@@ -30,25 +25,33 @@ const defaultData = {
 test('ip v4', async () => {
   for (let ip of defaultData.ip4) {
     const data = { ip };
-    expect(await validator.ip.version('4').validate(data, 'ip')).toBeUndefined();
+    expect(
+      await validator.ip.version('4').validate(data, 'ip'),
+    ).toBeUndefined();
   }
 
   for (let ip of defaultData.invalidIp4) {
     const data = { ip };
-    expect(await validator.ip.version('4').validate(data, 'ip')).toContain('ip4');
+    expect(await validator.ip.version('4').validate(data, 'ip')).toContain(
+      'ip4',
+    );
   }
 });
 
 test('ip v6', async () => {
   for (let ip of defaultData.ip6) {
     const data = { ip };
-    expect(await validator.ip.version('6').validate(data, 'ip')).toBeUndefined();
+    expect(
+      await validator.ip.version('6').validate(data, 'ip'),
+    ).toBeUndefined();
   }
 });
 
 test('ip v4 + v6', async () => {
   for (let ip of defaultData.ip6.concat(defaultData.ip4)) {
     const data = { ip };
-    expect(await validator.ip.version('all').validate(data, 'ip')).toBeUndefined();
+    expect(
+      await validator.ip.version('all').validate(data, 'ip'),
+    ).toBeUndefined();
   }
 });

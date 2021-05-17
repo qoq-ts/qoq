@@ -21,7 +21,7 @@ interface Options {
 
 export class ConsoleApplication extends EventEmitter {
   protected readonly routerParser: ConsoleRouterParser;
-  public/*protected*/ readonly scriptName: string;
+  public readonly /*protected*/ scriptName: string;
   protected executingCount: number = 0;
 
   constructor(options: Options = {}) {
@@ -40,7 +40,7 @@ export class ConsoleApplication extends EventEmitter {
   /**
    * Mount router from instance
    */
-   mountCommand(commands: ConsoleRouter | ConsoleRouter[]): this {
+  mountCommand(commands: ConsoleRouter | ConsoleRouter[]): this {
     this.routerParser.mountRouter(commands);
     return this;
   }
@@ -57,7 +57,9 @@ export class ConsoleApplication extends EventEmitter {
     // When dealing with cross-globals a normal `instanceof` check doesn't work properly.
     // See https://github.com/koajs/koa/issues/1466
     // We can probably remove it once jest fixes https://github.com/facebook/jest/issues/2549.
-    const isNativeError = Object.prototype.toString.call(err) === '[object Error]' || err instanceof Error;
+    const isNativeError =
+      Object.prototype.toString.call(err) === '[object Error]' ||
+      err instanceof Error;
     if (!isNativeError) {
       err = new TypeError(util.format('non-error thrown: %j', err));
     }
@@ -86,7 +88,7 @@ export class ConsoleApplication extends EventEmitter {
    *
    * `app.execute('a:b', '--name', 'Peter', '--age', '15')`
    */
-   public async execute(...commands: string[]): Promise<ConsoleContext> {
+  public async execute(...commands: string[]): Promise<ConsoleContext> {
     await this.routerParser.waitToReady();
 
     const isChildProcess = !!Reflect.get(this.execute, 'isChildProcess');
@@ -108,7 +110,9 @@ export class ConsoleApplication extends EventEmitter {
       // When dealing with cross-globals a normal `instanceof` check doesn't work properly.
       // See https://github.com/koajs/koa/issues/1466
       // We can probably remove it once jest fixes https://github.com/facebook/jest/issues/2549.
-      const isNativeError = Object.prototype.toString.call(err) === '[object Error]' || err instanceof Error;
+      const isNativeError =
+        Object.prototype.toString.call(err) === '[object Error]' ||
+        err instanceof Error;
       if (!isNativeError) {
         err = new TypeError(util.format('non-error thrown: %j', err));
       }

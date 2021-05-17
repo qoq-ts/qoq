@@ -42,7 +42,10 @@ describe('File validator', () => {
   router
     .post('/c')
     .body({
-      file1: validator.file.maxSize(300).hash('md5').allowMimeTypes(['image/png', 'image/gif']),
+      file1: validator.file
+        .maxSize(300)
+        .hash('md5')
+        .allowMimeTypes(['image/png', 'image/gif']),
     })
     .action((ctx, payload) => {
       ctx.body = payload.body;
@@ -50,11 +53,13 @@ describe('File validator', () => {
 
   app.mountRouter(router);
 
-  it ('may be undefined', async () => {
-    expect(await validator.file.optional().validate({}, 'any')).toEqual(undefined);
+  it('may be undefined', async () => {
+    expect(await validator.file.optional().validate({}, 'any')).toEqual(
+      undefined,
+    );
   });
 
-  it ('can upload single file', async () => {
+  it('can upload single file', async () => {
     await request(listen)
       .post('/a')
       .attach('file1', path.join(__dirname, '..', 'fixture', 'favicon.png'))
@@ -79,7 +84,7 @@ describe('File validator', () => {
     listen.close();
   });
 
-  it ('can upload multiple file', async () => {
+  it('can upload multiple file', async () => {
     const router = new WebRouter({
       slots: null,
     });
@@ -125,7 +130,7 @@ describe('File validator', () => {
     listen.close();
   });
 
-  it ('can set max size', async () => {
+  it('can set max size', async () => {
     await request(listen)
       .post('/c')
       .attach('file1', path.join(__dirname, '..', 'fixture', 'favicon.png'))
@@ -140,20 +145,22 @@ describe('File validator', () => {
       .expect(200);
   });
 
-  it ('can set hash', async () => {
+  it('can set hash', async () => {
     await request(listen)
       .post('/c')
       .attach('file1', path.join(__dirname, '..', 'fixture', 'arrow.png'))
       .then((res) => {
         expect(res.body.file1).toMatchObject({
           hash: createHash('md5')
-            .update(readFileSync(path.join(__dirname, '..', 'fixture', 'arrow.png')))
+            .update(
+              readFileSync(path.join(__dirname, '..', 'fixture', 'arrow.png')),
+            )
             .digest('hex'),
         });
       });
   });
 
-  it ('can set allow types', async () => {
+  it('can set allow types', async () => {
     await request(listen)
       .post('/c')
       .attach('file1', path.join(__dirname, '..', 'fixture', 'arrow.jpg'))

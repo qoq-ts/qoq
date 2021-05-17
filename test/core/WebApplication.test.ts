@@ -2,7 +2,7 @@ import path, { dirname } from 'path';
 import { WebApplication, WebRouter, WebSlotManager } from '../../src';
 import request from 'supertest';
 
-it ('can search routers', async () => {
+it('can search routers', async () => {
   const app = new WebApplication({
     routersDir: path.join(dirname(__dirname), 'fixture'),
   });
@@ -15,14 +15,14 @@ it ('can search routers', async () => {
   listener.close();
 });
 
-it ('can mount router from memory', async () => {
+it('can mount router from memory', async () => {
   const app = new WebApplication({
     routersDir: path.join(dirname(__dirname), 'fixture'),
   });
   const router = new WebRouter({
     slots: new WebSlotManager(),
   });
-  router.get('/hello').action((ctx) => ctx.body = 'World');
+  router.get('/hello').action((ctx) => (ctx.body = 'World'));
   app.mountRouter([router]);
 
   const listener = app.listen();
@@ -34,7 +34,7 @@ it ('can mount router from memory', async () => {
   listener.close();
 });
 
-it ('can mount router path after app is created', async () => {
+it('can mount router path after app is created', async () => {
   const app = new WebApplication({
     routersDir: [],
   });
@@ -49,7 +49,7 @@ it ('can mount router path after app is created', async () => {
   listener.close();
 });
 
-it ('mount router path before ready() is allowed', async () => {
+it('mount router path before ready() is allowed', async () => {
   const app = new WebApplication({
     routersDir: './not-exists',
   });
@@ -62,7 +62,7 @@ it ('mount router path before ready() is allowed', async () => {
   listener.close();
 });
 
-it ('only search WebRouter', async () => {
+it('only search WebRouter', async () => {
   const app = new WebApplication({
     routersDir: path.join(dirname(__dirname), 'fixture'),
   });
@@ -71,7 +71,7 @@ it ('only search WebRouter', async () => {
   listener.close();
 });
 
-it ('router can use `export default`', async () => {
+it('router can use `export default`', async () => {
   const app = new WebApplication({
     routersDir: path.join(dirname(__dirname), 'fixture'),
   });

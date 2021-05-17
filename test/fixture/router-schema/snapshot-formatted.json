@@ -1,193 +1,185 @@
 [
-    {
-        "uris": [
-            "/projects"
-        ],
-        "method": "GET",
-        "title": "Get Projects",
-        "description": "It is a desc test",
-        "query": {
-            "page": {
-                "required": true,
-                "type": "integer",
-                "validator": "number"
-            },
-            "pageSize": {
-                "defaultValue": 10,
-                "required": false,
-                "type": "integer",
-                "validator": "number"
-            },
-            "projectId": {
-                "required": true,
-                "type": "integer",
-                "validator": "number"
-            },
-            "name": {
-                "label": "Project Name",
-                "description": "You can filter the project name",
-                "required": false,
-                "type": "string",
-                "validator": "string"
-            }
-        },
-        "response": [
-            {
-                "statusCode": 200,
-                "content": {
-                    "required": true,
-                    "type": "object",
-                    "validator": "json",
-                    "properties": {
-                        "page": {
-                            "description": "Current Page",
-                            "required": true,
-                            "type": "integer",
-                            "validator": "number"
-                        },
-                        "result": {
-                            "required": true,
-                            "type": "array",
-                            "validator": "array",
-                            "items": {
-                                "required": true,
-                                "type": "object",
-                                "validator": "json",
-                                "properties": {
-                                    "id": {
-                                        "required": true,
-                                        "type": "integer",
-                                        "validator": "number"
-                                    },
-                                    "name": {
-                                        "required": true,
-                                        "type": "string",
-                                        "validator": "string"
-                                    }
-                                }
-                            }
-                        },
-                        "total": {
-                            "description": "Total records amount",
-                            "required": true,
-                            "type": "integer",
-                            "validator": "number"
-                        }
-                    }
-                },
-                "headers": {
-                    "x-date": {
-                        "required": true,
-                        "type": "string",
-                        "validator": "string"
-                    },
-                    "y-schema": {
-                        "required": false,
-                        "type": "number",
-                        "validator": "number"
-                    }
-                }
-            }
-        ]
+  {
+    "uris": ["/projects"],
+    "method": "GET",
+    "title": "Get Projects",
+    "description": "It is a desc test",
+    "query": {
+      "page": {
+        "required": true,
+        "type": "integer",
+        "validator": "number"
+      },
+      "pageSize": {
+        "defaultValue": 10,
+        "required": false,
+        "type": "integer",
+        "validator": "number"
+      },
+      "projectId": {
+        "required": true,
+        "type": "integer",
+        "validator": "number"
+      },
+      "name": {
+        "label": "Project Name",
+        "description": "You can filter the project name",
+        "required": false,
+        "type": "string",
+        "validator": "string"
+      }
     },
-    {
-        "uris": [
-            "/p/users"
-        ],
-        "method": "GET",
-        "title": "Get Users",
-        "description": "Get all users from db",
-        "query": {
-            "projectId": {
-                "required": true,
-                "type": "integer",
-                "validator": "number"
+    "response": [
+      {
+        "statusCode": 200,
+        "content": {
+          "required": true,
+          "type": "object",
+          "validator": "json",
+          "properties": {
+            "page": {
+              "description": "Current Page",
+              "required": true,
+              "type": "integer",
+              "validator": "number"
             },
-            "name": {
-                "label": "You can filter the project name",
-                "required": false,
-                "type": "string",
-                "validator": "string"
-            }
-        },
-        "response": [
-            {
-                "statusCode": 200,
-                "content": {
+            "result": {
+              "required": true,
+              "type": "array",
+              "validator": "array",
+              "items": {
+                "required": true,
+                "type": "object",
+                "validator": "json",
+                "properties": {
+                  "id": {
+                    "required": true,
+                    "type": "integer",
+                    "validator": "number"
+                  },
+                  "name": {
                     "required": true,
                     "type": "string",
-                    "validator": "url"
+                    "validator": "string"
+                  }
                 }
-            }
-        ]
-    },
-    {
-        "uris": [
-            "/projects"
-        ],
-        "method": "POST",
-        "title": "Create a project",
-        "description": "Create a project description",
-        "query": {
-            "projectId": {
-                "required": true,
-                "type": "integer",
-                "validator": "number"
+              }
             },
-            "name": {
-                "label": "Project search name",
-                "required": true,
-                "type": "string",
-                "validator": "string"
-            },
-            "description": {
-                "required": false,
-                "type": "string",
-                "validator": "string"
+            "total": {
+              "description": "Total records amount",
+              "required": true,
+              "type": "integer",
+              "validator": "number"
             }
+          }
         },
-        "response": [
-            {
-                "statusCode": 201,
-                "contentType": "application/json",
-                "content": {
-                    "required": true,
-                    "type": "object",
-                    "validator": "json",
-                    "properties": {
-                        "id": {
-                            "required": true,
-                            "type": "integer",
-                            "validator": "number"
-                        }
-                    }
-                }
-            }
-        ]
+        "headers": {
+          "x-date": {
+            "required": true,
+            "type": "string",
+            "validator": "string"
+          },
+          "y-schema": {
+            "required": false,
+            "type": "number",
+            "validator": "number"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "uris": ["/p/users"],
+    "method": "GET",
+    "title": "Get Users",
+    "description": "Get all users from db",
+    "query": {
+      "projectId": {
+        "required": true,
+        "type": "integer",
+        "validator": "number"
+      },
+      "name": {
+        "label": "You can filter the project name",
+        "required": false,
+        "type": "string",
+        "validator": "string"
+      }
     },
-    {
-        "uris": [
-            "/p/projects"
-        ],
-        "method": "POST",
-        "query": {
-            "projectId": {
-                "required": true,
-                "type": "integer",
-                "validator": "number"
-            },
-            "name": {
-                "label": "Project search name",
-                "required": true,
-                "type": "string",
-                "validator": "string"
-            },
-            "description": {
-                "required": false,
-                "type": "string",
-                "validator": "string"
+    "response": [
+      {
+        "statusCode": 200,
+        "content": {
+          "required": true,
+          "type": "string",
+          "validator": "url"
+        }
+      }
+    ]
+  },
+  {
+    "uris": ["/projects"],
+    "method": "POST",
+    "title": "Create a project",
+    "description": "Create a project description",
+    "query": {
+      "projectId": {
+        "required": true,
+        "type": "integer",
+        "validator": "number"
+      },
+      "name": {
+        "label": "Project search name",
+        "required": true,
+        "type": "string",
+        "validator": "string"
+      },
+      "description": {
+        "required": false,
+        "type": "string",
+        "validator": "string"
+      }
+    },
+    "response": [
+      {
+        "statusCode": 201,
+        "contentType": "application/json",
+        "content": {
+          "required": true,
+          "type": "object",
+          "validator": "json",
+          "properties": {
+            "id": {
+              "required": true,
+              "type": "integer",
+              "validator": "number"
             }
-        },
-        "response": []
-    }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "uris": ["/p/projects"],
+    "method": "POST",
+    "query": {
+      "projectId": {
+        "required": true,
+        "type": "integer",
+        "validator": "number"
+      },
+      "name": {
+        "label": "Project search name",
+        "required": true,
+        "type": "string",
+        "validator": "string"
+      },
+      "description": {
+        "required": false,
+        "type": "string",
+        "validator": "string"
+      }
+    },
+    "response": []
+  }
 ]

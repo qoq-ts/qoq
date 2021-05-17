@@ -12,11 +12,15 @@ export interface EnumDataType {
   ranges: Array<AllowedRangeType>;
 }
 
-export const enumRange = <T extends AllowedRangeType>(values: T[]): EnumValidator<T> => {
+export const enumRange = <T extends AllowedRangeType>(
+  values: T[],
+): EnumValidator<T> => {
   return new EnumValidator(values);
 };
 
-export class EnumValidator<T = AllowedRangeType> extends Validator<EnumOptions<T>> {
+export class EnumValidator<T = AllowedRangeType> extends Validator<
+  EnumOptions<T>
+> {
   constructor(ranges: T[]) {
     super();
     this.config.ranges = ranges;
@@ -26,14 +30,23 @@ export class EnumValidator<T = AllowedRangeType> extends Validator<EnumOptions<T
 
   declare optional: () => EnumValidator<T | undefined>;
 
-  declare transform: <T1>(fn: (value: T) => Promise<T1> | T1) => EnumValidator<T1>;
+  declare transform: <T1>(
+    fn: (value: T) => Promise<T1> | T1,
+  ) => EnumValidator<T1>;
 
-  protected async validateValue(data: Record<string, any>, key: string, superKeys: string[]): Promise<string | void> {
+  protected async validateValue(
+    data: Record<string, any>,
+    key: string,
+    superKeys: string[],
+  ): Promise<string | void> {
     const { ranges } = this.config;
     let value = data[key];
 
     if (!ranges.includes(value)) {
-      return `${this.getLabel(key, superKeys)} must be in range of ${JSON.stringify(ranges)}`;
+      return `${this.getLabel(
+        key,
+        superKeys,
+      )} must be in range of ${JSON.stringify(ranges)}`;
     }
   }
 

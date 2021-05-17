@@ -28,7 +28,11 @@ export class MemoryCache extends BaseCache {
     return data === undefined ? null : data;
   }
 
-  protected async setValue(key: string, value: string, ttl?: number): Promise<boolean> {
+  protected async setValue(
+    key: string,
+    value: string,
+    ttl?: number,
+  ): Promise<boolean> {
     return this.cache.set(key, value, ttl);
   }
 

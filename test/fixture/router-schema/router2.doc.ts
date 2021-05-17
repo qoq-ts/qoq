@@ -7,6 +7,6 @@ export const getUsersResponse: WebRouterDocument = {
     {
       statusCode: 200,
       content: validator.url,
-    }
+    },
   ],
 };

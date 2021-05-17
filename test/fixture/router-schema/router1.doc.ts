@@ -22,6 +22,6 @@ export const getProjectsResponse: WebRouterDocument = {
         'x-date': validator.string,
         'y-schema': validator.number.optional(),
       },
-    }
+    },
   ],
 };

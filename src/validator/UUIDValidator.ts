@@ -1,7 +1,7 @@
 import { Validator, ValidatorOptions } from './Validator';
 
 interface UUIDOptions<T> extends ValidatorOptions<T> {
-  uuidVersion: '1' | '2' | '3' | '4' | '5' | 'all',
+  uuidVersion: '1' | '2' | '3' | '4' | '5' | 'all';
 }
 
 const patterns: {
@@ -12,12 +12,12 @@ const patterns: {
   '3': /^[0-9A-F]{8}-[0-9A-F]{4}-3[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i,
   '4': /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i,
   '5': /^[0-9A-F]{8}-[0-9A-F]{4}-5[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i,
-  all: /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i,
+  'all': /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i,
 };
 
 export interface UUIDDataType {
-  type: 'string',
-  validator: 'uuid',
+  type: 'string';
+  validator: 'uuid';
 }
 
 export class UUIDValidator<T = string> extends Validator<UUIDOptions<T>> {
@@ -25,14 +25,20 @@ export class UUIDValidator<T = string> extends Validator<UUIDOptions<T>> {
 
   declare default: (uuid: NonNullable<T>) => UUIDValidator<NonNullable<T>>;
 
-  declare transform: <T1>(fn: (uuid: T) => Promise<T1> | T1) => UUIDValidator<T1>;
+  declare transform: <T1>(
+    fn: (uuid: T) => Promise<T1> | T1,
+  ) => UUIDValidator<T1>;
 
   version(version: UUIDOptions<T>['uuidVersion']): this {
     this.config.uuidVersion = version;
     return this;
   }
 
-  protected async validateValue(data: Record<string, any>, key: string, superKeys: string[]): Promise<string | void> {
+  protected async validateValue(
+    data: Record<string, any>,
+    key: string,
+    superKeys: string[],
+  ): Promise<string | void> {
     const { uuidVersion = 'all' } = this.config;
     const value = data[key];
 

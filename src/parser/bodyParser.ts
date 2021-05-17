@@ -9,10 +9,12 @@ export const bodyParser = (rules: { [key: string]: Validator }) => {
   const parsedRules = Object.entries(rules);
 
   const respond = async (ctx: WebCtx) => {
-    const rawBody
+    const rawBody =
       // @ts-expect-error
-      = ctx.request.body = ctx[PARSED_BODY]
-      = await getRawBody(ctx);
+      (ctx.request.body =
+      // @ts-expect-error
+      ctx[PARSED_BODY] =
+        await getRawBody(ctx));
     const body: Record<string, any> = {};
 
     for (let i = 0; i < parsedRules.length; ++i) {
@@ -68,4 +70,4 @@ const getRawBody = (ctx: WebCtx): Promise<Record<string, any>> => {
   } catch (e) {
     return ctx.throw(500, e);
   }
-}
+};

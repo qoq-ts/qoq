@@ -7,5 +7,5 @@ module.exports = {
   coverageReporters: ['text-summary', 'lcov'],
   collectCoverageFrom: ['src/**/*.ts'],
   verbose: true,
-  testMatch: ['**/test/**/*.test.ts']
+  testMatch: ['**/test/**/*.test.ts'],
 };

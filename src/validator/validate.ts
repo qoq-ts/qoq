@@ -1,7 +1,10 @@
 import createError from 'http-errors';
 import { Validator, ValidatorTypes } from './Validator';
 
-export const validate = async <T extends { [key: string]: Validator }>(sourceData: Record<string, any>, validators: T): Promise<ValidatorTypes<T>> => {
+export const validate = async <T extends { [key: string]: Validator }>(
+  sourceData: Record<string, any>,
+  validators: T,
+): Promise<ValidatorTypes<T>> => {
   const payload: Record<string, any> = {};
   const keys = Object.keys(validators);
 

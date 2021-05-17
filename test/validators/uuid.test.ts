@@ -1,7 +1,7 @@
 import { validator } from '../../src';
 
 const defaultData: {
-  [key: string]: string[]
+  [key: string]: string[];
 } = {
   uuid1: [
     'b6dbd93e-a941-11eb-90dc-52540006f7b4',
@@ -45,23 +45,23 @@ const defaultData: {
     '000001f4-a941-21eb-8500-52540006f7b4',
     'b6dbd93e-a941-11eb-90dc-52540006f7b4',
   ],
-  invalid: [
-    '23450-s2083',
-    '9900',
-    'x-099283-s93857-990dk3e99',
-  ],
+  invalid: ['23450-s2083', '9900', 'x-099283-s93857-990dk3e99'],
 };
 
-it ('can recognize different uuid versions', async () => {
+it('can recognize different uuid versions', async () => {
   for (let num of ['1', '2', '3', '4', '5', 'all'] as const) {
     for (let uuid of defaultData['uuid' + num]!) {
       const data = { ['uuid' + uuid]: uuid };
-      expect(await validator.uuid.version(num).validate(data, 'uuid' + uuid)).toEqual(undefined);
+      expect(
+        await validator.uuid.version(num).validate(data, 'uuid' + uuid),
+      ).toEqual(undefined);
     }
 
     for (let invalidUUID of defaultData.invalid!) {
       const data = { uuid: invalidUUID };
-      expect(await validator.uuid.version(num).validate(data, 'uuid')).toContain('uuid');
+      expect(
+        await validator.uuid.version(num).validate(data, 'uuid'),
+      ).toContain('uuid');
     }
   }
 });

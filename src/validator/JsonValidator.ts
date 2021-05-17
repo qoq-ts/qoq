@@ -1,4 +1,9 @@
-import { Validator, ValidatorDataType, ValidatorOptions, ValidatorType } from './Validator';
+import {
+  Validator,
+  ValidatorDataType,
+  ValidatorOptions,
+  ValidatorType,
+} from './Validator';
 
 type Property = Record<string, Validator>;
 
@@ -7,13 +12,15 @@ interface JsonOptions<T> extends ValidatorOptions<T> {
 }
 
 export interface JsonDataType {
-  type: 'object',
-  validator: 'json',
-  properties: Record<string, ValidatorDataType>,
+  type: 'object';
+  validator: 'json';
+  properties: Record<string, ValidatorDataType>;
 }
 
 export class JsonValidator<T = object> extends Validator<JsonOptions<T>> {
-  public properties<V extends Property>(properties: V): JsonValidator<{ [key in keyof V]: ValidatorType<V[key]> }> {
+  public properties<V extends Property>(
+    properties: V,
+  ): JsonValidator<{ [key in keyof V]: ValidatorType<V[key]> }> {
     this.config.properties = properties;
     // @ts-expect-error
     return this;
@@ -23,9 +30,15 @@ export class JsonValidator<T = object> extends Validator<JsonOptions<T>> {
 
   declare optional: () => JsonValidator<T | undefined>;
 
-  declare transform: <T1>(fn: (object: T) => Promise<T1> | T1) => JsonValidator<T1>;
+  declare transform: <T1>(
+    fn: (object: T) => Promise<T1> | T1,
+  ) => JsonValidator<T1>;
 
-  protected async validateValue(data: Record<string, any>, key: string, superKeys: string[]): Promise<string | void> {
+  protected async validateValue(
+    data: Record<string, any>,
+    key: string,
+    superKeys: string[],
+  ): Promise<string | void> {
     const { properties } = this.config;
     let value = data[key];
 
@@ -53,7 +66,11 @@ export class JsonValidator<T = object> extends Validator<JsonOptions<T>> {
         const subKey = keys[i]!;
         tempObj[subKey] = value[subKey];
 
-        const result = await properties[subKey]!.validate(tempObj, subKey, newSuperKeys);
+        const result = await properties[subKey]!.validate(
+          tempObj,
+          subKey,
+          newSuperKeys,
+        );
         if (result) {
           return result;
         }

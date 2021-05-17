@@ -6,21 +6,23 @@ export abstract class Builder<
   T extends SlotAllType,
   Props = any,
   State = any,
-  Payload = {}
+  Payload = {},
 > {
   protected slots = new SlotManager<T, any, any>([]);
   protected payload: Record<string, (ctx: any) => any> = {};
 
-  public use<P, S>(slot: Use<T, P, S>): Builder<T, Props & P, State & S, Payload> {
+  public use<P, S>(
+    slot: Use<T, P, S>,
+  ): Builder<T, Props & P, State & S, Payload> {
     this.slots = this.slots.use(slot);
     return this;
   }
 
-  public/*protected*/ getMiddleware() {
+  public /*protected*/ getMiddleware() {
     return this.slots.getBranchMiddleware();
   }
 
-  public/*protected*/ abstract toJSON(): object;
+  public abstract /*protected*/ toJSON(): object;
 
   protected useAction(fn: (ctx: any, payload: Payload, next: Next) => any) {
     const payload = Object.entries(this.payload);
@@ -37,7 +39,7 @@ export abstract class Builder<
         promises.push(
           result.then((data) => {
             parsed[key] = data;
-          })
+          }),
         );
       }
 

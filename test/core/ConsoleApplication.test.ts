@@ -1,7 +1,7 @@
 import path, { dirname } from 'path';
 import { ConsoleApplication } from '../../src';
 
-it ('can execute command', async () => {
+it('can execute command', async () => {
   const app = new ConsoleApplication({
     commandsDir: path.join(dirname(__dirname), 'fixture'),
   });
@@ -12,7 +12,7 @@ it ('can execute command', async () => {
   });
 });
 
-it ('can mount commands', async () => {
+it('can mount commands', async () => {
   const app = new ConsoleApplication();
   const spy = jest.spyOn(console, 'log');
   let message = '';

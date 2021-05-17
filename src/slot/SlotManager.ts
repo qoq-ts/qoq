@@ -4,7 +4,15 @@ import { Slot, SlotAllType, SlotCtx } from './Slot';
 export type Use<T extends SlotAllType, P, S> =
   | Slot<T, P, S>
   | SlotManager<T, P, S>
-  | SlotCtx<Slot.Web extends T ? Slot.Web : Slot.Console extends T ? Slot.Console : Slot.Mix, P, S>
+  | SlotCtx<
+      Slot.Web extends T
+        ? Slot.Web
+        : Slot.Console extends T
+        ? Slot.Console
+        : Slot.Mix,
+      P,
+      S
+    >
   | null;
 
 export class SlotManager<T extends SlotAllType, Props = {}, State = {}> {
@@ -15,7 +23,7 @@ export class SlotManager<T extends SlotAllType, Props = {}, State = {}> {
 
   public static use<T extends SlotAllType, P = {}, S = {}>(
     this: new (...args: any[]) => SlotManager<T, any, any>,
-    slot: Use<T, P, S>
+    slot: Use<T, P, S>,
   ): SlotManager<T, P, S> {
     return new this([]).use(slot);
   }
@@ -32,7 +40,7 @@ export class SlotManager<T extends SlotAllType, Props = {}, State = {}> {
         this.middleware = this.middleware.concat(item.collect());
       }
     }
-  };
+  }
 
   use<P, S>(slot: Use<T, P, S>): SlotManager<T, Props & P, State & S> {
     if (slot === null) {
@@ -68,7 +76,7 @@ export class SlotManager<T extends SlotAllType, Props = {}, State = {}> {
     return manager;
   }
 
-  public/*protected*/ getTrunkMiddlewareAndRouters() {
+  public /*protected*/ getTrunkMiddlewareAndRouters() {
     let mixData: Middleware<any>[] = [];
     let prevManager: SlotManager<T, any, any> | null = this;
 
@@ -82,7 +90,7 @@ export class SlotManager<T extends SlotAllType, Props = {}, State = {}> {
     return mixData;
   }
 
-  public/*protected*/ getTrunkNode(): SlotManager<T, any, any> | null {
+  public /*protected*/ getTrunkNode(): SlotManager<T, any, any> | null {
     let prevManager: SlotManager<T, any, any> | null = this;
 
     while (prevManager) {
@@ -95,7 +103,7 @@ export class SlotManager<T extends SlotAllType, Props = {}, State = {}> {
     return null;
   }
 
-  public/*protected*/ getBranchMiddleware() {
+  public /*protected*/ getBranchMiddleware() {
     let middleware: Middleware<any>[] = [];
     let prevManager: SlotManager<T, any, any> | null = this;
 
@@ -107,13 +115,15 @@ export class SlotManager<T extends SlotAllType, Props = {}, State = {}> {
     return middleware;
   }
 
-  public/*protected*/ setTrunk(): void {
+  public /*protected*/ setTrunk(): void {
     let prevManager: SlotManager<T, any, any> | null = this;
 
-    do { prevManager.isTrunk = true } while (prevManager = prevManager.prev);
+    do {
+      prevManager.isTrunk = true;
+    } while ((prevManager = prevManager.prev));
   }
 
-  public/*protected*/ mountRouter(router: SlotCtx<T>) {
+  public /*protected*/ mountRouter(router: SlotCtx<T>) {
     if (!this.isTrunk) {
       throw new ReferenceError('Only tree trunk can mount router');
     }
@@ -121,6 +131,14 @@ export class SlotManager<T extends SlotAllType, Props = {}, State = {}> {
   }
 }
 
-export class WebSlotManager<Props = {}, State = {}> extends SlotManager<Slot.Mix | Slot.Web, Props, State> {}
+export class WebSlotManager<Props = {}, State = {}> extends SlotManager<
+  Slot.Mix | Slot.Web,
+  Props,
+  State
+> {}
 
-export class ConsoleSlotManager<Props = {}, State = {}> extends SlotManager<Slot.Mix | Slot.Console, Props, State> {}
+export class ConsoleSlotManager<Props = {}, State = {}> extends SlotManager<
+  Slot.Mix | Slot.Console,
+  Props,
+  State
+> {}

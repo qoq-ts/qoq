@@ -12,6 +12,9 @@ export const router = new ConsoleRouter({
   slots: slots,
 });
 
-router.command('/test3').showInHelp().action<{}, { data: string }>((ctx) => {
-  ctx.state.data = 'Hello ' + ctx.state.data;
-});
+router
+  .command('/test3')
+  .showInHelp()
+  .action<{}, { data: string }>((ctx) => {
+    ctx.state.data = 'Hello ' + ctx.state.data;
+  });

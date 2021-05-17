@@ -6,8 +6,8 @@ interface UrlOptions<T> extends ValidatorOptions<T> {
 }
 
 export interface UrlDataType {
-  type: 'string',
-  validator: 'url',
+  type: 'string';
+  validator: 'url';
 }
 
 export class UrlValidator<T = string> extends Validator<UrlOptions<T>> {
@@ -25,9 +25,15 @@ export class UrlValidator<T = string> extends Validator<UrlOptions<T>> {
 
   declare default: (url: NonNullable<T>) => UrlValidator<NonNullable<T>>;
 
-  declare transform: <T1>(fn: (value: T) => Promise<T1> | T1) => UrlValidator<T1>;
+  declare transform: <T1>(
+    fn: (value: T) => Promise<T1> | T1,
+  ) => UrlValidator<T1>;
 
-  protected async validateValue(data: Record<string, any>, key: string, superKeys: string[]): Promise<string | void> {
+  protected async validateValue(
+    data: Record<string, any>,
+    key: string,
+    superKeys: string[],
+  ): Promise<string | void> {
     const url = this.getURL(data[key]);
 
     if (!url) {

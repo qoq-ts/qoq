@@ -2,7 +2,9 @@ import { finder } from '../util/finder';
 import { WebRouterSchema } from './WebBuilder';
 import { WebRouter } from './WebRouter';
 
-export const generateRouterSchemas = async (routerPath: finder.Paths): Promise<WebRouterSchema[]> => {
+export const generateRouterSchemas = async (
+  routerPath: finder.Paths,
+): Promise<WebRouterSchema[]> => {
   const routers: WebRouterSchema[] = [];
   const matches = await finder(finder.normalize(routerPath));
 
@@ -18,9 +20,9 @@ export const generateRouterSchemas = async (routerPath: finder.Paths): Promise<W
             }
           }
           return;
-        })
+        }),
       );
-    })
+    }),
   );
 
   return routers;

@@ -13,7 +13,7 @@ export namespace finder {
 
 const isString = (data: string[] | finder.Options[]): data is string[] => {
   return typeof data[0] === 'string';
-}
+};
 
 const flat = (matches: string[][]): string[] => {
   switch (matches.length) {
@@ -52,11 +52,11 @@ export const finder = async (opts: finder.Options[]): Promise<string[]> => {
               }
             });
           });
-        })
+        }),
       );
 
       return flat(matches);
-    })
+    }),
   );
 
   return flat(matches);
@@ -67,7 +67,7 @@ finder.normalize = (pattern: finder.Paths): finder.Options[] => {
     return [
       {
         pattern: [pattern],
-      }
+      },
     ];
   }
 
@@ -80,7 +80,7 @@ finder.normalize = (pattern: finder.Paths): finder.Options[] => {
       return [
         {
           pattern: pattern,
-        }
+        },
       ];
     }
 

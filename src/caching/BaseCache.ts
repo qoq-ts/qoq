@@ -20,9 +20,14 @@ export abstract class BaseCache {
   }
 
   async get<T>(key: string, defaultValue: T): Promise<T>;
-  async get<T extends string | number | object | boolean>(key: string): Promise<T | null>;
+  async get<T extends string | number | object | boolean>(
+    key: string,
+  ): Promise<T | null>;
 
-  async get(key: string, defaultValue?: string | number | object | boolean): Promise<any> {
+  async get(
+    key: string,
+    defaultValue?: string | number | object | boolean,
+  ): Promise<any> {
     const hashKey = this.buildKey(key);
     let result = await this.getValue(hashKey);
 
@@ -38,9 +43,21 @@ export abstract class BaseCache {
   }
 
   // Notice: Overloading of functions to against the complex object such as `sequelize Model`
-  async getOrSet<T extends string | number | object | boolean>(key: string, orSet: () => T, ttl?: number): Promise<T>;
-  async getOrSet<T extends string | number | object | boolean>(key: string, orSet: () => Promise<T>, ttl?: number): Promise<T>;
-  async getOrSet<T extends string | number | object | boolean>(key: string, orSet: () => T | Promise<T>, ttl?: number): Promise<T> {
+  async getOrSet<T extends string | number | object | boolean>(
+    key: string,
+    orSet: () => T,
+    ttl?: number,
+  ): Promise<T>;
+  async getOrSet<T extends string | number | object | boolean>(
+    key: string,
+    orSet: () => Promise<T>,
+    ttl?: number,
+  ): Promise<T>;
+  async getOrSet<T extends string | number | object | boolean>(
+    key: string,
+    orSet: () => T | Promise<T>,
+    ttl?: number,
+  ): Promise<T> {
     let value: T | null = await this.get(key);
 
     if (value !== null) {
@@ -52,7 +69,11 @@ export abstract class BaseCache {
     return value;
   }
 
-  async set(key: string, value: string | number | object | boolean, ttl?: number): Promise<boolean> {
+  async set(
+    key: string,
+    value: string | number | object | boolean,
+    ttl?: number,
+  ): Promise<boolean> {
     const hashKey = this.buildKey(key);
     const wrappedValue = JSON.stringify(value);
 
@@ -75,13 +96,18 @@ export abstract class BaseCache {
     return this.deleteAllValues();
   }
 
-  public/*protected*/ buildKey(key: string): string {
-    const hashKey = key.length <= 32 ? key : createHash('md5').update(key).digest('hex');
+  public /*protected*/ buildKey(key: string): string {
+    const hashKey =
+      key.length <= 32 ? key : createHash('md5').update(key).digest('hex');
 
     return this.keyPrefix + hashKey;
   }
 
-  protected async addValue(key: string, value: string, ttl?: number): Promise<boolean> {
+  protected async addValue(
+    key: string,
+    value: string,
+    ttl?: number,
+  ): Promise<boolean> {
     const exist = await this.exists(key);
 
     if (!exist) {
@@ -92,7 +118,11 @@ export abstract class BaseCache {
   }
 
   protected abstract getValue(key: string): Promise<string | null>;
-  protected abstract setValue(key: string, value: string, ttl?: number): Promise<boolean>;
+  protected abstract setValue(
+    key: string,
+    value: string,
+    ttl?: number,
+  ): Promise<boolean>;
   protected abstract deleteValue(key: string): Promise<boolean>;
   protected abstract deleteAllValues(): Promise<boolean>;
 }

@@ -1,7 +1,7 @@
 import { BaseCache, BaseCacheOptions } from '../../src';
 
 export interface CustomCacheOptions extends BaseCacheOptions {
-  engine: new (...args: any[]) => CustomCache,
+  engine: new (...args: any[]) => CustomCache;
   test: boolean;
 }
 

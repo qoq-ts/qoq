@@ -24,7 +24,7 @@ function js() {
   }
 
   return false;
-};
+}
 
 function ts() {
   let tsFile: string | undefined;

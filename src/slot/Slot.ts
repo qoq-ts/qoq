@@ -2,13 +2,23 @@ import { Next } from 'koa';
 import { ConsoleCtx } from '../core/ConsoleContext';
 import { WebCtx } from '../core/WebContext';
 
-export type MixSlotCtx<Props = {}, State = {}> = (ctx: WebCtx<Props, State> | ConsoleCtx<Props, State>, next: Next) => any;
-export type WebSlotCtx<Props = {}, State = {}> = (ctx: WebCtx<Props, State>, next: Next) => any;
-export type ConsoleSlotCtx<Props = {}, State = {}> = (ctx: ConsoleCtx<Props, State>, next: Next) => any;
+export type MixSlotCtx<Props = {}, State = {}> = (
+  ctx: WebCtx<Props, State> | ConsoleCtx<Props, State>,
+  next: Next,
+) => any;
+export type WebSlotCtx<Props = {}, State = {}> = (
+  ctx: WebCtx<Props, State>,
+  next: Next,
+) => any;
+export type ConsoleSlotCtx<Props = {}, State = {}> = (
+  ctx: ConsoleCtx<Props, State>,
+  next: Next,
+) => any;
 
-export type SlotCtx<Type extends SlotAllType, Props = {}, State = {}> = Type extends Slot.Web
-  ? WebSlotCtx<Props, State>
-  : Type extends Slot.Console
+export type SlotCtx<Type extends SlotAllType, Props = {}, State = {}> =
+  Type extends Slot.Web
+    ? WebSlotCtx<Props, State>
+    : Type extends Slot.Console
     ? ConsoleSlotCtx<Props, State>
     : MixSlotCtx<Props, State>;
 
@@ -23,11 +33,11 @@ export type SlotAllType = Slot.Mix | Slot.Web | Slot.Console;
 export abstract class Slot<
   Type extends SlotAllType = Slot.Mix,
   Props = {},
-  State = {}
+  State = {},
 > {
   private middleware: SlotCtx<Type, Props, State>[] = [];
 
-  public/*protected*/ collect(): SlotCtx<Type, Props, State>[] {
+  public /*protected*/ collect(): SlotCtx<Type, Props, State>[] {
     return this.middleware;
   }
 
@@ -38,16 +48,16 @@ export abstract class Slot<
     slot: Type extends Slot.Web
       ? Slot<Slot.Web, P, S> | Slot<Slot.Mix, P, S>
       : Type extends Slot.Console
-        ? Slot<Slot.Console, P, S> | Slot<Slot.Mix, P, S>
-        : Slot<Slot.Web, P, S> | Slot<Slot.Mix, P, S> | Slot<Slot.Console, P, S>
+      ? Slot<Slot.Console, P, S> | Slot<Slot.Mix, P, S>
+      : Slot<Slot.Web, P, S> | Slot<Slot.Mix, P, S> | Slot<Slot.Console, P, S>,
   ): {
     use: Slot<Type, P & Props, S & State>['use'];
   };
   protected use(fn: SlotCtx<Type, any, any> | Slot<any>): object {
     if (typeof fn === 'function') {
       this.middleware.push(fn);
-    } else{
-      this.middleware.push(...fn.collect() as any[]);
+    } else {
+      this.middleware.push(...(fn.collect() as any[]));
     }
 
     return this;
@@ -55,10 +65,13 @@ export abstract class Slot<
 
   protected assume<P, S>(
     _slot: Type extends Slot.Web
-      ? new(...args: any[]) => Slot<Slot.Web, P, S> | Slot<Slot.Mix, P, S>
+      ? new (...args: any[]) => Slot<Slot.Web, P, S> | Slot<Slot.Mix, P, S>
       : Type extends Slot.Console
-        ? new(...args: any[]) => Slot<Slot.Console, P, S> | Slot<Slot.Mix, P, S>
-        : new(...args: any[]) => Slot<Slot.Web, P, S> | Slot<Slot.Mix, P, S> | Slot<Slot.Console, P, S>
+      ? new (...args: any[]) => Slot<Slot.Console, P, S> | Slot<Slot.Mix, P, S>
+      : new (...args: any[]) =>
+          | Slot<Slot.Web, P, S>
+          | Slot<Slot.Mix, P, S>
+          | Slot<Slot.Console, P, S>,
   ): {
     use: Slot<Type, P & Props, S & State>['use'];
     assume: Slot<Type, P & Props, S & State>['assume'];

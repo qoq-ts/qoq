@@ -15,7 +15,9 @@ router
       description: 'You can filter the project name',
     }),
   })
-  .document(() => import('./router1.doc').then((item) => item.getProjectsResponse))
+  .document(() =>
+    import('./router1.doc').then((item) => item.getProjectsResponse),
+  )
   .action((ctx) => {
     ctx.body = 'Hello router1';
   });
@@ -39,7 +41,7 @@ router
         content: {
           id: validator.integer,
         },
-      }
+      },
     ],
   })
   .action((ctx) => {
