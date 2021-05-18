@@ -2,10 +2,10 @@
   "compilerOptions": {
     // https://github.com/microsoft/TypeScript/wiki/Node-Target-Mapping
     "target": "ES2020",
-    "module": "CommonJS",
+    "module": "ES2020",
+    "lib": ["ES2020"],
     "allowJs": false,
     "declaration": true,
-    "declarationDir": "./build/types",
     "outDir": "./build",
     "rootDir": ".",
     "importHelpers": true,

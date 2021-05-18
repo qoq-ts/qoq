@@ -2,15 +2,20 @@
 
 set -e
 
-rm -rf ./es/ ./lib/ ./types/
+rm -rf ./es/ ./lib/
 
 rm -rf ./build
-./node_modules/.bin/tsc
+./node_modules/.bin/tsc  --module commonjs
+npx public-refactor --src ./src --dist ./build/src
 mv ./build/src ./lib
 
 rm -rf ./build
-./node_modules/.bin/tsc --module es2020
+./node_modules/.bin/tsc
+npx public-refactor --src ./src --dist ./build/src
 mv ./build/src ./es
 
-npx public-refactor --src ./src --dist ./build/types/src
-mv ./build/types/src ./types
+cat > ./es/package.json <<EOF
+{
+  "type": "module"
+}
+EOF

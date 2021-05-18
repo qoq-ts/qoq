@@ -2,8 +2,6 @@
   "name": "qoq",
   "version": "0.0.46",
   "main": "lib/index.js",
-  "module": "es/index.js",
-  "typings": "types/index.d.ts",
   "description": "A node framework for TS project",
   "repository": "git@github.com:qoq-ts/qoq.git",
   "author": "原罪",
@@ -12,8 +10,15 @@
     "test": "jest --runInBand",
     "prepublishOnly": "sh ./prepublish.sh"
   },
+  "exports": {
+    ".": {
+      "require": "./lib/index.js",
+      "import": "./es/index.js"
+    },
+    "./": "./"
+  },
   "bin": {
-    "qoq": "./lib/bin.js"
+    "qoq": "./bin.mjs"
   },
   "engines": {
     "node": "^14.15.0"
@@ -21,7 +26,7 @@
   "files": [
     "es",
     "lib",
-    "types",
+    "bin.mjs",
     "package.json",
     "LICENSE",
     "README.md",
@@ -46,6 +51,7 @@
     "lru-cache": "^6.0.0",
     "mkdirp": "^1.0.4",
     "path-to-regexp": "^6.2.0",
+    "read-pkg-up": "^8.0.0",
     "rimraf": "^3.0.2",
     "topic": "^2.1.2",
     "tslib": "^2.2.0",
