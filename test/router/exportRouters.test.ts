@@ -7,7 +7,7 @@ it('generate snapshot', async () => {
   const schemas = await generateRouterSchemas(input);
   writeFileSync(
     input + 'snapshot-formatted.json',
-    JSON.stringify(schemas, null, 4),
+    JSON.stringify(schemas, null, 2),
   );
 });
 
