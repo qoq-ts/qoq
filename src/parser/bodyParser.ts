@@ -1,5 +1,5 @@
 import coBody from 'co-body';
-import { IncomingForm } from 'formidable';
+import formidable from 'formidable';
 import { WebCtx } from '../core/WebContext';
 import { Validator } from '../validator/Validator';
 
@@ -44,7 +44,7 @@ const getRawBody = (ctx: WebCtx): Promise<Record<string, any>> => {
 
   try {
     if (ctx.request.is('multipart/*')) {
-      const form = new IncomingForm({
+      const form = new formidable.IncomingForm({
         multiples: true,
         hash: false,
         keepExtensions: true,
