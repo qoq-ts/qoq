@@ -3,7 +3,7 @@
 import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
-import { exec } from 'child_process';
+import { spawn } from 'child_process';
 import { hideBin } from 'yargs/helpers';
 
 const isESM = typeof require === 'undefined';
@@ -44,28 +44,17 @@ function ts() {
   if (tsFile) {
     // User should install ts-node manually
     if (isESM) {
-      const node = process.argv[0];
+      const node = process.argv[0]!;
       const args = hideBin(process.argv);
       const nodeOptions = [
         '--no-warnings',
         '--loader=ts-node/esm/transpile-only',
         '--experimental-specifier-resolution=node',
       ];
-      tsFile = tsFile!.replace(/\.ts$/, '.js');
 
-      exec(
-        `${node} ${nodeOptions.join(' ')} ${tsFile} ${args}`,
-        {
-          cwd: process.cwd(),
-        },
-        (err, stdout) => {
-          if (err) {
-            throw err;
-          }
-
-          process.stdout.write(stdout);
-        },
-      );
+      spawn(node, nodeOptions.concat(tsFile).concat(args), {
+        stdio: 'inherit',
+      });
     } else {
       import('ts-node/register/transpile-only').then(() => {
         import(tsFile!);
