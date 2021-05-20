@@ -1,6 +1,6 @@
 {
   "name": "qoq",
-  "version": "0.0.46",
+  "version": "0.0.51",
   "main": "lib/index.js",
   "description": "A node framework for TS project",
   "repository": "git@github.com:qoq-ts/qoq.git",
