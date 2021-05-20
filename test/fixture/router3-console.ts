@@ -1,7 +1,6 @@
 import { ConsoleRouter, ConsoleSlotManager, Tree } from '../../src';
 
 const slots = ConsoleSlotManager.use((ctx, next) => {
-  // @ts-expect-error
   ctx.state.data = 'router3';
   return next();
 });

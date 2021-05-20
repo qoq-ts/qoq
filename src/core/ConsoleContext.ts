@@ -5,7 +5,7 @@ import { ConsoleApplication } from './ConsoleApplication';
 export type ConsoleCtx<Props = {}, State = {}> = ConsoleContext<Props, State> & Props;
 
 export class ConsoleContext<_Props = {}, State = {}> {
-  public readonly state: State = {} as State;
+  public readonly state: State & { [key: string]: unknown } = {} as any;
   public readonly app: ConsoleApplication;
   public readonly command: string;
   public readonly commands: readonly string[];
