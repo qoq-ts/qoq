@@ -5,7 +5,7 @@ const input = './test/fixture/router-schema/';
 
 it('generate snapshot', async () => {
   const schemas = await generateRouterSchemas(input);
-  writeFileSync(input + 'snapshot-formatted.json', JSON.stringify(schemas, null, 2));
+  writeFileSync(input + 'snapshot-formatted.json', JSON.stringify(schemas, null, 2) + '\n');
 });
 
 it('can export web routers', async () => {
