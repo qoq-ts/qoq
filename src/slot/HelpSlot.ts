@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import yargs from 'yargs/yargs';
+import yargs from 'yargs';
 import { Slot } from './Slot';
 import { ConsoleBuilder } from '../router/ConsoleBuilder';
 import { version } from '../util/version';

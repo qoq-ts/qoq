@@ -1,4 +1,4 @@
-import yargs from 'yargs/yargs';
+import yargs from 'yargs';
 import { ConsoleCtx } from '../core/ConsoleContext';
 import { Validator } from '../validator/Validator';
 

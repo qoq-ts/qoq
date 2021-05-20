@@ -1,4 +1,4 @@
-import yargs from 'yargs/yargs';
+import yargs from 'yargs';
 import { setInspector } from '../util/setInspector';
 import { ConsoleApplication } from './ConsoleApplication';
 
