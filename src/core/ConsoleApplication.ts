@@ -1,4 +1,5 @@
 import chalk from 'chalk';
+import { hideBin } from 'yargs/helpers';
 import EventEmitter from 'events';
 import { EOL } from 'os';
 import util from 'util';
@@ -92,7 +93,7 @@ export class ConsoleApplication extends EventEmitter {
     Reflect.deleteProperty(this.execute, 'isChildProcess');
     const ctx = new ConsoleContext(
       this,
-      commands.length ? commands : process.argv.slice(2),
+      commands.length ? commands : hideBin(process.argv),
       isChildProcess,
     );
 
