@@ -3,6 +3,7 @@
 import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
+import { exec } from 'child_process';
 
 const isESM = typeof require === 'undefined';
 const files = ['./src/console', './lib/console', './console'];
@@ -42,9 +43,24 @@ function ts() {
   if (tsFile) {
     // User should install ts-node manually
     if (isESM) {
-      import('ts-node/esm/transpile-only.mjs').then(() => {
-        import(tsFile!);
-      });
+      const node = process.argv[0];
+
+      exec(
+        `${node} --loader ts-node/esm/transpile-only --experimental-specifier-resolution=node --no-warnings ${tsFile!.replace(
+          /\.ts$/,
+          '.js',
+        )}`,
+        {
+          cwd: process.cwd(),
+        },
+        (err, stdout) => {
+          if (err) {
+            throw err;
+          }
+
+          process.stdout.write(stdout);
+        },
+      );
     } else {
       import('ts-node/register/transpile-only').then(() => {
         import(tsFile!);
