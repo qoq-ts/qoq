@@ -20,13 +20,13 @@ it('can find .js and .ts files except .d.ts', async () => {
 });
 
 it('can ignore file by customize', async () => {
-  expect(
-    await finder([{ pattern: ['./test/fixture/glob'], ignore: ['z.js'] }]),
-  ).toContain(normalizePath('z.js'));
+  expect(await finder([{ pattern: ['./test/fixture/glob'], ignore: ['z.js'] }])).toContain(
+    normalizePath('z.js'),
+  );
 
-  expect(
-    await finder([{ pattern: ['./test/fixture/glob'], ignore: ['**/z.js'] }]),
-  ).not.toContain(normalizePath('z.js'));
+  expect(await finder([{ pattern: ['./test/fixture/glob'], ignore: ['**/z.js'] }])).not.toContain(
+    normalizePath('z.js'),
+  );
 
   const matches = await finder([
     {
@@ -40,28 +40,22 @@ it('can ignore file by customize', async () => {
   expect(matches).toContain(normalizePath('x.js'));
 
   expect(
-    await finder([
-      { pattern: ['./test/fixture/glob'], ignore: ['**/z.js', '**/y.js'] },
-    ]),
-  ).toMatchObject([
-    normalizePath('x.js'),
-    normalizePath('x.ts'),
-    normalizePath('y.ts'),
-  ]);
+    await finder([{ pattern: ['./test/fixture/glob'], ignore: ['**/z.js', '**/y.js'] }]),
+  ).toMatchObject([normalizePath('x.js'), normalizePath('x.ts'), normalizePath('y.ts')]);
 });
 
 it('can find files by customize', async () => {
-  expect(
-    await finder([{ pattern: [resolve('./test/fixture/glob/**/*.txt')] }]),
-  ).toMatchObject([normalizePath('o.txt')]);
+  expect(await finder([{ pattern: [resolve('./test/fixture/glob/**/*.txt')] }])).toMatchObject([
+    normalizePath('o.txt'),
+  ]);
 
-  expect(
-    await finder([{ pattern: ['./test/fixture/glob/**/*.txt'] }]),
-  ).not.toContain(normalizePath('x.js'));
+  expect(await finder([{ pattern: ['./test/fixture/glob/**/*.txt'] }])).not.toContain(
+    normalizePath('x.js'),
+  );
 
-  expect(
-    await finder([{ pattern: ['./test/fixture/glob/**/*.txt'] }]),
-  ).not.toContain(normalizePath('i.json'));
+  expect(await finder([{ pattern: ['./test/fixture/glob/**/*.txt'] }])).not.toContain(
+    normalizePath('i.json'),
+  );
 });
 
 it('can match empty file list', async () => {

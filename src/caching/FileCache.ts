@@ -43,11 +43,7 @@ export class FileCache extends BaseCache {
     return null;
   }
 
-  protected async setValue(
-    key: string,
-    value: string,
-    ttl?: number,
-  ): Promise<boolean> {
+  protected async setValue(key: string, value: string, ttl?: number): Promise<boolean> {
     const filePath = this.getFilePath(key);
     const serialize: FileData = {
       k: key,
@@ -79,11 +75,6 @@ export class FileCache extends BaseCache {
 
   protected getFilePath(key: string): string {
     const hashKey = createHash('md5').update(key).digest('hex');
-    return path.join(
-      this.dir,
-      hashKey.substr(0, 2),
-      hashKey.substr(2, 2),
-      hashKey,
-    );
+    return path.join(this.dir, hashKey.substr(0, 2), hashKey.substr(2, 2), hashKey);
   }
 }

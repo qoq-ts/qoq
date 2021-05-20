@@ -4,9 +4,7 @@ import { Validator } from '../validator/Validator';
 export const paramParser = (rules: { [key: string]: Validator }) => {
   const parsedRules = Object.entries(rules);
 
-  const respond = async (
-    ctx: WebCtx<{ params: { [key: string]: unknown } }>,
-  ) => {
+  const respond = async (ctx: WebCtx<{ params: { [key: string]: unknown } }>) => {
     const rawParams: Record<string, any> = ctx.params || {};
     const params: typeof ctx.params = {};
 

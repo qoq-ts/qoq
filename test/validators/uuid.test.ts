@@ -52,16 +52,12 @@ it('can recognize different uuid versions', async () => {
   for (let num of ['1', '2', '3', '4', '5', 'all'] as const) {
     for (let uuid of defaultData['uuid' + num]!) {
       const data = { ['uuid' + uuid]: uuid };
-      expect(
-        await validator.uuid.version(num).validate(data, 'uuid' + uuid),
-      ).toBeUndefined();
+      expect(await validator.uuid.version(num).validate(data, 'uuid' + uuid)).toBeUndefined();
     }
 
     for (let invalidUUID of defaultData.invalid!) {
       const data = { uuid: invalidUUID };
-      expect(
-        await validator.uuid.version(num).validate(data, 'uuid'),
-      ).toContain('uuid');
+      expect(await validator.uuid.version(num).validate(data, 'uuid')).toContain('uuid');
     }
   }
 });

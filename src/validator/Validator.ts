@@ -26,9 +26,7 @@ export type ValidatorTypes<T> = {
   [key in keyof T]: ValidatorType<T[key]>;
 };
 
-export type ValidatorType<T> = T extends Validator<infer Options>
-  ? Options['defaultValue']
-  : never;
+export type ValidatorType<T> = T extends Validator<infer Options> ? Options['defaultValue'] : never;
 
 interface CommonValidatorDataType {
   label?: string;
@@ -53,9 +51,7 @@ type SubValidatorDataType =
 
 export type ValidatorDataType = CommonValidatorDataType & SubValidatorDataType;
 
-export abstract class Validator<
-  T extends ValidatorOptions<any> = ValidatorOptions<any>,
-> {
+export abstract class Validator<T extends ValidatorOptions<any> = ValidatorOptions<any>> {
   protected readonly config: T;
 
   constructor() {

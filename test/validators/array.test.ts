@@ -24,23 +24,16 @@ describe('Array validator', () => {
 
   it('may be undefined', async () => {
     expect(
-      await validator.array
-        .items(validator.number)
-        .validate(data, 'numberArray'),
+      await validator.array.items(validator.number).validate(data, 'numberArray'),
     ).toBeUndefined();
-    expect(
-      await validator.array.optional().validate(data, 'notfound'),
-    ).toBeUndefined();
+    expect(await validator.array.optional().validate(data, 'notfound')).toBeUndefined();
   });
 
   it('should has default value', async () => {
     const newlyData: Record<string, any> = {};
 
     expect(
-      await validator.array
-        .items(validator.number)
-        .default([15])
-        .validate(newlyData, 'no-data'),
+      await validator.array.items(validator.number).default([15]).validate(newlyData, 'no-data'),
     ).toBeUndefined();
     expect(newlyData['no-data']).toContain(15);
   });
@@ -51,41 +44,25 @@ describe('Array validator', () => {
   });
 
   it('more than minimum item length', async () => {
-    expect(
-      await validator.array.minLength(10).validate(data, 'strArray'),
-    ).toContain('more than 10');
-    expect(
-      await validator.array.minLength(5).validate(data, 'strArray'),
-    ).toBeUndefined();
-    expect(
-      await validator.array.minLength(3).validate(data, 'strArray'),
-    ).toBeUndefined();
+    expect(await validator.array.minLength(10).validate(data, 'strArray')).toContain(
+      'more than 10',
+    );
+    expect(await validator.array.minLength(5).validate(data, 'strArray')).toBeUndefined();
+    expect(await validator.array.minLength(3).validate(data, 'strArray')).toBeUndefined();
   });
 
   it('less than maximum item length', async () => {
-    expect(
-      await validator.array.maxLength(3).validate(data, 'strArray'),
-    ).toContain('less than 3');
-    expect(
-      await validator.array.maxLength(5).validate(data, 'strArray'),
-    ).toBeUndefined();
-    expect(
-      await validator.array.maxLength(7).validate(data, 'strArray'),
-    ).toBeUndefined();
+    expect(await validator.array.maxLength(3).validate(data, 'strArray')).toContain('less than 3');
+    expect(await validator.array.maxLength(5).validate(data, 'strArray')).toBeUndefined();
+    expect(await validator.array.maxLength(7).validate(data, 'strArray')).toBeUndefined();
   });
 
   it('should between minimum and maximum item length', async () => {
+    expect(await validator.array.minLength(1).maxLength(4).validate(data, 'strArray')).toContain(
+      'between',
+    );
     expect(
-      await validator.array
-        .minLength(1)
-        .maxLength(4)
-        .validate(data, 'strArray'),
-    ).toContain('between');
-    expect(
-      await validator.array
-        .minLength(1)
-        .maxLength(7)
-        .validate(data, 'strArray'),
+      await validator.array.minLength(1).maxLength(7).validate(data, 'strArray'),
     ).toBeUndefined();
   });
 
@@ -107,9 +84,7 @@ describe('Array validator', () => {
 
   it('number item can convert to string', async () => {
     expect(
-      await validator.array
-        .items(validator.string)
-        .validate(data, 'numberArray'),
+      await validator.array.items(validator.string).validate(data, 'numberArray'),
     ).toBeUndefined();
     data.numberArray.forEach((item) => {
       expect(typeof item).toEqual('string');
@@ -126,9 +101,7 @@ describe('Array validator', () => {
   it('should support nested keys', async () => {
     // @ts-expect-error
     data.mixArray.push({});
-    const result = await validator.array
-      .items(validator.number)
-      .validate(data, 'mixArray');
+    const result = await validator.array.items(validator.number).validate(data, 'mixArray');
     expect(typeof result).toEqual('string');
     expect(result).toContain('mixArray.3');
   });

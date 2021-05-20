@@ -25,9 +25,7 @@ export class UUIDValidator<T = string> extends Validator<UUIDOptions<T>> {
 
   declare default: (uuid: NonNullable<T>) => UUIDValidator<NonNullable<T>>;
 
-  declare transform: <T1>(
-    fn: (uuid: T) => Promise<T1> | T1,
-  ) => UUIDValidator<T1>;
+  declare transform: <T1>(fn: (uuid: T) => Promise<T1> | T1) => UUIDValidator<T1>;
 
   version(version: UUIDOptions<T>['uuidVersion']): this {
     this.config.uuidVersion = version;

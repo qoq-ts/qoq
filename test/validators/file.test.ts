@@ -42,10 +42,7 @@ describe('File validator', () => {
   router
     .post('/c')
     .body({
-      file1: validator.file
-        .maxSize(300)
-        .hash('md5')
-        .allowMimeTypes(['image/png', 'image/gif']),
+      file1: validator.file.maxSize(300).hash('md5').allowMimeTypes(['image/png', 'image/gif']),
     })
     .action((ctx, payload) => {
       ctx.body = payload.body;
@@ -150,9 +147,7 @@ describe('File validator', () => {
       .then((res) => {
         expect(res.body.file1).toMatchObject({
           hash: createHash('md5')
-            .update(
-              readFileSync(path.join(__dirname, '..', 'fixture', 'arrow.png')),
-            )
+            .update(readFileSync(path.join(__dirname, '..', 'fixture', 'arrow.png')))
             .digest('hex'),
         });
       });

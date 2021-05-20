@@ -18,11 +18,7 @@ export { MemoryCacheOptions, MemoryCache } from './caching/MemoryCache';
 // Advanced
 export { ConsoleSlotCtx, WebSlotCtx, MixSlotCtx } from './slot/Slot';
 export { ValidatorStatic } from './validator';
-export {
-  Validator,
-  ValidatorOptions,
-  ValidatorType,
-} from './validator/Validator';
+export { Validator, ValidatorOptions, ValidatorType } from './validator/Validator';
 export { WebCtx } from './core/WebContext';
 export { ConsoleCtx } from './core/ConsoleContext';
 export { HttpError } from 'http-errors';

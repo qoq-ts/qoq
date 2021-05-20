@@ -21,15 +21,11 @@ export interface ArrayDataType {
 }
 
 export class ArrayValidator<T = unknown[]> extends Validator<ArrayOptions<T>> {
-  public items<V extends Validator>(
-    values: V,
-  ): ArrayValidator<ValidatorType<V>[]>;
+  public items<V extends Validator>(values: V): ArrayValidator<ValidatorType<V>[]>;
   public items<V extends { [key: string]: Validator }>(
     values: V,
   ): ArrayValidator<ValidatorTypes<V>[]>;
-  public items(
-    values: Validator | { [key: string]: Validator },
-  ): ArrayValidator<any> {
+  public items(values: Validator | { [key: string]: Validator }): ArrayValidator<any> {
     if (values instanceof Validator) {
       this.config.itemValidator = values;
     } else {
@@ -58,21 +54,14 @@ export class ArrayValidator<T = unknown[]> extends Validator<ArrayOptions<T>> {
 
   declare optional: () => ArrayValidator<T | undefined>;
 
-  declare transform: <T1>(
-    fn: (array: T) => Promise<T1> | T1,
-  ) => ArrayValidator<T1>;
+  declare transform: <T1>(fn: (array: T) => Promise<T1> | T1) => ArrayValidator<T1>;
 
   protected async validateValue(
     data: Record<string, any>,
     key: string,
     superKeys: string[],
   ): Promise<string | void> {
-    const {
-      minItemLength,
-      maxItemLength,
-      itemValidator,
-      distinct = false,
-    } = this.config;
+    const { minItemLength, maxItemLength, itemValidator, distinct = false } = this.config;
     let value: any[] = data[key];
 
     if (!Array.isArray(value)) {
@@ -86,10 +75,7 @@ export class ArrayValidator<T = unknown[]> extends Validator<ArrayOptions<T>> {
     if (minItemLength !== undefined || maxItemLength !== undefined) {
       if (minItemLength !== undefined && value.length < minItemLength) {
         if (maxItemLength === undefined) {
-          return `${this.getLabel(
-            key,
-            superKeys,
-          )} must includes more than ${minItemLength} items`;
+          return `${this.getLabel(key, superKeys)} must includes more than ${minItemLength} items`;
         }
 
         return `${this.getLabel(
@@ -100,10 +86,7 @@ export class ArrayValidator<T = unknown[]> extends Validator<ArrayOptions<T>> {
 
       if (maxItemLength !== undefined && value.length > maxItemLength) {
         if (minItemLength === undefined) {
-          return `${this.getLabel(
-            key,
-            superKeys,
-          )} must includes less than ${maxItemLength} items`;
+          return `${this.getLabel(key, superKeys)} must includes less than ${maxItemLength} items`;
         }
 
         return `${this.getLabel(
@@ -117,11 +100,7 @@ export class ArrayValidator<T = unknown[]> extends Validator<ArrayOptions<T>> {
       const newSuperKeys = superKeys.concat(key);
 
       for (let index = 0; index < value.length; ++index) {
-        const result = await itemValidator.validate(
-          value,
-          index.toString(),
-          newSuperKeys,
-        );
+        const result = await itemValidator.validate(value, index.toString(), newSuperKeys);
         if (result) {
           return result;
         }

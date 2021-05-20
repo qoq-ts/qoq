@@ -25,9 +25,7 @@ export class UrlValidator<T = string> extends Validator<UrlOptions<T>> {
 
   declare default: (url: NonNullable<T>) => UrlValidator<NonNullable<T>>;
 
-  declare transform: <T1>(
-    fn: (value: T) => Promise<T1> | T1,
-  ) => UrlValidator<T1>;
+  declare transform: <T1>(fn: (value: T) => Promise<T1> | T1) => UrlValidator<T1>;
 
   protected async validateValue(
     data: Record<string, any>,

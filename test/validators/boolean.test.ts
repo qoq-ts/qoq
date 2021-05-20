@@ -20,17 +20,13 @@ describe('Boolean validator', () => {
 
   it('may be undefined', async () => {
     expect(await validator.boolean.validate(data, 'true1')).toBeUndefined();
-    expect(
-      await validator.boolean.optional().validate(data, 'notfound'),
-    ).toBeUndefined();
+    expect(await validator.boolean.optional().validate(data, 'notfound')).toBeUndefined();
   });
 
   it('should has default value', async () => {
     const newlyData: Record<string, any> = {};
 
-    expect(
-      await validator.boolean.default(true).validate(newlyData, 'no-data'),
-    ).toBeUndefined();
+    expect(await validator.boolean.default(true).validate(newlyData, 'no-data')).toBeUndefined();
     expect(newlyData['no-data']).toEqual(true);
   });
 
@@ -41,9 +37,7 @@ describe('Boolean validator', () => {
     expect(await validator.boolean.validate(data, 'true1str')).toBeUndefined();
     expect(data['true1str']).toEqual(true);
 
-    expect(
-      await validator.boolean.validate(data, 'trueboolean'),
-    ).toBeUndefined();
+    expect(await validator.boolean.validate(data, 'trueboolean')).toBeUndefined();
     expect(data['trueboolean']).toEqual(true);
 
     expect(await validator.boolean.validate(data, 'false0')).toBeUndefined();
@@ -52,32 +46,21 @@ describe('Boolean validator', () => {
     expect(await validator.boolean.validate(data, 'false0str')).toBeUndefined();
     expect(data['false0str']).toEqual(false);
 
-    expect(
-      await validator.boolean.validate(data, 'falseboolean'),
-    ).toBeUndefined();
+    expect(await validator.boolean.validate(data, 'falseboolean')).toBeUndefined();
     expect(data['falseboolean']).toEqual(false);
 
-    expect(await validator.boolean.validate(data, 'id5')).toContain(
-      'must be boolean',
-    );
+    expect(await validator.boolean.validate(data, 'id5')).toContain('must be boolean');
   });
 
   it('can customize allowed values', async () => {
-    expect(
-      await validator.boolean.trueValues([5, true]).validate(data, 'id5'),
-    ).toBeUndefined();
+    expect(await validator.boolean.trueValues([5, true]).validate(data, 'id5')).toBeUndefined();
     expect(data['id5']).toEqual(true);
 
-    expect(
-      await validator.boolean.trueValues(['0']).validate(data, 'false0str'),
-    ).toBeUndefined();
+    expect(await validator.boolean.trueValues(['0']).validate(data, 'false0str')).toBeUndefined();
     expect(data['false0str']).toEqual(true);
 
     expect(
-      await validator.boolean
-        .trueValues([false])
-        .falseValues([true])
-        .validate(data, 'trueboolean'),
+      await validator.boolean.trueValues([false]).falseValues([true]).validate(data, 'trueboolean'),
     ).toBeUndefined();
     expect(data['trueboolean']).toEqual(false);
   });

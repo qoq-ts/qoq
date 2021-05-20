@@ -58,8 +58,6 @@ function ts() {
 }
 
 if (!js('.js') && !js(isESM ? '.mjs' : '.cjs') && !ts()) {
-  console.error(
-    chalk.red('Command entry file console.{ts|js|mjs|cjs} is not found.'),
-  );
+  console.error(chalk.red('Command entry file console.{ts|js|mjs|cjs} is not found.'));
   process.exit(127);
 }

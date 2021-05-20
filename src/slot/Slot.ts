@@ -6,21 +6,17 @@ export type MixSlotCtx<Props = {}, State = {}> = (
   ctx: WebCtx<Props, State> | ConsoleCtx<Props, State>,
   next: Next,
 ) => any;
-export type WebSlotCtx<Props = {}, State = {}> = (
-  ctx: WebCtx<Props, State>,
-  next: Next,
-) => any;
+export type WebSlotCtx<Props = {}, State = {}> = (ctx: WebCtx<Props, State>, next: Next) => any;
 export type ConsoleSlotCtx<Props = {}, State = {}> = (
   ctx: ConsoleCtx<Props, State>,
   next: Next,
 ) => any;
 
-export type SlotCtx<Type extends SlotAllType, Props = {}, State = {}> =
-  Type extends Slot.Web
-    ? WebSlotCtx<Props, State>
-    : Type extends Slot.Console
-    ? ConsoleSlotCtx<Props, State>
-    : MixSlotCtx<Props, State>;
+export type SlotCtx<Type extends SlotAllType, Props = {}, State = {}> = Type extends Slot.Web
+  ? WebSlotCtx<Props, State>
+  : Type extends Slot.Console
+  ? ConsoleSlotCtx<Props, State>
+  : MixSlotCtx<Props, State>;
 
 export namespace Slot {
   export type Web = 'web';
@@ -30,11 +26,7 @@ export namespace Slot {
 
 export type SlotAllType = Slot.Mix | Slot.Web | Slot.Console;
 
-export abstract class Slot<
-  Type extends SlotAllType = Slot.Mix,
-  Props = {},
-  State = {},
-> {
+export abstract class Slot<Type extends SlotAllType = Slot.Mix, Props = {}, State = {}> {
   private middleware: SlotCtx<Type, Props, State>[] = [];
 
   public /*protected*/ collect(): SlotCtx<Type, Props, State>[] {

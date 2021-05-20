@@ -1,10 +1,4 @@
-import {
-  Tree,
-  validator,
-  WebApplication,
-  WebRouter,
-  WebSlotManager,
-} from '../../src';
+import { Tree, validator, WebApplication, WebRouter, WebSlotManager } from '../../src';
 import request from 'supertest';
 import { SlotDemo1 } from '../fixture/SlotDemo1';
 import { resolve } from 'path';
@@ -357,20 +351,11 @@ it('can receive array parameter in querystring', async () => {
       ctx.body = payload.query.list.toString();
     });
 
-  await request(listen)
-    .get('/?list=1&list=2&list=3&list=4')
-    .expect(200)
-    .expect('1,2,3,4');
+  await request(listen).get('/?list=1&list=2&list=3&list=4').expect(200).expect('1,2,3,4');
 
-  await request(listen)
-    .get('/?list[]=1&list[]=2&list[]=3&list[]=4')
-    .expect(200)
-    .expect('1,2,3,4');
+  await request(listen).get('/?list[]=1&list[]=2&list[]=3&list[]=4').expect(200).expect('1,2,3,4');
 
-  await request(listen)
-    .get('/?list[]=1&list[]=2&list=3&list[]=4')
-    .expect(200)
-    .expect('1,2,4,3');
+  await request(listen).get('/?list[]=1&list[]=2&list=3&list[]=4').expect(200).expect('1,2,4,3');
 
   await request(listen)
     .get('/?list[0]=1&list[1]=2&list[2]=3&list[3]=4')

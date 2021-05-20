@@ -2,8 +2,7 @@ import yargs from 'yargs/yargs';
 import { setInspector } from '../util/setInspector';
 import { ConsoleApplication } from './ConsoleApplication';
 
-export type ConsoleCtx<Props = {}, State = {}> = ConsoleContext<Props, State> &
-  Props;
+export type ConsoleCtx<Props = {}, State = {}> = ConsoleContext<Props, State> & Props;
 
 export class ConsoleContext<_Props = {}, State = {}> {
   public readonly state: State = {} as State;
@@ -16,18 +15,10 @@ export class ConsoleContext<_Props = {}, State = {}> {
 
   public /*protected*/ commandMatched = false;
 
-  constructor(
-    app: ConsoleApplication,
-    argv: string[],
-    isChildProcess: boolean,
-  ) {
+  constructor(app: ConsoleApplication, argv: string[], isChildProcess: boolean) {
     this.app = app;
     this.argv = argv;
-    const {
-      $0,
-      _: commands,
-      ...options
-    } = yargs([]).help(false).version(false).parse(argv);
+    const { $0, _: commands, ...options } = yargs([]).help(false).version(false).parse(argv);
     this.commands = commands.map(String);
     this.command = this.commands[0] || '';
     this.options = options;

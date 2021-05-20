@@ -25,18 +25,12 @@ describe('Url validator', () => {
     expect(await validator.url.validate(data, 'path')).toBeUndefined();
     expect(await validator.url.validate(data, 'portPath')).toBeUndefined();
 
-    expect(await validator.url.validate(data, 'invalid')).toContain(
-      'must be url',
-    );
+    expect(await validator.url.validate(data, 'invalid')).toContain('must be url');
   });
 
   it('may be undefined', async () => {
-    expect(
-      await validator.url.optional().validate(data, 'notfound'),
-    ).toBeUndefined();
-    expect(await validator.url.validate(data, 'notfound')).toContain(
-      'is required',
-    );
+    expect(await validator.url.optional().validate(data, 'notfound')).toBeUndefined();
+    expect(await validator.url.validate(data, 'notfound')).toContain('is required');
   });
 
   it('should has default value', async () => {
@@ -49,16 +43,12 @@ describe('Url validator', () => {
   it('should have multiple schemes', async () => {
     expect(await validator.url.validate(data, 'ftp')).toContain('scheme');
     expect(
-      await validator.url
-        .schemes(['ftp', 'http', 'https'])
-        .validate(data, 'ftp'),
+      await validator.url.schemes(['ftp', 'http', 'https']).validate(data, 'ftp'),
     ).toBeUndefined();
   });
 
   it('can transform data by user', async () => {
-    const msg = await validator.url
-      .transform((value) => value.substr(5))
-      .validate(data, 'http');
+    const msg = await validator.url.transform((value) => value.substr(5)).validate(data, 'http');
 
     expect(msg).toBeUndefined();
 

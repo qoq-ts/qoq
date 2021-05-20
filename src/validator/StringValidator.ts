@@ -53,9 +53,7 @@ export class StringValidator<T = string> extends Validator<StringOptions<T>> {
 
   declare default: (string: NonNullable<T>) => StringValidator<NonNullable<T>>;
 
-  declare transform: <T1>(
-    fn: (string: T) => Promise<T1> | T1,
-  ) => StringValidator<T1>;
+  declare transform: <T1>(fn: (string: T) => Promise<T1> | T1) => StringValidator<T1>;
 
   protected isEmpty(value: any): boolean {
     return typeof value !== 'string' && super.isEmpty(value);
@@ -83,10 +81,7 @@ export class StringValidator<T = string> extends Validator<StringOptions<T>> {
 
     if (minLength !== undefined && value.length < minLength) {
       if (maxLength === undefined) {
-        return `${this.getLabel(
-          key,
-          superKeys,
-        )} must includes more than ${minLength} characters`;
+        return `${this.getLabel(key, superKeys)} must includes more than ${minLength} characters`;
       }
 
       return `${this.getLabel(
@@ -97,10 +92,7 @@ export class StringValidator<T = string> extends Validator<StringOptions<T>> {
 
     if (maxLength !== undefined && value.length > maxLength) {
       if (minLength === undefined) {
-        return `${this.getLabel(
-          key,
-          superKeys,
-        )} must includes less than ${maxLength} characters`;
+        return `${this.getLabel(key, superKeys)} must includes less than ${maxLength} characters`;
       }
 
       return `${this.getLabel(
@@ -117,16 +109,12 @@ export class StringValidator<T = string> extends Validator<StringOptions<T>> {
         data[key] = value = value.toUpperCase();
         break;
       case 'title':
-        data[key] = value =
-          value.substr(0, 1).toUpperCase() + value.substr(1).toLowerCase();
+        data[key] = value = value.substr(0, 1).toUpperCase() + value.substr(1).toLowerCase();
         break;
     }
 
     if (pattern && !pattern.test(value)) {
-      return `${this.getLabel(
-        key,
-        superKeys,
-      )} doesn't match regular expression`;
+      return `${this.getLabel(key, superKeys)} doesn't match regular expression`;
     }
 
     return;

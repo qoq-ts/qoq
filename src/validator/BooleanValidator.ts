@@ -10,9 +10,7 @@ export interface BooleanDataType {
   validator: 'boolean';
 }
 
-export class BooleanValidator<T = boolean> extends Validator<
-  BooleanOptions<T>
-> {
+export class BooleanValidator<T = boolean> extends Validator<BooleanOptions<T>> {
   protected static trueValues: any[] = [1, '1', true, 'true'];
   protected static falseValues: any[] = [0, '0', false, 'false'];
 
@@ -28,23 +26,17 @@ export class BooleanValidator<T = boolean> extends Validator<
 
   declare optional: () => BooleanValidator<T | undefined>;
 
-  declare default: (
-    boolean: NonNullable<T>,
-  ) => BooleanValidator<NonNullable<T>>;
+  declare default: (boolean: NonNullable<T>) => BooleanValidator<NonNullable<T>>;
 
-  declare transform: <T1>(
-    fn: (boolean: T) => Promise<T1> | T1,
-  ) => BooleanValidator<T1>;
+  declare transform: <T1>(fn: (boolean: T) => Promise<T1> | T1) => BooleanValidator<T1>;
 
   protected async validateValue(
     data: Record<string, any>,
     key: string,
     superKeys: string[],
   ): Promise<string | void> {
-    const {
-      trueValues = BooleanValidator.trueValues,
-      falseValues = BooleanValidator.falseValues,
-    } = this.config;
+    const { trueValues = BooleanValidator.trueValues, falseValues = BooleanValidator.falseValues } =
+      this.config;
     const value = data[key];
 
     if (trueValues.includes(value)) {

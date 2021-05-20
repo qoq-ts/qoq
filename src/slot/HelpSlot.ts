@@ -44,10 +44,7 @@ export class HelpSlot extends Slot<Slot.Console> {
     return this;
   }
 
-  protected async showAllHelp(
-    commandsPath: finder.Options[],
-    scriptName: string,
-  ) {
+  protected async showAllHelp(commandsPath: finder.Options[], scriptName: string) {
     const cli = yargs([])
       .scriptName(scriptName)
       .usage(`${scriptName} [command] [options] [--help|-h]`)
@@ -101,9 +98,7 @@ export class HelpSlot extends Slot<Slot.Console> {
     });
 
     // Show help option last
-    cli
-      .alias('help', 'h')
-      .describe('help', 'Show help for command ' + json.commands[0]);
+    cli.alias('help', 'h').describe('help', 'Show help for command ' + json.commands[0]);
 
     cli.showHelp('log');
   }

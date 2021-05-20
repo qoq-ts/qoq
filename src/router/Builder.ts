@@ -2,18 +2,11 @@ import { Next } from 'koa';
 import { Slot, SlotAllType, SlotCtx } from '../slot/Slot';
 import { SlotManager, Use } from '../slot/SlotManager';
 
-export abstract class Builder<
-  T extends SlotAllType,
-  Props = any,
-  State = any,
-  Payload = {},
-> {
+export abstract class Builder<T extends SlotAllType, Props = any, State = any, Payload = {}> {
   protected slots = new SlotManager<T, any, any>([]);
   protected payload: Record<string, (ctx: any) => any> = {};
 
-  public use<P, S>(
-    slot: Use<T, P, S>,
-  ): Builder<T, Props & P, State & S, Payload> {
+  public use<P, S>(slot: Use<T, P, S>): Builder<T, Props & P, State & S, Payload> {
     this.slots = this.slots.use(slot);
     return this;
   }

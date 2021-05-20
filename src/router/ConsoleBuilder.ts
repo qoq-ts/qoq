@@ -45,11 +45,7 @@ export class ConsoleBuilder<
   }
 
   public action<P = {}, S = {}>(
-    fn: (
-      ctx: ConsoleCtx<Props & P, State & S>,
-      payload: Payload,
-      next: Next,
-    ) => any,
+    fn: (ctx: ConsoleCtx<Props & P, State & S>, payload: Payload, next: Next) => any,
   ): ConsoleBuilder<Props & P, State & S, Alias, Payload> {
     this.useAction(fn);
     return this;

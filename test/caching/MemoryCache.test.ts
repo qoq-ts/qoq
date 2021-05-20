@@ -89,9 +89,7 @@ describe('Memory Cache', () => {
   it('max key length should less than 32', () => {
     const key = 'x'.repeat(33);
 
-    expect(cache.buildKey('x'.repeat(33))).toEqual(
-      createHash('md5').update(key).digest('hex'),
-    );
+    expect(cache.buildKey('x'.repeat(33))).toEqual(createHash('md5').update(key).digest('hex'));
   });
 
   it("can set value when value doesn't exist", async () => {
@@ -100,16 +98,10 @@ describe('Memory Cache', () => {
     expect(await cache.get('hello')).toEqual('world');
     expect(await cache.getOrSet('hello', () => 'test data')).toEqual('world');
 
-    expect(await cache.getOrSet('test1', () => 'test data', 500)).toEqual(
-      'test data',
-    );
-    expect(await cache.getOrSet('test1', () => 'new test data', 500)).toEqual(
-      'test data',
-    );
+    expect(await cache.getOrSet('test1', () => 'test data', 500)).toEqual('test data');
+    expect(await cache.getOrSet('test1', () => 'new test data', 500)).toEqual('test data');
     await sleep(502);
-    expect(await cache.getOrSet('test1', () => 'new test data', 500)).toEqual(
-      'new test data',
-    );
+    expect(await cache.getOrSet('test1', () => 'new test data', 500)).toEqual('new test data');
   });
 
   it("can set async value when value doesn't exist", async () => {

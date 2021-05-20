@@ -1,8 +1,6 @@
 [
   {
-    "uris": [
-      "/projects"
-    ],
+    "uris": ["/projects"],
     "method": "GET",
     "title": "Get Projects",
     "description": "It is a desc test",
@@ -91,9 +89,7 @@
     ]
   },
   {
-    "uris": [
-      "/p/users"
-    ],
+    "uris": ["/p/users"],
     "method": "GET",
     "title": "Get Users",
     "description": "Get all users from db",
@@ -122,9 +118,7 @@
     ]
   },
   {
-    "uris": [
-      "/projects"
-    ],
+    "uris": ["/projects"],
     "method": "POST",
     "title": "Create a project",
     "description": "Create a project description",
@@ -166,9 +160,7 @@
     ]
   },
   {
-    "uris": [
-      "/p/projects"
-    ],
+    "uris": ["/p/projects"],
     "method": "POST",
     "query": {
       "projectId": {

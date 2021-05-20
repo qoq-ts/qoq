@@ -29,21 +29,15 @@ describe('Json validator', () => {
     expect(
       await validator.json.properties(data.objPlain).validate(data, 'objPlain'),
     ).toBeUndefined();
-    expect(
-      await validator.json.optional().validate(data, 'notfound'),
-    ).toBeUndefined();
-    expect(await validator.json.validate(data, 'notfound')).toContain(
-      'is required',
-    );
+    expect(await validator.json.optional().validate(data, 'notfound')).toBeUndefined();
+    expect(await validator.json.validate(data, 'notfound')).toContain('is required');
   });
 
   it('should has default value', async () => {
     const newlyData: Record<string, any> = {};
 
     expect(
-      await validator.json
-        .default({ hello: 'world' })
-        .validate(newlyData, 'id2'),
+      await validator.json.default({ hello: 'world' }).validate(newlyData, 'id2'),
     ).toBeUndefined();
     expect(newlyData['id2']).toMatchObject({ hello: 'world' });
   });

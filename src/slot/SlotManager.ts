@@ -4,15 +4,7 @@ import { Slot, SlotAllType, SlotCtx } from './Slot';
 export type Use<T extends SlotAllType, P, S> =
   | Slot<T, P, S>
   | SlotManager<T, P, S>
-  | SlotCtx<
-      Slot.Web extends T
-        ? Slot.Web
-        : Slot.Console extends T
-        ? Slot.Console
-        : Slot.Mix,
-      P,
-      S
-    >
+  | SlotCtx<Slot.Web extends T ? Slot.Web : Slot.Console extends T ? Slot.Console : Slot.Mix, P, S>
   | null;
 
 export class SlotManager<T extends SlotAllType, Props = {}, State = {}> {

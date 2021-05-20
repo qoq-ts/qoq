@@ -17,9 +17,7 @@ export interface TimestampDataType {
 const unixPattern = /^\d{10}$/;
 const microPattern = /^\d{13}$/;
 
-export class TimestampValidator<T = number> extends Validator<
-  TimestampOptions<T>
-> {
+export class TimestampValidator<T = number> extends Validator<TimestampOptions<T>> {
   /**
    * Timestamp with seconds like: 1620367239
    */
@@ -60,13 +58,9 @@ export class TimestampValidator<T = number> extends Validator<
 
   declare optional: () => TimestampValidator<T | undefined>;
 
-  declare default: (
-    timestamp: Date | (() => Date),
-  ) => TimestampValidator<NonNullable<T>>;
+  declare default: (timestamp: Date | (() => Date)) => TimestampValidator<NonNullable<T>>;
 
-  declare transform: <T1>(
-    fn: (timestamp: T) => Promise<T1> | T1,
-  ) => TimestampValidator<T1>;
+  declare transform: <T1>(fn: (timestamp: T) => Promise<T1> | T1) => TimestampValidator<T1>;
 
   protected transformDefaultValue(value: CustomDate | undefined) {
     const timestamp = TimestampValidator.date2timestamp(value);
@@ -110,16 +104,12 @@ export class TimestampValidator<T = number> extends Validator<
 
     const min = TimestampValidator.date2timestamp(minDate);
     if (min !== undefined && numValue < min) {
-      return `${this.getLabel(key, superKeys)} must be after ${new Date(
-        min,
-      ).toLocaleString()}`;
+      return `${this.getLabel(key, superKeys)} must be after ${new Date(min).toLocaleString()}`;
     }
 
     const max = TimestampValidator.date2timestamp(maxDate);
     if (max !== undefined && numValue > max) {
-      return `${this.getLabel(key, superKeys)} must be before ${new Date(
-        max,
-      ).toLocaleString()}`;
+      return `${this.getLabel(key, superKeys)} must be before ${new Date(max).toLocaleString()}`;
     }
 
     // Last step, we don't reassign to local value

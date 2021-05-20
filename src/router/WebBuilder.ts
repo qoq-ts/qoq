@@ -2,11 +2,7 @@ import { pathToRegexp, Key } from 'path-to-regexp';
 import { Slot } from '../slot/Slot';
 import { Use } from '../slot/SlotManager';
 import { Method } from '../util/Method';
-import {
-  Validator,
-  ValidatorDataType,
-  ValidatorTypes,
-} from '../validator/Validator';
+import { Validator, ValidatorDataType, ValidatorTypes } from '../validator/Validator';
 import { Builder } from './Builder';
 import { Next } from 'koa';
 import { WebCtx } from '../core/WebContext';
@@ -29,11 +25,7 @@ export interface WebRouterDocument {
   additional?: Record<string, any>;
 }
 
-export type WebRouterSchema = ReturnType<WebBuilder['toJSON']> extends Promise<
-  infer R
->
-  ? R
-  : never;
+export type WebRouterSchema = ReturnType<WebBuilder['toJSON']> extends Promise<infer R> ? R : never;
 
 const purePathPattern = /^[\/a-z0-9-_]+$/i;
 
@@ -84,12 +76,7 @@ export class WebBuilder<
 
   public query<T extends { [key: string]: Validator }>(
     rules: T,
-  ): WebBuilder<
-    Props,
-    State,
-    Param,
-    Omit<Payload, 'query'> & { query: ValidatorTypes<T> }
-  > {
+  ): WebBuilder<Props, State, Param, Omit<Payload, 'query'> & { query: ValidatorTypes<T> }> {
     this.queryRules = rules;
     this.payload.query = queryParser(rules);
     // @ts-ignore
@@ -112,12 +99,7 @@ export class WebBuilder<
 
   public params<T extends { [key in Param]: Validator }>(
     rules: T,
-  ): WebBuilder<
-    Props,
-    State,
-    Param,
-    Omit<Payload, 'params'> & { params: ValidatorTypes<T> }
-  > {
+  ): WebBuilder<Props, State, Param, Omit<Payload, 'params'> & { params: ValidatorTypes<T> }> {
     this.paramRules = rules;
     this.payload.params = paramParser(rules);
     // @ts-ignore
@@ -125,11 +107,7 @@ export class WebBuilder<
   }
 
   public action<P = {}, S = {}>(
-    fn: (
-      ctx: WebCtx<Props & P, State & S>,
-      payload: Payload,
-      next: Next,
-    ) => any,
+    fn: (ctx: WebCtx<Props & P, State & S>, payload: Payload, next: Next) => any,
   ): WebBuilder<Props & P, State & S, Param, Payload> {
     return this.useAction(fn), this;
   }
@@ -149,9 +127,7 @@ export class WebBuilder<
    * ```
    * @see WebRouterDocument
    */
-  public document(
-    document: (() => Promise<WebRouterDocument>) | WebRouterDocument,
-  ): this {
+  public document(document: (() => Promise<WebRouterDocument>) | WebRouterDocument): this {
     this.docs = document;
     return this;
   }
@@ -186,9 +162,7 @@ export class WebBuilder<
 
         if (key) {
           const capture = captures[keyIndex + 1];
-          params[key.name] = capture
-            ? this.decodeURIComponent(capture)
-            : capture;
+          params[key.name] = capture ? this.decodeURIComponent(capture) : capture;
         }
       }
 
@@ -214,33 +188,30 @@ export class WebBuilder<
       return;
     };
 
-    const docs =
-      typeof this.docs === 'function' ? await this.docs() : this.docs || {};
+    const docs = typeof this.docs === 'function' ? await this.docs() : this.docs || {};
     const query: TransformData = {};
     const body: TransformData = {};
     const params: TransformData = {};
-    const response = (docs.response || []).map(
-      ({ content, headers, ...rest }) => {
-        const responseHeaders: TransformData = {};
-        let responseContent: ValidatorDataType | undefined;
+    const response = (docs.response || []).map(({ content, headers, ...rest }) => {
+      const responseHeaders: TransformData = {};
+      let responseContent: ValidatorDataType | undefined;
 
-        if (content instanceof Validator) {
-          responseContent = content.toJSON();
-        } else if (content) {
-          responseContent = validator.json.properties(content).toJSON();
-        }
+      if (content instanceof Validator) {
+        responseContent = content.toJSON();
+      } else if (content) {
+        responseContent = validator.json.properties(content).toJSON();
+      }
 
-        Object.entries(headers ?? {}).map(([key, validator]) => {
-          responseHeaders[key] = validator.toJSON();
-        });
+      Object.entries(headers ?? {}).map(([key, validator]) => {
+        responseHeaders[key] = validator.toJSON();
+      });
 
-        return {
-          ...rest,
-          content: responseContent,
-          headers: getNotPlainObject(responseHeaders),
-        };
-      },
-    );
+      return {
+        ...rest,
+        content: responseContent,
+        headers: getNotPlainObject(responseHeaders),
+      };
+    });
 
     (
       [

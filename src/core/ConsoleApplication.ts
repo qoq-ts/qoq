@@ -58,15 +58,12 @@ export class ConsoleApplication extends EventEmitter {
     // See https://github.com/koajs/koa/issues/1466
     // We can probably remove it once jest fixes https://github.com/facebook/jest/issues/2549.
     const isNativeError =
-      Object.prototype.toString.call(err) === '[object Error]' ||
-      err instanceof Error;
+      Object.prototype.toString.call(err) === '[object Error]' || err instanceof Error;
     if (!isNativeError) {
       err = new TypeError(util.format('non-error thrown: %j', err));
     }
 
-    const msgs = (err.stack || err.toString())
-      .split(EOL)
-      .map((item) => '  ' + item);
+    const msgs = (err.stack || err.toString()).split(EOL).map((item) => '  ' + item);
 
     console.error();
     console.error(chalk.red(msgs.shift()));
@@ -111,8 +108,7 @@ export class ConsoleApplication extends EventEmitter {
       // See https://github.com/koajs/koa/issues/1466
       // We can probably remove it once jest fixes https://github.com/facebook/jest/issues/2549.
       const isNativeError =
-        Object.prototype.toString.call(err) === '[object Error]' ||
-        err instanceof Error;
+        Object.prototype.toString.call(err) === '[object Error]' || err instanceof Error;
       if (!isNativeError) {
         err = new TypeError(util.format('non-error thrown: %j', err));
       }

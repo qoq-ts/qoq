@@ -6,9 +6,7 @@ test('the valid emails', async () => {
     email2: 'hi-test@ccc.com.cc',
   };
 
-  expect(await validator.email.optional().validate(data, 'notfound')).toEqual(
-    undefined,
-  );
+  expect(await validator.email.optional().validate(data, 'notfound')).toEqual(undefined);
   expect(await validator.email.validate(data, 'email1')).toBeUndefined();
   expect(await validator.email.validate(data, 'email2')).toBeUndefined();
 });
@@ -20,9 +18,7 @@ test('the invalid emails', async () => {
     email3: 'hi-test@ccc.com.',
   };
 
-  expect(await validator.email.validate(data, 'notfound')).toContain(
-    'required',
-  );
+  expect(await validator.email.validate(data, 'notfound')).toContain('required');
   expect(await validator.email.validate(data, 'email1')).toContain('email');
   expect(await validator.email.validate(data, 'email2')).toContain('email');
   expect(await validator.email.validate(data, 'email3')).toContain('email');
