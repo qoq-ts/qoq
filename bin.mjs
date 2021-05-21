@@ -1,15 +1,12 @@
 #!/usr/bin/env node
 
+import fs from 'fs';
+import path from 'path';
+import chalk from 'chalk';
 import { createRequire } from 'module';
 import { readPackageUpSync } from 'read-pkg-up';
 
-if (isESModule()) {
-  import('./es/bin.js');
-} else {
-  createRequire(import.meta.url)('./lib/bin.js');
-}
-
-function isESModule() {
+const isESM = (function () {
   if (typeof require === 'undefined') {
     return true;
   }
@@ -19,4 +16,48 @@ function isESModule() {
   }
 
   return false;
+})();
+
+const files = ['./src/console', './lib/console', './console'];
+
+const mjsFile = js('.mjs');
+const cjsFile = js('.cjs');
+const jsFile = js('.js');
+const tsFile = ts();
+
+(() => {
+  const loadESM = mjsFile || (isESM && jsFile) || (isESM && tsFile);
+  if (loadESM) {
+    import('./es/bin.js').then((bin) => bin.loadESM(loadESM));
+    return;
+  }
+
+  const loadCJS = cjsFile || (!isESM && jsFile) || (!isESM && tsFile);
+  if (loadCJS) {
+    createRequire(import.meta.url)('./lib/bin.js').loadCJS(loadCJS);
+    return;
+  }
+
+  console.error(chalk.red('Command entry file console.{ts|js|mjs|cjs} is not found.'));
+  process.exit(127);
+})();
+
+function js(ext) {
+  for (let i = 0; i < files.length; ++i) {
+    const file = path.resolve(files[i] + ext);
+
+    if (fs.existsSync(file)) {
+      return file;
+    }
+  }
+}
+
+function ts() {
+  for (let i = 0; i < files.length; ++i) {
+    const file = path.resolve(files[i] + '.ts');
+
+    if (fs.existsSync(file)) {
+      return file;
+    }
+  }
 }

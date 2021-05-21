@@ -1,6 +1,6 @@
 {
   "name": "qoq",
-  "version": "0.0.52",
+  "version": "0.0.54",
   "main": "./lib/index.js",
   "module": "./es/index.js",
   "description": "A TS-Only node framework",
