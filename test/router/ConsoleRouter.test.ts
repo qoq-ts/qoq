@@ -12,12 +12,7 @@ beforeEach(() => {
 });
 
 it('should throw error when mismatch command', async () => {
-  try {
-    await app.execute('not-exist');
-    expect(true).toBeFalsy();
-  } catch {
-    expect(true).toBeTruthy();
-  }
+  await expect(app.execute('not-exist')).rejects.toThrowError();
 });
 
 it('can create command', async () => {
@@ -40,12 +35,7 @@ it('can create command with options', async () => {
       ctx.state.testData = payload.options.data * 2;
     });
 
-  try {
-    await app.execute('test-command');
-    expect(true).toBeFalsy();
-  } catch {
-    expect(true).toBeTruthy();
-  }
+  await expect(app.execute('test-command')).rejects.toThrowError();
 
   const ctx = await app.execute('test-command', '--data', '41');
   expect(ctx.state.testData).toBe(82);

@@ -21,16 +21,13 @@ test('validate object', async () => {
 });
 
 test('validate function will throw error', async () => {
-  try {
-    await validator.validate(
+  await expect(
+    validator.validate(
       { age: 3 },
       {
         hello: validator.string,
         age: validator.string,
       },
-    );
-    expect(true).toBeFalsy();
-  } catch (e) {
-    expect(e.message).toBe('hello is required');
-  }
+    ),
+  ).rejects.toThrow('hello is required');
 });

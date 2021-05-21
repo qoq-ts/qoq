@@ -21,12 +21,7 @@ it('can assume other slots have been registered', async () => {
     }
   }
 
-  try {
-    await testMiddleware(new Custom())({});
-    expect(true).toBe(false);
-  } catch {
-    expect(true).toBe(true);
-  }
+  await expect(testMiddleware(new Custom())({})).rejects.toThrowError();
 
   const ctx = await testMiddleware(new SlotDemo2('abc'), new Custom())({});
 
