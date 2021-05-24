@@ -4155,6 +4155,13 @@ ts-node@^9.1.1:
     source-map-support "^0.5.17"
     yn "3.1.1"
 
+ts-prepublish@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/ts-prepublish/-/ts-prepublish-1.0.0.tgz#c499a3ac215e26ad61472d36ddfbca314b83d7fd"
+  integrity sha512-WkvGipZ4wt2IbzyipfvHXlf/ZMrN/748CW77d+zb21k2mvxN7+qBOrV/g38C2UZr58es2Re6BaCB88oXUvbcXg==
+  dependencies:
+    public-refactor "^0.8.1"
+
 tslib@^2.2.0:
   version "2.2.0"
   resolved "https://registry.npmjs.org/tslib/-/tslib-2.2.0.tgz#fb2c475977e35e241311ede2693cee1ec6698f5c"
