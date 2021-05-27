@@ -10,7 +10,7 @@ export abstract class RouterParser<R extends Router<any, any>> {
   public readonly pathPattern: finder.Options[];
 
   protected loadingCounter: number = 1;
-  protected topic = new Topic<{ ready: () => void }>();
+  protected topic = new Topic<{ ready: [] }>();
   protected treeTrunk: Middleware<any>[] = [];
   protected readonly tree: Middleware<any>[];
   protected readonly treeBranch: Middleware<any>[] = [];
