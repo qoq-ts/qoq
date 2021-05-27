@@ -17,7 +17,7 @@ export const optionParser = (rules: { [key: string]: Validator }) => {
       });
     }
 
-    const { _, $0, ...rawOptions } = input.parse(ctx.argv);
+    const { _, $0, ...rawOptions } = input.parseSync(ctx.argv);
     const options: Record<string, any> = {};
 
     for (const [key, validator] of parsedRules) {

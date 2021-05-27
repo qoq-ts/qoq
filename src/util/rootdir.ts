@@ -1,8 +1,4 @@
-import { getRootDir } from 'node-rootdir';
+import { join } from 'path';
+import { getDirName } from 'this-file';
 
-// TODO: import.meta.url
-export const rootdir = getRootDir('qoq-sequelize', {
-  esmodule: './es',
-  commonjs: './lib',
-  source: './src',
-});
+export const rootdir = join(getDirName(), '..');

@@ -26,40 +26,36 @@ const flat = (matches: string[][]): string[] => {
   }
 };
 
-export const finder = async (opts: finder.Options[]): Promise<string[]> => {
-  const matches = await Promise.all(
-    opts.map(async (opt) => {
+export const finder = (opts: finder.Options[]): Promise<string[]> => {
+  return Promise.all(
+    opts.map((opt) => {
       const options: glob.IOptions = opt;
+      const ignore = opt.ignore || [];
 
-      const matches = await Promise.all(
-        opt.pattern.map((pattern) => {
-          return new Promise<string[]>((resolve, reject) => {
-            const ignore = opt.ignore || [];
+      ignore.push('**/*.d.ts');
+      options.ignore = ignore;
+      options.nodir = true;
 
-            if (!glob.hasMagic(pattern)) {
-              pattern = path.resolve(pattern, './**/*.{ts,js}');
-            }
-
-            ignore.push('**/*.d.ts');
-            options.ignore = ignore;
-            options.nodir = true;
-
-            glob(pattern, options, (err, matches) => {
-              if (err === null) {
-                resolve(matches);
-              } else {
-                reject(err);
+      return Promise.all(
+        opt.pattern.map(
+          (pattern) =>
+            new Promise<string[]>((resolve, reject) => {
+              if (!glob.hasMagic(pattern)) {
+                pattern = path.resolve(pattern, './**/*.{ts,js}');
               }
-            });
-          });
-        }),
-      );
 
-      return flat(matches);
+              glob(pattern, options, (err, matches) => {
+                if (err === null) {
+                  resolve(matches);
+                } else {
+                  reject(err);
+                }
+              });
+            }),
+        ),
+      ).then(flat);
     }),
-  );
-
-  return flat(matches);
+  ).then(flat);
 };
 
 finder.normalize = (pattern: finder.Paths): finder.Options[] => {

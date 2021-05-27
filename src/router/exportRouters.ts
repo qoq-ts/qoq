@@ -9,19 +9,18 @@ export const generateRouterSchemas = async (
   const matches = await finder(finder.normalize(routerPath));
 
   await Promise.all(
-    matches.map(async (matchPath) => {
-      const modules = await import(matchPath);
-
-      return Promise.all(
-        Object.values(modules).map(async (item) => {
-          if (item && item instanceof WebRouter) {
-            for (let builder of item.builders) {
-              routers.push(await builder.toJSON());
+    matches.map((matchPath) => {
+      return import(matchPath).then((modules) => {
+        return Promise.all(
+          Object.values(modules).map(async (item) => {
+            if (item && item instanceof WebRouter) {
+              for (let builder of item.builders) {
+                routers.push(await builder.toJSON());
+              }
             }
-          }
-          return;
-        }),
-      );
+          }),
+        );
+      });
     }),
   );
 

@@ -63,15 +63,9 @@ export abstract class RouterParser<R extends Router<any, any>> {
 
   protected async searchRouters(pattern: finder.Options[]): Promise<void> {
     const matches = await finder(pattern);
+    const parse = this.parseRouters.bind(this);
 
-    await Promise.all(
-      matches.map((file) => {
-        return import(file).then((modules) => {
-          this.parseRouters(modules);
-        });
-      }),
-    );
-
+    await Promise.all(matches.map((file) => import(file).then(parse)));
     this.refreshTreeTrunk();
   }
 
