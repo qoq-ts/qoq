@@ -85,7 +85,7 @@ export abstract class Validator<T extends ValidatorOptions<any> = ValidatorOptio
     return this;
   }
 
-  public async /*protected*/ validate(
+  /*protected*/ public async validate(
     data: Record<string, any>,
     key: string,
     superKeys: string[] = [],

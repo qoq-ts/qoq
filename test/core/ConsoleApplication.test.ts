@@ -1,9 +1,11 @@
 import path, { dirname } from 'path';
+import { jest } from '@jest/globals';
 import { ConsoleApplication } from '../../src';
+import { getDirName } from '../../src/util/getDirName';
 
 it('can execute command', async () => {
   const app = new ConsoleApplication({
-    commandsDir: path.join(dirname(__dirname), 'fixture'),
+    commandsDir: path.join(dirname(getDirName(import.meta.url)), 'fixture'),
   });
 
   const ctx = await app.execute('/test3');
@@ -25,7 +27,7 @@ it('can mount commands', async () => {
   expect(message).not.toContain('test3');
 
   message = '';
-  app.mountCommandPath(path.join(dirname(__dirname), 'fixture'));
+  app.mountCommandPath(path.join(dirname(getDirName(import.meta.url)), 'fixture'));
   await app.execute('-h');
   expect(message).toContain('test3');
 

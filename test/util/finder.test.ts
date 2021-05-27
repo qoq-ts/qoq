@@ -6,16 +6,17 @@ const normalizePath = (file: string) => {
 };
 
 it('can find .js and .ts files except .d.ts', async () => {
-  expect(await finder([{ pattern: ['./test/fixture/glob'] }])).toMatchObject([
-    normalizePath('x.js'),
-    normalizePath('x.ts'),
-    normalizePath('y.js'),
-    normalizePath('y.ts'),
-    normalizePath('z.js'),
-  ]);
-
-  expect(await finder([{ pattern: ['./test/fixture/glob'] }])).not.toContain(
-    normalizePath('z.d.ts'),
+  expect(await finder([{ pattern: ['./test/fixture/glob'] }])).toEqual(
+    expect.arrayContaining([
+      normalizePath('x.js'),
+      normalizePath('x.ts'),
+      normalizePath('y.js'),
+      normalizePath('y.ts'),
+      normalizePath('z.js'),
+    ]),
+  );
+  expect(await finder([{ pattern: ['./test/fixture/glob'] }])).toEqual(
+    expect.not.arrayContaining([normalizePath('z.d.ts')]),
   );
 });
 

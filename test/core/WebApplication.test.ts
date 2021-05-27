@@ -1,10 +1,11 @@
 import path, { dirname } from 'path';
 import { WebApplication, WebRouter, WebSlotManager } from '../../src';
 import request from 'supertest';
+import { getDirName } from '../../src/util/getDirName';
 
 it('can search routers', async () => {
   const app = new WebApplication({
-    routersDir: path.join(dirname(__dirname), 'fixture'),
+    routersDir: path.join(dirname(getDirName(import.meta.url)), 'fixture'),
   });
   const listener = app.listen();
 
@@ -17,7 +18,7 @@ it('can search routers', async () => {
 
 it('can mount router from memory', async () => {
   const app = new WebApplication({
-    routersDir: path.join(dirname(__dirname), 'fixture'),
+    routersDir: path.join(dirname(getDirName(import.meta.url)), 'fixture'),
   });
   const router = new WebRouter({
     slots: new WebSlotManager(),
@@ -43,7 +44,7 @@ it('can mount router path after app is created', async () => {
   await app.ready();
   await request(listener).get('/test1').expect(404);
 
-  await app.mountRouterPath(path.join(dirname(__dirname), 'fixture'));
+  await app.mountRouterPath(path.join(dirname(getDirName(import.meta.url)), 'fixture'));
   await request(listener).get('/test1').expect('Hello router1');
 
   listener.close();
@@ -54,7 +55,7 @@ it('mount router path before ready() is allowed', async () => {
     routersDir: './not-exists',
   });
   const listener = app.listen();
-  app.mountRouterPath(path.join(dirname(__dirname), 'fixture'));
+  app.mountRouterPath(path.join(dirname(getDirName(import.meta.url)), 'fixture'));
 
   await app.ready();
   await request(listener).get('/test1').expect('Hello router1');
@@ -64,7 +65,7 @@ it('mount router path before ready() is allowed', async () => {
 
 it('only search WebRouter', async () => {
   const app = new WebApplication({
-    routersDir: path.join(dirname(__dirname), 'fixture'),
+    routersDir: path.join(dirname(getDirName(import.meta.url)), 'fixture'),
   });
   const listener = app.listen();
   await request(listener).get('/test3').expect(404);
@@ -73,7 +74,7 @@ it('only search WebRouter', async () => {
 
 it('router can use `export default`', async () => {
   const app = new WebApplication({
-    routersDir: path.join(dirname(__dirname), 'fixture'),
+    routersDir: path.join(dirname(getDirName(import.meta.url)), 'fixture'),
   });
   const listener = app.listen();
 

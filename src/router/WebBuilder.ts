@@ -180,7 +180,7 @@ export class WebBuilder<
     }
   }
 
-  public async /*protected*/ toJSON() {
+  /*protected*/ public async toJSON() {
     type TransformData = { [key: string]: ValidatorDataType };
 
     const getNotPlainObject = (obj: object) => {

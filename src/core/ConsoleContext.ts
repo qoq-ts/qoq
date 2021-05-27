@@ -18,7 +18,7 @@ export class ConsoleContext<_Props = {}, State = {}> {
   constructor(app: ConsoleApplication, argv: string[], isChildProcess: boolean) {
     this.app = app;
     this.argv = argv;
-    const { $0, _: commands, ...options } = yargs([]).help(false).version(false).parse(argv);
+    const { $0, _: commands, ...options } = yargs([]).help(false).version(false).parseSync(argv);
     this.commands = commands.map(String);
     this.command = this.commands[0] || '';
     this.options = options;

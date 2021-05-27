@@ -1,5 +1,5 @@
 import { validator } from '../../src';
-import { cloneDeep } from 'lodash';
+import { cloneDeep } from 'lodash-es';
 
 const defaultData = {
   numberArray: [2, 3, 4],
