@@ -9,7 +9,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "test": "NODE_OPTIONS=\"--experimental-vm-modules\" jest --runInBand",
+    "test": "node --experimental-vm-modules ./node_modules/.bin/jest --runInBand",
     "prepublishOnly": "ts-prepublish"
   },
   "exports": {
