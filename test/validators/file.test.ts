@@ -4,7 +4,9 @@ import { readFileSync } from 'fs';
 import { WebApplication, validator, WebRouter } from '../../src';
 import { createHash } from 'crypto';
 import { Server } from 'http';
-import { getDirName } from '../../src/util/getDirName';
+import { getDirName } from 'this-file';
+
+const __dir = getDirName();
 
 describe('File validator', () => {
   const app = new WebApplication();
@@ -58,7 +60,7 @@ describe('File validator', () => {
   it('can upload single file', async () => {
     await request(listen)
       .post('/a')
-      .attach('file1', path.join(dirname(getDirName(import.meta.url)), 'fixture', 'favicon.png'))
+      .attach('file1', path.join(dirname(__dir), 'fixture', 'favicon.png'))
       .then((res) => {
         expect(res.body.file1).toMatchObject({
           name: 'favicon.png',
@@ -68,8 +70,8 @@ describe('File validator', () => {
 
     await request(listen)
       .post('/a')
-      .attach('file1', path.join(dirname(getDirName(import.meta.url)), 'fixture', 'favicon.png'))
-      .attach('file1', path.join(dirname(getDirName(import.meta.url)), 'fixture', 'arrow.png'))
+      .attach('file1', path.join(dirname(__dir), 'fixture', 'favicon.png'))
+      .attach('file1', path.join(dirname(__dir), 'fixture', 'arrow.png'))
       .then((res) => {
         expect(res.body.file1).toMatchObject({
           name: 'favicon.png',
@@ -98,7 +100,7 @@ describe('File validator', () => {
 
     await request(listen)
       .post('/b')
-      .attach('file1', path.join(dirname(getDirName(import.meta.url)), 'fixture', 'favicon.png'))
+      .attach('file1', path.join(dirname(__dir), 'fixture', 'favicon.png'))
       .then((res) => {
         expect(res.body.file1).toHaveLength(1);
         expect(res.body.file1[0]).toMatchObject({
@@ -109,8 +111,8 @@ describe('File validator', () => {
 
     await request(listen)
       .post('/b')
-      .attach('file1', path.join(dirname(getDirName(import.meta.url)), 'fixture', 'favicon.png'))
-      .attach('file1', path.join(dirname(getDirName(import.meta.url)), 'fixture', 'arrow.png'))
+      .attach('file1', path.join(dirname(__dir), 'fixture', 'favicon.png'))
+      .attach('file1', path.join(dirname(__dir), 'fixture', 'arrow.png'))
       .then((res) => {
         expect(res.body.file1).toHaveLength(2);
         expect(res.body.file1[0]).toMatchObject({
@@ -129,7 +131,7 @@ describe('File validator', () => {
   it('can set max size', async () => {
     await request(listen)
       .post('/c')
-      .attach('file1', path.join(dirname(getDirName(import.meta.url)), 'fixture', 'favicon.png'))
+      .attach('file1', path.join(dirname(__dir), 'fixture', 'favicon.png'))
       .expect(400)
       .then((res) => {
         expect(res.text).toContain('300B');
@@ -137,20 +139,18 @@ describe('File validator', () => {
 
     await request(listen)
       .post('/c')
-      .attach('file1', path.join(dirname(getDirName(import.meta.url)), 'fixture', 'arrow.png'))
+      .attach('file1', path.join(dirname(__dir), 'fixture', 'arrow.png'))
       .expect(200);
   });
 
   it('can set hash', async () => {
     await request(listen)
       .post('/c')
-      .attach('file1', path.join(dirname(getDirName(import.meta.url)), 'fixture', 'arrow.png'))
+      .attach('file1', path.join(dirname(__dir), 'fixture', 'arrow.png'))
       .then((res) => {
         expect(res.body.file1).toMatchObject({
           hash: createHash('md5')
-            .update(
-              readFileSync(path.join(dirname(getDirName(import.meta.url)), 'fixture', 'arrow.png')),
-            )
+            .update(readFileSync(path.join(dirname(__dir), 'fixture', 'arrow.png')))
             .digest('hex'),
         });
       });
@@ -159,7 +159,7 @@ describe('File validator', () => {
   it('can set allow types', async () => {
     await request(listen)
       .post('/c')
-      .attach('file1', path.join(dirname(getDirName(import.meta.url)), 'fixture', 'arrow.jpg'))
+      .attach('file1', path.join(dirname(__dir), 'fixture', 'arrow.jpg'))
       .expect(400)
       .then((res) => {
         expect(res.text).toContain('mime type');

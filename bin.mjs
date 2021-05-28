@@ -3,7 +3,6 @@
 import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
-import { createRequire } from 'module';
 import { readPackageUpSync } from 'read-pkg-up';
 
 const isESM = (function () {
@@ -34,7 +33,7 @@ const tsFile = ts();
 
   const loadCJS = cjsFile || (!isESM && jsFile) || (!isESM && tsFile);
   if (loadCJS) {
-    createRequire(import.meta.url)('./lib/bin.js').loadCJS(loadCJS);
+    import('./lib/bin.js').then((bin) => bin.loadCJS(loadCJS));
     return;
   }
 
