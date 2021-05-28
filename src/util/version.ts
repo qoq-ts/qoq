@@ -1,7 +1,3 @@
-import { readFileSync } from 'fs';
-import { join } from 'path';
-import { rootdir } from './rootdir';
+import { getRequire } from 'this-file';
 
-// TODO: import json file.
-export const version =
-  JSON.parse(readFileSync(join(rootdir, '..', 'package.json')).toString()).version || '0.0.0';
+export const version = getRequire()('../../package.json').version || '0.0.0';
