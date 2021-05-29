@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "@types/formidable": "^1.2.2",
-    "@types/koa": "2.13.1",
+    "@types/koa": "2.13.3",
     "chalk": "^4.1.1",
     "co-body": "^6.1.0",
     "email-validator": "^2.0.4",

@@ -37,7 +37,6 @@ export class WebApplication extends Koa {
   protected readonly routerParser: WebRouterParser;
 
   constructor(options: Options = {}) {
-    // @ts-expect-error why @types/koa doesn't accept arguments?
     super(options);
     overrideQuery(this);
     this.routerParser = new WebRouterParser(options.routersDir ?? './src/routers');
