@@ -4,9 +4,9 @@ import { readFileSync } from 'fs';
 import { WebApplication, validator, WebRouter } from '../../src';
 import { createHash } from 'crypto';
 import { Server } from 'http';
-import { getDirName } from 'this-file';
+import { createContext } from 'this-file';
 
-const __dir = getDirName();
+const __dir = createContext().dirname;
 
 describe('File validator', () => {
   const app = new WebApplication();

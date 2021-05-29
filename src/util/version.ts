@@ -1,3 +1,3 @@
-import { getRequire } from 'this-file';
+import { createContext } from 'this-file';
 
-export const version = getRequire()('../../package.json').version || '0.0.0';
+export const version = createContext().require('../../package.json').version || '0.0.0';

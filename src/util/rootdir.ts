@@ -1,4 +1,6 @@
 import { join } from 'path';
-import { getDirName } from 'this-file';
+import { createContext } from 'this-file';
 
-export const rootdir = join(getDirName(), '..');
+const context = createContext();
+
+export const rootdir = join(context.dirname, '..');

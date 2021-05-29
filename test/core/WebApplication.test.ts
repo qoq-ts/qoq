@@ -1,9 +1,9 @@
 import path, { dirname } from 'path';
 import { WebApplication, WebRouter, WebSlotManager } from '../../src';
 import request from 'supertest';
-import { getDirName } from 'this-file';
+import { createContext } from 'this-file';
 
-const __dir = getDirName();
+const __dir = createContext().dirname;
 
 it('can search routers', async () => {
   const app = new WebApplication({
