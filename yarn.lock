@@ -3184,10 +3184,10 @@ test-exclude@^6.0.0:
     glob "^7.1.4"
     minimatch "^3.0.4"
 
-this-file@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.npmjs.org/this-file/-/this-file-1.0.4.tgz#582b95c788be626e0698e7b9b6448dffadb666e5"
-  integrity sha512-jibXPWQ83Z15uGy7Wxg+clY/8lkJx/caD9zF2Ufjpjq1OeuSPNQHmXyvYY5P7vLHWISZemPS1KCP6sCu/S/TLw==
+this-file@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.npmjs.org/this-file/-/this-file-2.0.2.tgz#745a9ef09d12ff03565636eb5328df1ca25c3137"
+  integrity sha512-JUNkmS0so8PcKyDgzrUWUPllxqhJ3JcGpjgMRR4DW+z6qkvvQ1ce7xyTGkI7lBR+vemyH9pr8beDTkPyZQJFlg==
 
 throat@^6.0.1:
   version "6.0.1"

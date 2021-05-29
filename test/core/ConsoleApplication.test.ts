@@ -1,9 +1,9 @@
 import path, { dirname } from 'path';
 import { jest } from '@jest/globals';
 import { ConsoleApplication } from '../../src';
-import { getDirName } from 'this-file';
+import { createContext } from 'this-file';
 
-const __dir = getDirName();
+const __dir = createContext().dirname;
 
 it('can execute command', async () => {
   const app = new ConsoleApplication({
