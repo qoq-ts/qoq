@@ -2,6 +2,5 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "module": "CommonJS"
-  },
-  "include": ["src/"]
+  }
 }
