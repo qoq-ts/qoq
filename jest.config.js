@@ -1,5 +1,5 @@
-export default {
-  preset: 'ts-jest/presets/default-esm',
+module.exports = {
+  preset: 'ts-jest',
   testEnvironment: 'node',
   bail: true,
   verbose: true,
@@ -10,8 +10,7 @@ export default {
   testMatch: ['**/test/**/*.test.ts'],
   globals: {
     'ts-jest': {
-      useESM: true,
+      tsconfig: 'tsconfig.cjs.json',
     },
   },
-  extensionsToTreatAsEsm: ['.ts'],
 };
