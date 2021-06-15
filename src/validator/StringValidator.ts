@@ -55,7 +55,7 @@ export class StringValidator<T = string> extends Validator<StringOptions<T>> {
 
   declare transform: <T1>(fn: (string: T) => Promise<T1> | T1) => StringValidator<T1>;
 
-  protected isEmpty(value: any): boolean {
+  protected override isEmpty(value: any): boolean {
     return typeof value !== 'string' && super.isEmpty(value);
   }
 

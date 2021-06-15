@@ -62,7 +62,7 @@ export class TimestampValidator<T = number> extends Validator<TimestampOptions<T
 
   declare transform: <T1>(fn: (timestamp: T) => Promise<T1> | T1) => TimestampValidator<T1>;
 
-  protected transformDefaultValue(value: CustomDate | undefined) {
+  protected override transformDefaultValue(value: CustomDate | undefined) {
     const timestamp = TimestampValidator.date2timestamp(value);
 
     if (timestamp !== undefined && this.config.type === 'unix') {

@@ -19,7 +19,7 @@ export class MemoryCache extends BaseCache {
     });
   }
 
-  public async exists(key: string): Promise<boolean> {
+  public override async exists(key: string): Promise<boolean> {
     return this.cache.has(this.buildKey(key));
   }
 

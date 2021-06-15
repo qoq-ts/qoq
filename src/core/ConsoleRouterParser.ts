@@ -26,7 +26,7 @@ export class ConsoleRouterParser extends RouterParser<ConsoleRouter> {
     return this.helper || (this.helper = new HelpSlot());
   }
 
-  protected parseRouters(modules: Record<string, any>): void {
+  protected override parseRouters(modules: Record<string, any>): void {
     super.parseRouters(modules);
     Object.values(modules).forEach((item) => {
       if (item && item instanceof ConsoleRouter) {

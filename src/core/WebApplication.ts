@@ -67,7 +67,7 @@ export class WebApplication extends Koa {
    * @deprecated Middlewares are delegated to WebSlotManager.
    * @throws Error
    */
-  use(_: never): Koa<any, any> {
+  override use(_: never): Koa<any, any> {
     throw new Error('qoq.use() is denied to call.');
   }
 }
