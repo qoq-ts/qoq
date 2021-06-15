@@ -39,7 +39,6 @@ export abstract class Builder<T extends SlotAllType, Props = any, State = any, P
       return Promise.all(promises).then(() => fn(ctx, parsed, next));
     };
 
-    // @ts-expect-error
     this.use(middleware);
   }
 }
