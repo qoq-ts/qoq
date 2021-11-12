@@ -63,8 +63,9 @@ describe('File validator', () => {
       .attach('file1', path.join(dirname(__dir), 'fixture', 'favicon.png'))
       .then((res) => {
         expect(res.body.file1).toMatchObject({
-          name: 'favicon.png',
-          type: 'image/png',
+          originalFilename: 'favicon.png',
+          mimetype: 'image/png',
+          size: 540,
         });
       });
 
@@ -74,8 +75,8 @@ describe('File validator', () => {
       .attach('file1', path.join(dirname(__dir), 'fixture', 'arrow.png'))
       .then((res) => {
         expect(res.body.file1).toMatchObject({
-          name: 'favicon.png',
-          type: 'image/png',
+          originalFilename: 'favicon.png',
+          mimetype: 'image/png',
         });
       });
 
@@ -104,8 +105,8 @@ describe('File validator', () => {
       .then((res) => {
         expect(res.body.file1).toHaveLength(1);
         expect(res.body.file1[0]).toMatchObject({
-          name: 'favicon.png',
-          type: 'image/png',
+          originalFilename: 'favicon.png',
+          mimetype: 'image/png',
         });
       });
 
@@ -116,12 +117,12 @@ describe('File validator', () => {
       .then((res) => {
         expect(res.body.file1).toHaveLength(2);
         expect(res.body.file1[0]).toMatchObject({
-          name: 'favicon.png',
-          type: 'image/png',
+          originalFilename: 'favicon.png',
+          mimetype: 'image/png',
         });
         expect(res.body.file1[1]).toMatchObject({
-          name: 'arrow.png',
-          type: 'image/png',
+          originalFilename: 'arrow.png',
+          mimetype: 'image/png',
         });
       });
 

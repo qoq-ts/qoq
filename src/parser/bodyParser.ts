@@ -46,7 +46,7 @@ const getRawBody = (ctx: WebCtx): Promise<Record<string, any>> => {
     if (ctx.request.is('multipart/*')) {
       const form = new formidable.IncomingForm({
         multiples: true,
-        hash: false,
+        hashAlgorithm: false,
         keepExtensions: true,
       });
 
@@ -68,6 +68,6 @@ const getRawBody = (ctx: WebCtx): Promise<Record<string, any>> => {
       returnRawBody: false,
     });
   } catch (e) {
-    return ctx.throw(500, e);
+    return ctx.throw(500, e as Error);
   }
 };

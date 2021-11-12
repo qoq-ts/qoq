@@ -30,22 +30,21 @@ yarn add qoq
 
 # Official Related
 
-| Project                                                          | Version                                                                                                   | Platform     | Description                       |
-| ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | ------------ | --------------------------------- |
-| [qoq-sequelize](https://github.com/qoq-ts/qoq-sequelize)         | [![npm](https://img.shields.io/npm/v/qoq-sequelize)](https://www.npmjs.com/package/qoq-sequelize)         | Web, Console | database ORM (mysql, sqlite, ...) |
-| [qoq-redis](https://github.com/qoq-ts/qoq-redis)                 | [![npm](https://img.shields.io/npm/v/qoq-redis)](https://www.npmjs.com/package/qoq-redis)                 | Web, Console | redis command, cache extension    |
-| [qoq-compress](https://github.com/qoq-ts/qoq-compress)           | [![npm](https://img.shields.io/npm/v/qoq-compress)](https://www.npmjs.com/package/qoq-compress)           | Web          | gzip, brotli                      |
-| [qoq-morgan](https://github.com/qoq-ts/qoq-morgan)               | [![npm](https://img.shields.io/npm/v/qoq-morgan)](https://www.npmjs.com/package/qoq-morgan)               | Web          | logger                            |
-| [qoq-cors](https://github.com/qoq-ts/qoq-cors)                   | [![npm](https://img.shields.io/npm/v/qoq-cors)](https://www.npmjs.com/package/qoq-cors)                   | Web          | CORS                              |
-| [qoq-ratelimit](https://github.com/qoq-ts/qoq-ratelimit)         | [![npm](https://img.shields.io/npm/v/qoq-ratelimit)](https://www.npmjs.com/package/qoq-ratelimit)         | Web          | request rate limiter              |
-| [qoq-jwt](https://github.com/qoq-ts/qoq-jwt)                     | [![npm](https://img.shields.io/npm/v/qoq-jwt)](https://www.npmjs.com/package/qoq-jwt)                     | Web          | validating json token             |
-| [qoq-etag](https://github.com/qoq-ts/qoq-etag)                   | [![npm](https://img.shields.io/npm/v/qoq-etag)](https://www.npmjs.com/package/qoq-etag)                   | Web          | header: etag                      |
-| [qoq-response-time](https://github.com/qoq-ts/qoq-response-time) | [![npm](https://img.shields.io/npm/v/qoq-response-time)](https://www.npmjs.com/package/qoq-response-time) | Web          | header: X-Response-Time           |
-| [qoq-helmet](https://github.com/qoq-ts/qoq-helmet)               | [![npm](https://img.shields.io/npm/v/qoq-helmet)](https://www.npmjs.com/package/qoq-helmet)               | Web          | security headers                  |
-| [qoq-pretty-json](https://github.com/qoq-ts/qoq-pretty-json)     | [![npm](https://img.shields.io/npm/v/qoq-pretty-json)](https://www.npmjs.com/package/qoq-pretty-json)     | Web          | format JSON                       |
-| [qoq-static](https://github.com/qoq-ts/qoq-static)               | [![npm](https://img.shields.io/npm/v/qoq-static)](https://www.npmjs.com/package/qoq-static)               | Web          | static file serve                 |
-| [qoq-views](https://github.com/qoq-ts/qoq-views)                 | [![npm](https://img.shields.io/npm/v/qoq-views)](https://www.npmjs.com/package/qoq-views)                 | Web          | template rendering                |
-| [qoq-json-error](https://github.com/qoq-ts/qoq-json-error)       | [![npm](https://img.shields.io/npm/v/qoq-json-error)](https://www.npmjs.com/package/qoq-json-error)       | Web          | JSON error handler                |
+| Project                                                          | Version                                                                                                   | Platform     | Description                    |
+| ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | ------------ | ------------------------------ |
+| [qoq-redis](https://github.com/qoq-ts/qoq-redis)                 | [![npm](https://img.shields.io/npm/v/qoq-redis)](https://www.npmjs.com/package/qoq-redis)                 | Web, Console | redis command, cache extension |
+| [qoq-compress](https://github.com/qoq-ts/qoq-compress)           | [![npm](https://img.shields.io/npm/v/qoq-compress)](https://www.npmjs.com/package/qoq-compress)           | Web          | gzip, brotli                   |
+| [qoq-morgan](https://github.com/qoq-ts/qoq-morgan)               | [![npm](https://img.shields.io/npm/v/qoq-morgan)](https://www.npmjs.com/package/qoq-morgan)               | Web          | logger                         |
+| [qoq-cors](https://github.com/qoq-ts/qoq-cors)                   | [![npm](https://img.shields.io/npm/v/qoq-cors)](https://www.npmjs.com/package/qoq-cors)                   | Web          | CORS                           |
+| [qoq-ratelimit](https://github.com/qoq-ts/qoq-ratelimit)         | [![npm](https://img.shields.io/npm/v/qoq-ratelimit)](https://www.npmjs.com/package/qoq-ratelimit)         | Web          | request rate limiter           |
+| [qoq-jwt](https://github.com/qoq-ts/qoq-jwt)                     | [![npm](https://img.shields.io/npm/v/qoq-jwt)](https://www.npmjs.com/package/qoq-jwt)                     | Web          | validating json token          |
+| [qoq-etag](https://github.com/qoq-ts/qoq-etag)                   | [![npm](https://img.shields.io/npm/v/qoq-etag)](https://www.npmjs.com/package/qoq-etag)                   | Web          | header: etag                   |
+| [qoq-response-time](https://github.com/qoq-ts/qoq-response-time) | [![npm](https://img.shields.io/npm/v/qoq-response-time)](https://www.npmjs.com/package/qoq-response-time) | Web          | header: X-Response-Time        |
+| [qoq-helmet](https://github.com/qoq-ts/qoq-helmet)               | [![npm](https://img.shields.io/npm/v/qoq-helmet)](https://www.npmjs.com/package/qoq-helmet)               | Web          | security headers               |
+| [qoq-pretty-json](https://github.com/qoq-ts/qoq-pretty-json)     | [![npm](https://img.shields.io/npm/v/qoq-pretty-json)](https://www.npmjs.com/package/qoq-pretty-json)     | Web          | format JSON                    |
+| [qoq-static](https://github.com/qoq-ts/qoq-static)               | [![npm](https://img.shields.io/npm/v/qoq-static)](https://www.npmjs.com/package/qoq-static)               | Web          | static file serve              |
+| [qoq-views](https://github.com/qoq-ts/qoq-views)                 | [![npm](https://img.shields.io/npm/v/qoq-views)](https://www.npmjs.com/package/qoq-views)                 | Web          | template rendering             |
+| [qoq-json-error](https://github.com/qoq-ts/qoq-json-error)       | [![npm](https://img.shields.io/npm/v/qoq-json-error)](https://www.npmjs.com/package/qoq-json-error)       | Web          | JSON error handler             |
 
 **And more from koa community...**
 

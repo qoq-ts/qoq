@@ -81,7 +81,7 @@ it('can upload file', async () => {
     })
     .action(async (ctx, payload) => {
       ctx.body = {
-        filename: payload.body.file.name,
+        filename: payload.body.file.originalFilename,
         ping: payload.body.ping,
       };
     });
